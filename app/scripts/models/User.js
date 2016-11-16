@@ -73,6 +73,7 @@ var User = Backbone.Model.extend({
     var path = '?username='+username+'&password='+encodeURI(password);
     var self = this;
 
+    this.beforeSave();
     $.get(url + path).then(function(response){
 			self.handleResponse(response, username);
     	callback();
@@ -86,6 +87,7 @@ var User = Backbone.Model.extend({
     var token = localStorage.getItem('sessionToken');
     localStorage.clear();
 
+    this.beforeSave();
     $.post(url).then(function(response){
       // Backbone.history.navigate('login', {trigger: true})
       console.log('signed out');
