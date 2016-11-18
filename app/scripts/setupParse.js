@@ -6,7 +6,7 @@ var setupParse = function(sessionId){
       xhr.setRequestHeader("X-Parse-Application-Id", 'maeve');
       xhr.setRequestHeader("X-Parse-REST-API-Key", 'clementine');
 
-      if(localStorage.gsessionId){
+      if(localStorage.getItem('sessionId') !== null){
         xhr.setRequestHeader("X-Parse-Session-Token", sessionId);
       }
     }

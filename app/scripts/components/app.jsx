@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import React from 'react';
 
-import {AppBar, FlatButton, IconButton, IconMenu, MenuItem, Divider} from 'material-ui';
+import {AppBar, FlatButton, IconButton, IconMenu, MenuItem, Divider, Snackbar} from 'material-ui';
 
 import Theme from './theme.jsx'
 import User from './../models/User'
@@ -52,7 +52,9 @@ var UserMenu = React.createClass({
       </IconMenu>
     )
   }
-})
+});
+
+
 
 var App = React.createClass({
 
@@ -82,6 +84,7 @@ var App = React.createClass({
           }
 				/>
         {this.props.children}
+
     	</Theme>
 		);
   }

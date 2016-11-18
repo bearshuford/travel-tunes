@@ -7,6 +7,9 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import App from './app.jsx';
 import AddTripForm from './addTripForm.jsx';
 
+import Trip from './../models/Trip';
+import TripCollection from './../models/TripCollection';
+
 
 
 
@@ -44,10 +47,17 @@ const styles = {
 		bottom: -100,
 		zIndex: 1300
 	},
+	dialog:{
+
+	},
 	dialogTitle:{
 		border: 0
+		// marginBottom: 16
 	},
 	dialogBody: {
+
+	},
+	dialogContent: {
 
 	}
 
@@ -59,15 +69,19 @@ const styles = {
 
 
 
-var Trip = React.createClass({
+
+
+var TripRow = React.createClass({
 	render: function() {
 		var trip = this.props.trip;
+		var startDate = moment(trip.startDate).format('ll');
+		var endDate   = moment(trip.endDate).format('ll');
 		return (
 			<TableRow>
 				<TableRowColumn> {trip.city}      </TableRowColumn>
 				<TableRowColumn> {trip.state}     </TableRowColumn>
-				<TableRowColumn> {trip.startDate} </TableRowColumn>
-				<TableRowColumn> {trip.endDate}   </TableRowColumn>
+				<TableRowColumn> {startDate} </TableRowColumn>
+				<TableRowColumn> {endDate}   </TableRowColumn>
 			</TableRow>
 		);
 	}
@@ -78,7 +92,9 @@ var Calendar = React.createClass({
 
   render: function() {
 		var trips = this.props.trips.map(function(trip, i){
-			return <Trip trip={trip} key={i}/>
+			console.log('arguments', arguments);
+			console.log(trip.toJSON)
+			return <TripRow trip={trip} key={i}/>
 		});
     return (
 			<Paper style={styles.paper}>
@@ -109,14 +125,20 @@ var CalendarContainer = React.createClass({
 
 	getInitialState: function() {
 		return {
-			trips: tripList,
+			trips: new TripCollection(),
 			state: open
 		};
 	},
 
 	componentWillMount: function() {
 		var trips = this.state.trips;
-		// trips.fetch();
+		var userId = localStorage.getItem('userId');
+		trips.parseWhere('user','_User', userId).fetch().then(
+      function(){
+        this.setState({trips: trips});
+      }.bind(this)
+    );
+    return true;
 	},
 
 
@@ -130,6 +152,8 @@ var CalendarContainer = React.createClass({
 
 	handleSubmit(data) {
 		console.log('handlesubmit',data);
+		var trip = new Trip(data);
+		trip.save();
 	},
 
 
@@ -140,7 +164,7 @@ var CalendarContainer = React.createClass({
     return (
 			<App>
 				<div style={styles.page}>
-					<Calendar trips={this.state.trips}/>
+					<Calendar trips={this.state.trips.toJSON()}/>
 					<FloatingActionButton style={styles.addButton}
 						secondary={true}
 						children={<i className="material-icons">add</i>}
@@ -150,11 +174,11 @@ var CalendarContainer = React.createClass({
           title="Add a Trip"
 					titleStyle={styles.dialogTitle}
 					bodyStyle={styles.dialogBody}
+					contentStyle={styles.dialogContent}
           open={(this.props.new === true)}
 					autoScrollBodyContent={true}
 					modal={true}
         >
-          Only actions can close this dialog.
 					<AddTripForm
 						handleSubmit={this.handleSubmit}
 					/>

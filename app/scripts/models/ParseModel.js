@@ -1,12 +1,12 @@
 import Backbone from 'backbone';
-import parseSetup from './../parseUtilities';
+import setupParse from './../setupParse';
 
 
 var ParseModel = Backbone.Model.extend({
   idAttribute: 'objectId',
 
   beforeSave: function(){
-    parseSetup();
+    setupParse();
   },
 
   save: function(key, val, options){
