@@ -179,8 +179,7 @@ var AddTripForm = React.createClass({
             onChange={this.handleStartDate}
             formatDate={this.formatDate}
             autoOk={true}
-            mode="portrait"
-            container="inline"
+            mode="landscape"
             required
           />
           <FormsyDate
@@ -192,7 +191,6 @@ var AddTripForm = React.createClass({
             formatDate={this.formatDate}
             autoOk={true}
             mode="landscape"
-            container="inline"
             required
           />
         </div>

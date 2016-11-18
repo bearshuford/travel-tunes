@@ -58,6 +58,7 @@ var UserMenu = React.createClass({
 
 var App = React.createClass({
 
+
   handleLogout: function(){
     var user = new User();
     user.logout();
@@ -66,13 +67,15 @@ var App = React.createClass({
   render: function() {
     var hasUser = (localStorage.getItem('sessionToken') !== null);
     var username = localStorage.getItem('username');
-    console.log('username!');
+
+    var back = this.props.handleBack !== undefined;
+    console.log('back',back);
 
     return (
       <Theme>
   			<AppBar
     			title="final project"
-    			showMenuIconButton={false}
+    			showMenuIconButton={back}
     			onTitleTouchTap={this.handleTitle}
     			style={styles.appBar}
           titleStyle={styles.titleDiv}
@@ -81,6 +84,14 @@ var App = React.createClass({
               label={username}
               handleLogout={this.handleLogout}
 						/>
+          }
+          iconElementLeft={
+            (<IconButton
+              iconStyle={styles.icon}
+              iconClassName="material-icons"
+              onTouchTap={this.props.handleBack}
+              children="arrow_back"
+            />)
           }
 				/>
         {this.props.children}

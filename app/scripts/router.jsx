@@ -3,9 +3,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Backbone from 'backbone';
 
-import App from './components/app.jsx'
-import Login from './components/login.jsx'
-import Calendar from './components/calendar.jsx'
+import App from './components/app.jsx';
+import Login from './components/login.jsx';
+import Calendar from './components/calendar.jsx';
+import TripDetail from './components/tripDetail.jsx';
 
 
 var AppRouter = Backbone.Router.extend({
@@ -65,6 +66,11 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	tripDetail: function(id){
+		ReactDOM.render(
+			<TripDetail tripId={id}/>,
+			document.getElementById('root')
+		);
+		this.loginRedirect();
 
 	}
 

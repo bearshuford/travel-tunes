@@ -20,7 +20,7 @@ var ParseCollection = Backbone.Collection.extend({
   url: function(){
     var url = this.baseUrl;
 
-    console.log('whereClause',this.whereClause.field)
+    console.log('whereClause', this.whereClause.field)
     if(this.whereClause.field){
       var field = this.whereClause.field;
       delete this.whereClause.field;

@@ -16,6 +16,10 @@ var ParseModel = Backbone.Model.extend({
     delete this.attributes.updatedAt;
 
     return Backbone.Model.prototype.save.apply(this, arguments);
+  },
+  fetch: function() {
+    setupParse();
+    return Backbone.Collection.prototype.fetch.apply(this, arguments);
   }
 });
 
