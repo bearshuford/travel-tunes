@@ -5,7 +5,7 @@ import Backbone from 'backbone';
 
 import App from './components/app.jsx'
 import Login from './components/login.jsx'
-
+import Calendar from './components/calendar.jsx'
 
 
 var AppRouter = Backbone.Router.extend({
@@ -13,6 +13,10 @@ var AppRouter = Backbone.Router.extend({
   routes: {
     '': 'index',
     'login': 'login',
+		'trips/new': 'tripAdd',
+		'trips/:id': 'tripDetail',
+		'trips': 'calendar'
+
   },
 
   initialize: function(){
@@ -28,19 +32,13 @@ var AppRouter = Backbone.Router.extend({
   },
 
   index: function(){
-    ReactDOM.render(
-      <App/>,
-      document.getElementById('root')
-    );
-    this.loginRedirect();
+		this.navigate('trips',{trigger: true});
   },
 
   login: function(){
 
     ReactDOM.render(
-      <App>
-        <Login/>
-      </App>,
+      <Login/>,
       document.getElementById('root')
     );
 
@@ -48,7 +46,27 @@ var AppRouter = Backbone.Router.extend({
     if(loggedIn){
       this.navigate('', {trigger: true});
     }
-  }
+  },
+
+	calendar: function(){
+		ReactDOM.render(
+			<Calendar/>,
+			document.getElementById('root')
+		);
+		this.loginRedirect();
+	},
+
+	tripAdd: function(){
+		ReactDOM.render(
+			<Calendar new={true}/>,
+			document.getElementById('root')
+		);
+		this.loginRedirect();
+	},
+
+	tripDetail: function(id){
+
+	}
 
 });
 

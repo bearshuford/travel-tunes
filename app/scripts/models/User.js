@@ -1,26 +1,11 @@
 import $ from 'jquery';
 import Backbone from 'backbone';
 
-var User = Backbone.Model.extend({
+import ParseModel from './ParseModel';
+
+var User = ParseModel.extend({
 	idAttribute: 'objectId',
   urlRoot: 'https://maeve.herokuapp.com/users',
-
-	beforeSave: function(){
-    console.log('before we save')
-		$.ajaxSetup({
-			beforeSend: function(xhr){
-				xhr.setRequestHeader('X-Parse-Application-Id', 'maeve'),
-				xhr.setRequestHeader('X-Parse-REST-API-Key',   'clementine')
-			}
-		});
-    return true;
-	},
-
-	save: function (key, val, options) {
-    this.beforeSave(key, val, options);
-    return Backbone.Model.prototype.save.call(this, key, val, options);
-  },
-
 
   handleBadResponse: function(response) {
     var r = response.responseJSON;
@@ -35,18 +20,7 @@ var User = Backbone.Model.extend({
 
 
   handleResponse: function(response, username){
-
-    console.log('handleResponse', response);
-
-		$.ajaxSetup({
-			beforeSend: function(xhr){
-				xhr.setRequestHeader('X-Parse-Session-Token',  response.sessionToken);
-			}
-		});
-    console.log('response.sessionToken',response.sessionToken)
-    console.log('username:',username);
 			if(response.sessionToken){
-
 				localStorage.setItem('username', 		 username);
 				localStorage.setItem('userId', 	 	   response.objectId);
 				localStorage.setItem('sessionToken', response.sessionToken);
@@ -55,14 +29,11 @@ var User = Backbone.Model.extend({
 
 
   signup: function(username, password, callback){
-    var self = this;
-    console.log('username', username);
     var user = {'username': username, 'password': password};
-    console.log('user',user);
+    var self = this;
 
     this.save(user).then(function(response){
 			self.handleResponse(response, username);
-      console.log(callback);
 			callback();
     });
   },
@@ -95,5 +66,6 @@ var User = Backbone.Model.extend({
     Backbone.history.navigate('login', {trigger: true})
   }
 });
+
 
 export default User;

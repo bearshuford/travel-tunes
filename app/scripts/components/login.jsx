@@ -6,6 +6,7 @@ import {Paper, RaisedButton} from 'material-ui'
 import Formsy from 'formsy-react';
 import {FormsyText} from 'formsy-material-ui/lib';
 
+import App from './app.jsx';
 import User from './../models/User';
 
 
@@ -113,22 +114,24 @@ var Login = React.createClass({
 
   render: function(){
     return(
-    <div style={styles.login}>
-      <Paper style={styles.paper}>
-        <h3 style={styles.header}>Sign Up</h3>
-        <UserForm
-          label="Sign Up"
-          handleSubmit={this.handleSignUp}
-          />
-      </Paper>
-      <Paper style={styles.paper}>
-          <h3 style={styles.header}>Log In</h3>
-        <UserForm
-          label="Log In"
-          handleSubmit={this.handleLogin}
-          />
-      </Paper>
-    </div>
+   	<App>
+	    <div style={styles.login}>
+	      <Paper style={styles.paper}>
+	        <h3 style={styles.header}>Sign Up</h3>
+	        <UserForm
+	          label="Sign Up"
+	          handleSubmit={this.handleSignUp}
+	          />
+	      </Paper>
+	      <Paper style={styles.paper}>
+	          <h3 style={styles.header}>Log In</h3>
+	        <UserForm
+	          label="Log In"
+	          handleSubmit={this.handleLogin}
+	          />
+	      </Paper>
+	    </div>
+		</App>
     );
   }
 });
