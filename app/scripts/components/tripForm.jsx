@@ -1,13 +1,12 @@
 import $ from 'jquery';
 import React from 'react';
-
 import moment from 'moment';
+
+
 
 import Formsy from 'formsy-react';
 import {FormsySelect, FormsyText, FormsyDate} from 'formsy-material-ui/lib';
-
 import {FlatButton, RaisedButton, MenuItem} from 'material-ui';
-
 
 
 const styles = {
@@ -55,13 +54,7 @@ const styles = {
 
 
 
-
-
-
-
-
-var AddTripForm = React.createClass({
-
+var TripForm = React.createClass({
 
   getInitialState: function() {
     var today = new Date();
@@ -195,6 +188,8 @@ var AddTripForm = React.createClass({
           />
         </div>
 
+
+
       <div style={styles.buttons}>
         <FlatButton
           style={styles.cancel}
@@ -218,4 +213,4 @@ var AddTripForm = React.createClass({
 
 
 
-export default AddTripForm;
+export default TripForm;

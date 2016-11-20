@@ -2,6 +2,7 @@ import $ from 'jquery';
 import Backbone from 'backbone';
 
 import ParseModel from './ParseModel';
+import setupParse from './../setupParse';
 
 var User = ParseModel.extend({
 	idAttribute: 'objectId',
@@ -44,9 +45,17 @@ var User = ParseModel.extend({
     var path = '?username='+username+'&password='+encodeURI(password);
     var self = this;
 
-    this.beforeSave();
-    $.get(url + path).then(function(response){
-			self.handleResponse(response, username);
+
+    // $.get(url + path).then(function(response){
+    //   self.handleResponse(response, username);
+    // 	callback();
+    // });
+    $.ajax({
+      type: 'GET',
+      url: url + path,
+      beforeSend: setupParse
+    }).done(function(response){
+      self.handleResponse(response, username);
     	callback();
     });
   },
@@ -58,9 +67,11 @@ var User = ParseModel.extend({
     var token = localStorage.getItem('sessionToken');
     localStorage.clear();
 
-    this.beforeSave();
-    $.post(url).then(function(response){
-      // Backbone.history.navigate('login', {trigger: true})
+    $.ajax({
+      type: 'POST',
+      url: url,
+      beforeSend: setupParse
+    }).done(function(response){
       console.log('signed out');
     });
     Backbone.history.navigate('login', {trigger: true})

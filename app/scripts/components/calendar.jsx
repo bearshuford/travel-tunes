@@ -6,7 +6,7 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import {Paper, Dialog, FlatButton, IconButton, FloatingActionButton} from 'material-ui';
 
 import App from './app.jsx';
-import AddTripForm from './addTripForm.jsx';
+import TripForm from './tripForm.jsx';
 
 import Trip from './../models/Trip';
 import TripCollection from './../models/TripCollection';
@@ -73,19 +73,19 @@ var TripRow = React.createClass({
 		var endDate   = moment(trip.get('endDate')).format('ll');
 		return (
 			<TableRow>
+				<TableRowColumn> {city}      </TableRowColumn>
+				<TableRowColumn> {state}     </TableRowColumn>
+				<TableRowColumn> {startDate} </TableRowColumn>
+				<TableRowColumn> {endDate}   </TableRowColumn>
 				<TableRowColumn style={styles.iconColumn}>
 					<IconButton
 						iconStyle={styles.linkIcon}
 						href={ '#trips/' + id}
 						iconClassName="material-icons"
-						children="event"
+						children="music_note"
 					/>
 
 				</TableRowColumn>
-				<TableRowColumn> {city}      </TableRowColumn>
-				<TableRowColumn> {state}     </TableRowColumn>
-				<TableRowColumn> {startDate} </TableRowColumn>
-				<TableRowColumn> {endDate}   </TableRowColumn>
 
 			</TableRow>
 		);
@@ -116,12 +116,12 @@ var Calendar = React.createClass({
 								displaySelectAll={false}
 							>
 								<TableRow>
-									<TableHeaderColumn style={styles.iconColumn}/>
 									<TableHeaderColumn>City</TableHeaderColumn>
 									<TableHeaderColumn>State</TableHeaderColumn>
 									<TableHeaderColumn>Start Date</TableHeaderColumn>
 									<TableHeaderColumn>End Date</TableHeaderColumn>
-								</TableRow>
+									<TableHeaderColumn style={styles.iconColumn}/>
+							</TableRow>
 							</TableHeader>
 							<TableBody
 								displayRowCheckbox={false}
@@ -210,7 +210,7 @@ var CalendarContainer = React.createClass({
 					autoScrollBodyContent={true}
 					modal={true}
         >
-					<AddTripForm
+					<TripForm
 						handleSubmit={this.handleSubmit}
 					/>
         </Dialog>

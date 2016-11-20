@@ -1,17 +1,18 @@
 import $ from 'jquery';
 
-var setupParse = function(sessionId){
-  $.ajaxSetup({
-    beforeSend: function(xhr){
-      xhr.setRequestHeader("X-Parse-Application-Id", 'maeve');
-      xhr.setRequestHeader("X-Parse-REST-API-Key", 'clementine');
+var setupParse = function(xhr){
+    console.log('beforeSend');
+    var token = localStorage.getItem('sessionToken');
 
-      if(localStorage.getItem('sessionId') !== null){
-        xhr.setRequestHeader("X-Parse-Session-Token", sessionId);
-      }
+    xhr.setRequestHeader("X-Parse-Application-Id", 'maeve');
+    xhr.setRequestHeader("X-Parse-REST-API-Key", 'clementine');
+
+    if(token !== null) {
+      xhr.setRequestHeader("X-Parse-Session-Token", token);
     }
-  });
-}
+
+
+};
 
 
 export default setupParse;
