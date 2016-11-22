@@ -32,6 +32,7 @@
     "react-infinite-calendar": "^1.2.2",
     "react-md-spinner": "^0.1.0",
     "react-tap-event-plugin": "^2.0.0",
+    "spotify-web-api-js": "^0.21.1",
     "strictify": "^0.2.0",
     "uglify-js": "^2.6.1",
     "underscore": "^1.8.3",
