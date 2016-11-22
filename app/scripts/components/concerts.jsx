@@ -17,34 +17,33 @@ const styles = {
 	concerts: {
 		display: 'flex',
 		flexFlow: 'row wrap',
-		justifyContent: 'flex-start'
+		justifyContent: 'stretch'
 	},
 	concert: {
-		flex: '1 0 200',
-
-		minWidth: 200,
+		// flex: '1 0 200',
+		// minWidth: 200,
 		margin: 8
-
 	},
 	artists: {
 		display: 'flex',
 		flexFlow: 'row wrap',
-		justifyContent: 'flex-start'
+		justifyContent: 'flex-start',
+		maxWidth: 800
 	},
 	artist: {
 		marginRight: 8,
 		height: 36,
 		lineHeight: 36,
-		borderRadius: '18px'
+		borderRadius: '18px',
+		marginBottom: 6
 	},
 	spotify: {
 		color: 'white',
 		lineHeight: '36px'
 	},
 	avatar: {
-		height: 36,
 		width: 36,
-		border: '3px transparent'
+		height: 36
 	},
 	label: {
 		lineHeight: '36px'
@@ -58,7 +57,9 @@ var ArtistChip = React.createClass({
 
 	getInitialState: function() {
 		return {
-			artist: this.props.artist
+			artist: this.props.artist,
+			hover: false,
+			added: false
 		};
 	},
 
@@ -72,19 +73,62 @@ var ArtistChip = React.createClass({
 		this.state.artist.search(this.updateArtist);
 	},
 
+	addArtist: function(artist){
+		this.props.addArtist(artist, this.updateRemoved);
+	},
+
+	updateRemoved: function(artist){
+		this.setState({'artist': artist, 'added': false});
+		this.props.removeArtist(artist);
+	},
+
+
 	handleClick: function(e){
 		e.preventDefault();
 		console.log(this.state.artist.toJSON());
-		this.state.artist.getTopTracks();
+
+		var artist =  this.state.artist;
+		var added  =  artist.get('added');
+
+		if(!added) {
+			artist.set({added: true});
+			this.addArtist(artist);
+		}
+		else {
+			artist.set({added: false});
+			this.updateRemoved(artist);
+		}
+
+		// this.state.artist.getTopTracks();
+
+		this.setState({added: !this.state.added});
+	},
+
+	onMouseOver: function(){
+		this.setState({hover: true});
+	},
+
+	onMouseLeave: function(){
+		this.setState({hover: false});
 	},
 
 	render: function(){
 		var artist = this.props.artist;
 		var spotify = artist.get('spotify');
 		var images = artist.get('images');
-		var color = spotify ? '#1DB954' : null;
-		var labelStyle = spotify ? styles.spotify : styles.label;
-		var href = spotify ? artist.get('spotifyLink') : null;
+
+
+		// var color 		  = spotify ? '#1DB954' : null;
+		var color 		  = spotify ? '#23CF5F'  : null;
+		var labelStyle  = spotify ? styles.spotify : styles.label;
+		var href 			  = spotify ? artist.get('spotifyLink') : null;
+		var handleClick = spotify ? this.handleClick : (function(){});
+
+		var hover = this.state.hover;
+		var added = this.state.added;
+
+		var avatarIcon = hover ? <i className="material-icons">playlist_add</i> : null;
+		avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : avatarIcon;
 
 
 		return (
@@ -92,15 +136,19 @@ var ArtistChip = React.createClass({
 				style={styles.artist}
 				children={artist.get('name')}
 				backgroundColor={color}
-				onTouchTap={this.handleClick}
+				onTouchTap={handleClick}
 				href={null}
 				labelStyle={labelStyle}
+				onMouseOver={this.onMouseOver}
+				onMouseLeave={this.onMouseLeave}
 			>
 
 			{spotify && images.length > 2 &&
 				 <Avatar
-					 src={images[images.length -1].url}
-					 style={styles.avatar}/>	}
+					 src={avatarIcon ? null : images[images.length -1].url}
+					 style={styles.avatar}
+					 icon={avatarIcon}
+					 backgroundColor="transparent"/>	}
 					 {artist.get('name')}
 			</Chip>
 		);
@@ -136,7 +184,7 @@ var Concerts = React.createClass({
 				crossDomain: true,
 		  data : {
 				// 'sort': 'score.desc',
-				'per_page': "100",
+				'per_page': "50",
 				'taxonomies.name': 'concert',
 		    'venue.state': trip.get('state'),
 				'venue.city': trip.get('city'),
@@ -156,12 +204,22 @@ var Concerts = React.createClass({
 
 
 	render: function() {
-		// var tracks = this.state.concerts.getAllArtists().getTopTracks();
+
+
+		// var artists = this.state.concerts.getAllArtists();
+		// console.log('artists', artists)
+		// console.log('spotify artists',artists.spotifyArtists());
+		// console.log('artists', artists);
+
+
+		var self = this;
 		// console.log(tracks);
 		var concerts = this.state.concerts.map(function(concert,i){
 			var date = moment(concert.get('date'));
 			var day  = date.format('ddd, MMM Do');
 			var time = date.format('h:mm a');
+
+
 			return (
 				<Card key={i} style={styles.concert}>
 					<CardHeader
@@ -174,10 +232,13 @@ var Concerts = React.createClass({
 					<CardText style={styles.artists}>
 						{concert.get('artists').map(
 							function(artist, i){
+
 								return  <ArtistChip
 													key={i}
-													artist={artist}/>;
-						})}
+													artist={artist}
+													addArtist={self.props.addArtist}
+													removeArtist={self.props.removeArtist}/>;
+							})}
 					</CardText>
 				</Card>
 			);

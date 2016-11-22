@@ -17,16 +17,52 @@ var Artist = Backbone.Model.extend({
 
   defaults: {
     name: '',
-    spotify: false
+    spotify: false,
+    added: false
   },
 
-  getTopTracks: function(callback){
+  getTopTracks: function(number, callback){
     var self = this;
 
+    if(!this.get('spotify')){
+      console.log('bail');
+      return false;
+    }
+
+    if(!number) {
+      number = 3;
+    }
+    console.log('top track yeah');
     this.spotifyApi.getArtistTopTracks(this.get('spotifyId'), 'US')
       .then(function(data){
+
         console.log('top tracks:', data.tracks);
+
+        var tracks = data.tracks.slice(0,number).map(function(track){
+
+          var album = {
+            type:   track.album['album_type'],
+            id:     track.album.id,
+            images: track.album.images,
+            uri:    track.album.uri
+          };
+          return {
+            album:      track.album,
+            uri:        track.uri,
+            id:         track.id,
+            name:       track.name,
+            explicit:   track.explicit,
+            mp3Url:     track['preview_url'],
+            duration:   track['duration_ms'],
+            number:     track['track_number'],
+            popularity: track.popularity
+          };
+
+        });
+        console.log('tracks', tracks);
+        return tracks;
       },
+
       function(err) {
         console.error(err);
       });
@@ -48,7 +84,7 @@ var Artist = Backbone.Model.extend({
         var r = data.artists.items[0];
         console.log('Search artists by', self.get('name'), ':', data);
 
-        if(self.get('name').toUpperCase()  !== r.name.toUpperCase()){
+        if(self.get('name').toUpperCase() !== r.name.toUpperCase()){
           artist = {
             spotify: false
           };        }

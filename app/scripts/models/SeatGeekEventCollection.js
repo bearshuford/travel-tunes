@@ -46,18 +46,15 @@ var ConcertCollection = Backbone.Collection.extend({
   getAllArtists: function(){
     console.log('this',this);
     var self = this;
-    var artists = self.map(function(concert){
-      console.log('concert', concert);
-      return concert.get('artists');
+    var a = new ArtistCollection();
+    self.each(function(concert){
+      concert.get('artists').each(function(artist){
+        a.add(artist, {silent:true})
+      });
     });
 
-    var a = new ArtistCollection(artists);
 
-
-
-    console.log('artists',a);
-    a = _.flatten(a, true);
-    console.log('artists',a);
+    console.log('all artists',a);
     return a;
   }
 

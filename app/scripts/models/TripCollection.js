@@ -7,8 +7,6 @@ var TripCollection = ParseCollection.extend({
   model: Trip,
   baseUrl: 'https://maeve.herokuapp.com/classes/Trip'
 
-
-
 });
 
 export default TripCollection;

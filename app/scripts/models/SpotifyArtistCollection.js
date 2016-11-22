@@ -7,14 +7,11 @@ import Artist from './SpotifyArtist';
 var ArtistCollection = Backbone.Collection.extend({
   model: Artist,
 
-  defaults: {
-    spotify: false
-  },
 
   getTopTracks: function(number){
-    var artists = this.get('spotify') ? this : this.spotifyArtists();
-    var tracks = artists.map(function(artist){
-      artist.getTopTracks();
+    var tracks = this.map(function(artist){
+      // artist.getTopTracks().then();
+      return artist.getTopTracks();
     });
 
     console.log('tracks:',tracks);
@@ -22,8 +19,12 @@ var ArtistCollection = Backbone.Collection.extend({
   },
 
   spotifyArtists: function(){
-    this.set({spotify: true});
-    return this.where({spotify: true});
+    var sa = this.map(function(artist){
+      if(artist.get('spotify'))
+        console.log('SPOTIFY!!!');
+    });
+    console.log('saaa',sa);
+    return new ArtistCollection(sa);
   }
 
 });
