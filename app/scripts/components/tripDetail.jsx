@@ -3,7 +3,7 @@ import React from 'react';
 import moment from 'moment';
 import Backbone from 'backbone';
 
-import {Paper, Drawer, MenuItem, Chip, Avatar, RaisedButton} from 'material-ui';
+import {Paper, Drawer, MenuItem, Chip, Avatar, RaisedButton, FloatingActionButton} from 'material-ui';
 
 import App from './app.jsx';
 import Concerts from './concerts.jsx';
@@ -41,6 +41,7 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'row nowrap',
 		justifyContent: 'space-between',
+		alignItems: 'center',
 		padding: 20,
 		flex: '1 1 auto',
 		minWidth: 0,
@@ -53,7 +54,10 @@ const styles = {
 		alignItems: 'flex-start',
 		justifyContent: 'flex-start',
 		alignContent: 'flex-start'
-	}
+	},
+	floatingActionButton: {
+
+	},
 
 };
 
@@ -90,9 +94,14 @@ var ArtistChip = React.createClass({
 
 var SelectedArtists = React.createClass({
 
+
+
 	getTracks: function(){
 		console.log(this.props.artists);
-		console.log(this.props.artists.getTopTracks());
+		this.props.artists.each(function(artist){
+			 artist.getTopTracks();
+		});
+
 	},
 
 	render: function() {
@@ -106,9 +115,10 @@ var SelectedArtists = React.createClass({
 		return (
 			<div style={styles.playlistForm}>
 				<div style={styles.selected}>{artists}</div>
-				<RaisedButton
-					label="get top tracks"
-					onTouchTap={this.getTracks}/>
+				<FloatingActionButton
+					children={<i className="material-icons">playlist_play</i>}
+					onTouchTap={this.getTracks}
+					style={styles.floatingActionButton}/>
 			</div>
 		);
 	}

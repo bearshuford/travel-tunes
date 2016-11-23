@@ -35,7 +35,7 @@ const styles = {
 		zIndex: 1300
 	},
 	linkIcon: {
-		color: '#00BCD4'
+		color: '#23CF5F'
 	},
 	iconColumn: {
 		width: 80
@@ -130,12 +130,7 @@ var Calendar = React.createClass({
 						</Table>)
 					:
 						<div style={styles.direction}>add a trip</div>
-
-
 				}
-
-
-
 
 			</Paper>
 		);

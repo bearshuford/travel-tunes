@@ -2,6 +2,8 @@ import $ from 'jquery';
 import Backbone from 'backbone';
 import Spotify from 'spotify-web-api-js';
 
+import TrackCollection from './SpotifyTrackCollection';
+
 
 import setupParse from './../setupParse'; // setupParse(clear=true)
 
@@ -18,7 +20,8 @@ var Artist = Backbone.Model.extend({
   defaults: {
     name: '',
     spotify: false,
-    added: false
+    added: false,
+    tracks: new TrackCollection()
   },
 
   getTopTracks: function(number, callback){
@@ -60,6 +63,7 @@ var Artist = Backbone.Model.extend({
 
         });
         console.log('tracks', tracks);
+        self.get('tracks').add(tracks);
         return tracks;
       },
 
