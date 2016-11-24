@@ -71,8 +71,6 @@ var ArtistChip = React.createClass({
 		this.props.removeArtist(this.props.artist);
 	},
 
-
-
 	render: function() {
 		var artist = this.props.artist;
 		var images = artist.get('images');
@@ -80,6 +78,7 @@ var ArtistChip = React.createClass({
 			<Chip
 				style={styles.artist}
 				onTouchTap={this.props.onTouchTap}
+				onRequestDelete={this.removeArtist}
 				>
 				<Avatar
 					src={images[images.length -1].url}/>
@@ -94,10 +93,7 @@ var ArtistChip = React.createClass({
 
 var SelectedArtists = React.createClass({
 
-
-
 	getTracks: function(){
-		console.log(this.props.artists);
 		this.props.artists.each(function(artist){
 			 artist.getTopTracks();
 		});
@@ -124,8 +120,6 @@ var SelectedArtists = React.createClass({
 	}
 
 });
-
-
 
 
 
@@ -169,7 +163,6 @@ var TripDetail = React.createClass({
 	addArtist: function(artist){
 		var artists = this.state.selectedArtists;
 		artists.add(artist);
-		console.log('selected artists', artists);
 		this.setState({selectedArtists: artists});
 	},
 
@@ -177,7 +170,6 @@ var TripDetail = React.createClass({
 		var artists = this.state.selectedArtists;
 		artist.set('added', false);
 		artists.remove(artist);
-		console.log('selected artists', artists);
 		this.setState({selectedArtists: artists});
 	},
 
