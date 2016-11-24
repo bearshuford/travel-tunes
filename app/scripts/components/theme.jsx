@@ -5,7 +5,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 const muiTheme = getMuiTheme({
   palette: {
-    primary1Color: '#23CF5F'
+    primary1Color: '#23CF5F',
+    primary2Color: '#000'
   },
   appBar: {
     // height: 50,

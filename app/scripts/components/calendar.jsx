@@ -188,7 +188,6 @@ var CalendarContainer = React.createClass({
 			<App>
 				<div style={styles.page}>
 					<h1>My Trips</h1>
-					<div style={{fontSize:11}}>(TODO: place on calendar)</div>
 					<Calendar trips={this.state.trips}/>
 
 					<FloatingActionButton style={styles.addButton}
