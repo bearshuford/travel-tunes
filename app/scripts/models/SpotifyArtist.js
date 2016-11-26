@@ -2,6 +2,7 @@ import $ from 'jquery';
 import Backbone from 'backbone';
 import Spotify from 'spotify-web-api-js';
 
+
 import TrackCollection from './SpotifyTrackCollection';
 
 
@@ -108,9 +109,6 @@ var Artist = Backbone.Model.extend({
 
       self.set(artist);
       console.log(self.toJSON());
-      if(callback){
-        callback(self);
-      };
 
     }, function(err) {
       console.error(err);

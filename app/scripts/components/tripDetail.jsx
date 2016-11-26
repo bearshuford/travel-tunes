@@ -12,6 +12,8 @@ import Trip from './../models/Trip';
 import ArtistCollection from './../models/SpotifyArtistCollection';
 import SGEventCollection from './../models/SeatGeekEventCollection';
 
+require('backbone-react-component');
+
 
 const styles = {
 	page:{
@@ -21,13 +23,18 @@ const styles = {
 		alignItems: 'center',
 		fontFamily: '"Roboto", sans-serif'
 	},
-	paper: {
-		padding: 20,
+	selectedArtists: {
+		position: 'fixed',
+		top: 64,
+		left: 5,
 		width: '100%',
 		display: 'flex',
 		flexFlow: 'row nowrap',
 		justifyContent: 'space-between',
-		alignItems: 'center'
+		alignItems: 'flex-start',
+		paddingTop: 10,
+		zIndex: 4,
+		background: 'white'
 	},
 	eventDetails:{
 		flex: '0 0 auto'
@@ -41,8 +48,8 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'row nowrap',
 		justifyContent: 'space-between',
-		alignItems: 'center',
-		padding: 20,
+		alignItems: 'flex-start',
+		padding: 0,
 		flex: '1 1 auto',
 		minWidth: 0,
 		marginLeft: 20
@@ -56,7 +63,7 @@ const styles = {
 		alignContent: 'flex-start'
 	},
 	floatingActionButton: {
-
+		marginRight: 10
 	},
 
 };
@@ -67,12 +74,15 @@ const styles = {
 
 var ArtistChip = React.createClass({
 
+	mixins: [Backbone.React.Component.mixin],
+
 	removeArtist: function(){
-		this.props.removeArtist(this.props.artist);
+		this.getModel().set({added: false});
+		this.props.removeArtist(this.getModel());
 	},
 
 	render: function() {
-		var artist = this.props.artist;
+		var artist = this.getModel();
 		var images = artist.get('images');
 		return (
 			<Chip
@@ -80,8 +90,8 @@ var ArtistChip = React.createClass({
 				onTouchTap={this.props.onTouchTap}
 				onRequestDelete={this.removeArtist}
 				>
-				<Avatar
-					src={images[images.length -1].url}/>
+				{/* <Avatar
+					src={images[images.length -1].url}/>*/}
 				{artist.get('name')}
 			</Chip>
 		);
@@ -93,28 +103,39 @@ var ArtistChip = React.createClass({
 
 var SelectedArtists = React.createClass({
 
+	mixins: [Backbone.React.Component.mixin],
+
+
 	getTracks: function(){
-		this.props.artists.each(function(artist){
+		this.getCollection().each(function(artist){
 			 artist.getTopTracks();
 		});
 
 	},
 
+	removeArtist(artist){
+		this.getCollection().remove(artist);
+	},
+
 	render: function() {
 		var self = this;
-		var artists = this.props.artists.map(function(artist,i){
+
+		var artistChips = this.getCollection().map(function(artist,i){
 			return <ArtistChip
 								key={i}
-								artist={artist}
-								removeArtist={self.props.removeArtist}/>;
+								model={artist}
+								removeArtist={self.removeArtist}/>;
 						});
 		return (
 			<div style={styles.playlistForm}>
-				<div style={styles.selected}>{artists}</div>
-				<FloatingActionButton
-					children={<i className="material-icons">playlist_play</i>}
-					onTouchTap={this.getTracks}
-					style={styles.floatingActionButton}/>
+				<div style={styles.selected}>{artistChips}</div>
+				{artistChips.length > 0 &&
+					<FloatingActionButton
+						children={<i className="material-icons">playlist_play</i>}
+						onTouchTap={this.getTracks}
+						style={styles.floatingActionButton}
+						mini={false}/>
+				}
 			</div>
 		);
 	}
@@ -126,6 +147,8 @@ var SelectedArtists = React.createClass({
 
 
 var TripDetail = React.createClass({
+
+
 
 	getInitialState: function() {
 		return {
@@ -175,9 +198,18 @@ var TripDetail = React.createClass({
 
 
   render: function() {
+
 		var trip = this.state.trip;
 		var startDate = moment(trip.get('startDate')).format('ll');
 		var endDate = moment(trip.get('endDate')).format('ll');
+
+		var startTitle = moment(trip.get('startDate')).format('l');
+		var endTitle = moment(trip.get('endTitle')).format('l');
+
+
+		var location = trip.get('city') + ', ' + trip.get('state');
+		var daterange = startTitle + ' - ' + endTitle;
+		var title = location + ' | ' + daterange
 
 		if(!this.state.fetched){
 			return (
@@ -188,17 +220,16 @@ var TripDetail = React.createClass({
 		}
 
     return (
-			<App handleBack={this.handleBack}>
+			<App
+				title={title}
+				fixed={true}
+				handleBack={this.handleBack}>
 				<div style={styles.page}>
 
-					<div style={styles.paper}>
-						<div style={styles.eventDetails}>
-							<h1>{trip.get('city') + ', ' + trip.get('state')}</h1>
-							<h2>{startDate + ' - ' + endDate}</h2>
-						</div>
+					<div style={styles.selectedArtists}>
 
 						<SelectedArtists
-							artists={this.state.selectedArtists}
+							collection={this.state.selectedArtists}
 							removeArtist={this.removeArtist}
 							/>
 

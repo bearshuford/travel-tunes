@@ -4,7 +4,6 @@ import React from 'react';
 import moment from 'moment';
 import Backbone from 'backbone';
 
-
 import {Avatar, Card, CardHeader, CardTitle, CardText, Chip} from 'material-ui';
 
 import Trip from './../models/Trip';
@@ -12,12 +11,15 @@ import Artist from './../models/SpotifyArtist';
 
 import SGEventCollection from './../models/SeatGeekEventCollection';
 
+require('backbone-react-component');
+
 
 const styles = {
 	concerts: {
 		display: 'flex',
 		flexFlow: 'row wrap',
-		justifyContent: 'stretch'
+		justifyContent: 'stretch',
+		marginTop: 116
 	},
 	concert: {
 		// flex: '1 0 200',
@@ -55,22 +57,21 @@ const styles = {
 
 var ArtistChip = React.createClass({
 
+
+  mixins: [Backbone.React.Component.mixin],
+
 	getInitialState: function() {
 		return {
-			artist: this.props.artist,
 			hover: false,
 			added: false
 		};
 	},
 
-	updateArtist: function(newArtist) {
-		var artist = new Artist(newArtist.toJSON());
-		this.setState({'artist': artist});
-	},
+
 
 	componentWillMount: function() {
-		var artist = this.state.artist;
-		this.state.artist.search(this.updateArtist);
+		var artist = this.getModel();
+		artist.search();
 	},
 
 	addArtist: function(artist){
@@ -78,16 +79,16 @@ var ArtistChip = React.createClass({
 	},
 
 	updateRemoved: function(artist){
-		this.setState({'artist': artist, 'added': false});
+		// this.setState({'artist': artist, 'added': false});
 		this.props.removeArtist(artist);
 	},
 
 
 	handleClick: function(e){
 		e.preventDefault();
-		console.log(this.state.artist.toJSON());
+		console.log(this.getModel().toJSON());
 
-		var artist =  this.state.artist;
+		var artist =  this.getModel();
 		var added  =  artist.get('added');
 
 		if(!added) {
@@ -113,7 +114,7 @@ var ArtistChip = React.createClass({
 	},
 
 	render: function(){
-		var artist = this.props.artist;
+		var artist = this.getModel();
 		var spotify = artist.get('spotify');
 		var images = artist.get('images');
 
@@ -125,7 +126,7 @@ var ArtistChip = React.createClass({
 		var handleClick = spotify ? this.handleClick : (function(){});
 
 		var hover = this.state.hover;
-		var added = this.state.added;
+		var added = artist.get('added');
 
 		var avatarIcon = hover ? <i className="material-icons">playlist_add</i> : null;
 		avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : avatarIcon;
@@ -215,9 +216,9 @@ var Concerts = React.createClass({
 		var self = this;
 		// console.log(tracks);
 		var concerts = this.state.concerts.map(function(concert,i){
-			var date = moment(concert.get('date'));
-			var day  = date.format('ddd, MMM Do');
-			var time = date.format('h:mm a');
+		var date = moment(concert.get('date'));
+		var day  = date.format('ddd, MMM Do');
+		var time = date.format('h:mm a');
 
 
 			return (
@@ -235,7 +236,7 @@ var Concerts = React.createClass({
 
 								return  <ArtistChip
 													key={i}
-													artist={artist}
+													model={artist}
 													addArtist={self.props.addArtist}
 													removeArtist={self.props.removeArtist}/>;
 							})}

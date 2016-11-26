@@ -11,6 +11,11 @@ const styles = {
   appBar: {
   	marginBottom: '8px',
 	},
+  fixed: {
+    position: 'fixed',
+    top: 0,
+    left: 0
+  },
 	icon: {
     fontSize: 26,
     color: 'white',
@@ -21,6 +26,9 @@ const styles = {
     fontSize: 24,
     hoverColor: 'blue',
     cursor: 'default'
+  },
+  titleDiv: {
+
   }
 };
 
@@ -71,13 +79,15 @@ var App = React.createClass({
     var back = this.props.handleBack !== undefined;
     console.log('back',back);
 
+    var title = this.props.title ? this.props.title : "final project";
+
     return (
       <Theme>
   			<AppBar
-    			title="final project"
+    			title={title}
     			showMenuIconButton={back}
     			onTitleTouchTap={this.handleTitle}
-    			style={styles.appBar}
+    			style={this.props.fixed ? styles.fixed : styles.appBar}
           titleStyle={styles.titleDiv}
           iconElementRight={!hasUser ? null :
             <UserMenu
