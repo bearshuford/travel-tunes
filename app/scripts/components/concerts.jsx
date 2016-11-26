@@ -19,7 +19,7 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
-		marginTop: 116
+		marginTop: 108
 	},
 	concert: {
 		// flex: '1 0 200',
@@ -62,7 +62,7 @@ var ArtistChip = React.createClass({
 
 	getInitialState: function() {
 		return {
-			hover: false,
+			// hover: false,
 			added: false
 		};
 	},
@@ -105,13 +105,13 @@ var ArtistChip = React.createClass({
 		this.setState({added: !this.state.added});
 	},
 
-	onMouseOver: function(){
-		this.setState({hover: true});
-	},
-
-	onMouseLeave: function(){
-		this.setState({hover: false});
-	},
+	// onMouseOver: function(){
+	// 	this.setState({hover: true});
+	// },
+	//
+	// onMouseLeave: function(){
+	// 	this.setState({hover: false});
+	// },
 
 	render: function(){
 		var artist = this.getModel();
@@ -120,16 +120,17 @@ var ArtistChip = React.createClass({
 
 
 		// var color 		  = spotify ? '#1DB954' : null;
-		var color 		  = spotify ? '#23CF5F'  : null;
-		var labelStyle  = spotify ? styles.spotify : styles.label;
+		var labelStyle  = spotify && added ? styles.spotify : styles.label;
 		var href 			  = spotify ? artist.get('spotifyLink') : null;
 		var handleClick = spotify ? this.handleClick : (function(){});
 
 		var hover = this.state.hover;
 		var added = artist.get('added');
+		var color = spotify && added ? '#23CF5F'  : null;
+		var iconColor = spotify && !added ? '#23CF5F'  : null;
 
-		var avatarIcon = hover ? <i className="material-icons">playlist_add</i> : null;
-		avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : avatarIcon;
+
+		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">playlist_add</i>;
 
 
 		return (
