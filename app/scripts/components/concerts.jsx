@@ -1,14 +1,14 @@
 
-import $ from 'jquery';
-import React from 'react';
-import moment from 'moment';
+import $ 				from 'jquery';
+import _ 				from 'underscore';
+import React 		from 'react';
+import moment 	from 'moment';
 import Backbone from 'backbone';
 
 import {Avatar, Card, CardHeader, CardTitle, CardText, Chip} from 'material-ui';
 
-import Trip from './../models/Trip';
+import Trip   from './../models/Trip';
 import Artist from './../models/SpotifyArtist';
-
 import SGEventCollection from './../models/SeatGeekEventCollection';
 
 require('backbone-react-component');
@@ -19,11 +19,9 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
-		marginTop: 108
+		marginTop: 118
 	},
 	concert: {
-		// flex: '1 0 200',
-		// minWidth: 200,
 		margin: 8
 	},
 	artists: {
@@ -49,6 +47,9 @@ const styles = {
 	},
 	label: {
 		lineHeight: '36px'
+	},
+	cardTitle: {
+		fontSize: 18
 	}
 
 };
@@ -60,13 +61,6 @@ var ArtistChip = React.createClass({
 
   mixins: [Backbone.React.Component.mixin],
 
-	getInitialState: function() {
-		return {
-			// hover: false,
-			added: false
-		};
-	},
-
 
 
 	componentWillMount: function() {
@@ -75,13 +69,9 @@ var ArtistChip = React.createClass({
 	},
 
 	addArtist: function(artist){
-		this.props.addArtist(artist, this.updateRemoved);
 	},
 
-	updateRemoved: function(artist){
-		// this.setState({'artist': artist, 'added': false});
-		this.props.removeArtist(artist);
-	},
+
 
 
 	handleClick: function(e){
@@ -93,45 +83,31 @@ var ArtistChip = React.createClass({
 
 		if(!added) {
 			artist.set({added: true});
-			this.addArtist(artist);
+			this.props.addArtist(artist);
 		}
 		else {
-			artist.set({added: false});
-			this.updateRemoved(artist);
+			artist.set({added: false})
+			this.props.removeArtist(artist);
 		}
 
-		// this.state.artist.getTopTracks();
-
-		this.setState({added: !this.state.added});
 	},
 
-	// onMouseOver: function(){
-	// 	this.setState({hover: true});
-	// },
-	//
-	// onMouseLeave: function(){
-	// 	this.setState({hover: false});
-	// },
+
 
 	render: function(){
 		var artist = this.getModel();
 		var spotify = artist.get('spotify');
+		var added = artist.get('added');
 		var images = artist.get('images');
 
-
-		// var color 		  = spotify ? '#1DB954' : null;
 		var labelStyle  = spotify && added ? styles.spotify : styles.label;
 		var href 			  = spotify ? artist.get('spotifyLink') : null;
-		var handleClick = spotify ? this.handleClick : (function(){});
+		var handleClick = spotify ? this.handleClick : undefined;
 
-		var hover = this.state.hover;
-		var added = artist.get('added');
 		var color = spotify && added ? '#23CF5F'  : null;
 		var iconColor = spotify && !added ? '#23CF5F'  : null;
 
-
 		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">playlist_add</i>;
-
 
 		return (
 			<Chip
@@ -160,27 +136,26 @@ var ArtistChip = React.createClass({
 
 
 var Concerts = React.createClass({
+
+	mixins: [Backbone.React.Component.mixin],
+
 	getInitialState: function() {
 		return {
-			concerts: new SGEventCollection()
+			fetched: false
 		};
 	},
 
-	componentWillMount: function() {
-		var trip    = this.props.trip;
+	componentDidMount: function() {
+		var trip    = this.getModel();
+		var concerts = this.getCollection();
 
 		var arrival = moment(trip.get('startDate')).format('YYYY-MM-DD');
 		var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
 
-		var concerts = this.state.concerts;
-
-
-		if(!trip) {
-			return false;
-		}
 
 		var self = this;
 
+		console.log(concerts);
 		concerts.fetch({
         withCredentials: false,
 				crossDomain: true,
@@ -195,31 +170,28 @@ var Concerts = React.createClass({
 		  },
 		  success : function(collection, response, options) {
 		    console.log(collection);
-
-				self.setState({'concerts': collection});
+				console.log('fetched events');
+				self.getCollection().set(collection.toJSON());
 		  },
 		  error : function(collection, response, options) {
-		    console.log(response.statusText);
+		    console.error(response.statusText);
 		  }
 		});
+
 	},
 
 
 	render: function() {
-
-
-		// var artists = this.state.concerts.getAllArtists();
-		// console.log('artists', artists)
-		// console.log('spotify artists',artists.spotifyArtists());
-		// console.log('artists', artists);
-
-
 		var self = this;
-		// console.log(tracks);
-		var concerts = this.state.concerts.map(function(concert,i){
-		var date = moment(concert.get('date'));
-		var day  = date.format('ddd, MMM Do');
-		var time = date.format('h:mm a');
+
+		console.log('concerts');
+		console.log(this.getCollection());
+
+		var concerts = this.getCollection().map(function(concert,i){
+			var date = moment(concert.get('date'));
+			var day  = date.format('ddd, MMM Do');
+			var time = date.format('h:mm a');
+			console.log('title',concert.get('title'));
 
 
 			return (
@@ -228,6 +200,7 @@ var Concerts = React.createClass({
 						title={day}
 						subtitle={time}/>
 				  <CardTitle
+						style={styles.cardTitle}
 					  title={concert.get('title')}
 					  subtitle={concert.get('venue').name}/>
 

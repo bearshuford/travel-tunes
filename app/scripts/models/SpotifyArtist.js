@@ -64,7 +64,7 @@ var Artist = Backbone.Model.extend({
 
         });
         console.log('tracks', tracks);
-        self.get('tracks').add(tracks);
+        self.get('tracks').set(tracks);
         return tracks;
       },
 
@@ -73,7 +73,7 @@ var Artist = Backbone.Model.extend({
       });
   },
 
-  search: function(callback){
+  search: function(){
     var self = this;
     this.spotifyApi.searchArtists(this.get('name'), {limit: 1})
     .then(function(data) {

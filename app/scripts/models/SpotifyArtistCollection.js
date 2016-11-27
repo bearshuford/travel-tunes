@@ -21,7 +21,8 @@ var ArtistCollection = Backbone.Collection.extend({
   spotifyArtists: function(){
     var sa = this.map(function(artist){
       if(artist.get('spotify'))
-        console.log('SPOTIFY!!!');
+        console.log('SPOTIFY!!!', artist.get('name'));
+        return artist;
     });
     console.log('saaa',sa);
     return new ArtistCollection(sa);

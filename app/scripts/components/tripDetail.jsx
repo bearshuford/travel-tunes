@@ -110,7 +110,6 @@ var SelectedArtists = React.createClass({
 		this.getCollection().each(function(artist){
 			 artist.getTopTracks();
 		});
-
 	},
 
 	removeArtist(artist){
@@ -129,13 +128,13 @@ var SelectedArtists = React.createClass({
 		return (
 			<div style={styles.playlistForm}>
 				<div style={styles.selected}>{artistChips}</div>
-				{artistChips.length > 0 &&
+
 					<FloatingActionButton
 						children={<i className="material-icons">playlist_play</i>}
 						onTouchTap={this.getTracks}
 						style={styles.floatingActionButton}
 						mini={false}/>
-				}
+
 			</div>
 		);
 	}
@@ -148,35 +147,14 @@ var SelectedArtists = React.createClass({
 
 var TripDetail = React.createClass({
 
-
+	mixins: [Backbone.React.Component.mixin],
 
 	getInitialState: function() {
 		return {
-			trip: new Trip(),
-			selectedArtists: new ArtistCollection(),
-			fetched: false
+			selectedArtists: new ArtistCollection()
 		};
 	},
 
-	componentWillMount: function() {
-		var trip = this.state.trip;
-		var tripId = this.props.tripId;
-
-		// if no trip, navigate to index
-		if(!tripId){
-			Backbone.history.navigate('',{trigger: true});
-		}
-
-		trip.set('objectId', tripId);
-
-		trip.fetch().then(function(){
-      this.setState({
-				trip: trip,
-				fetched: true
-			});
-			return true;
-    }.bind(this));
-	},
 
 	handleBack: function(){
 		Backbone.history.navigate('#trips', {trigger:true});
@@ -186,38 +164,28 @@ var TripDetail = React.createClass({
 	addArtist: function(artist){
 		var artists = this.state.selectedArtists;
 		artists.add(artist);
-		this.setState({selectedArtists: artists});
 	},
 
 	removeArtist: function(artist){
 		var artists = this.state.selectedArtists;
 		artist.set('added', false);
 		artists.remove(artist);
-		this.setState({selectedArtists: artists});
 	},
 
 
   render: function() {
 
-		var trip = this.state.trip;
-		var startDate = moment(trip.get('startDate')).format('ll');
-		var endDate = moment(trip.get('endDate')).format('ll');
+		var trip = this.getModel();
 
 		var startTitle = moment(trip.get('startDate')).format('l');
 		var endTitle = moment(trip.get('endTitle')).format('l');
 
-
 		var location = trip.get('city') + ', ' + trip.get('state');
 		var daterange = startTitle + ' - ' + endTitle;
-		var title = location + ' | ' + daterange
+		var title = location + ' | ' + daterange;
 
-		if(!this.state.fetched){
-			return (
-			<App handleBack={this.handleBack}>
-				{/* <div>loading...</div> */}
-			</App>
-			);
-		}
+		var EventCollection = new SGEventCollection();
+
 
     return (
 			<App
@@ -235,7 +203,8 @@ var TripDetail = React.createClass({
 
 					</div>
 					<Concerts
-						trip={trip}
+						model={trip}
+						collection={EventCollection}
 						addArtist={this.addArtist}
 						removeArtist={this.removeArtist}/>
 				</div>

@@ -1,12 +1,18 @@
-import $ from 'jquery';
-import React from 'react';
+import $        from 'jquery';
+import React    from 'react';
 import ReactDOM from 'react-dom';
 import Backbone from 'backbone';
 
-import App from './components/app.jsx';
-import Login from './components/login.jsx';
-import Calendar from './components/calendar.jsx';
+/* components */
+import App        from './components/app.jsx';
+import Login      from './components/login.jsx';
+import Calendar   from './components/calendar.jsx';
 import TripDetail from './components/tripDetail.jsx';
+
+/* models & collections */
+import Trip            from './models/Trip';
+import EventCollection from './models/SeatGeekEventCollection.js';
+
 
 
 var AppRouter = Backbone.Router.extend({
@@ -65,12 +71,19 @@ var AppRouter = Backbone.Router.extend({
 		this.loginRedirect();
 	},
 
-	tripDetail: function(id){
-		ReactDOM.render(
-			<TripDetail tripId={id}/>,
-			document.getElementById('root')
-		);
-		this.loginRedirect();
+	tripDetail: function(tripId){
+    var trip = new Trip({'objectId': tripId});
+    var self = this;
+    trip.fetch({
+      success: function(){
+        console.log('fetched');
+        ReactDOM.render(
+          <TripDetail model={trip}/>,
+          document.getElementById('root')
+        );
+        self.loginRedirect();
+      }
+    });
 
 	}
 

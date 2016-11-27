@@ -17,8 +17,6 @@ var ConcertCollection = Backbone.Collection.extend({
   model : Concert,
   url : "https://api.seatgeek.com/2/events?client_id=NjIyMDI4NXwxNDc5MzEwODUy",
 
-
-
   parse : function(response) {
 
     var concerts = response.events.map(function(r){
