@@ -19,7 +19,7 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
-		marginTop: 118
+		marginTop: 70
 	},
 	concert: {
 		margin: 8

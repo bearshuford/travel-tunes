@@ -21,7 +21,7 @@ const styles = {
 		fontFamily: '"Roboto", sans-serif'
 	},
 	paper:{
-		width: 600,
+		maxWidth: 800,
 		marginTop: 20,
 		display: 'flex',
 		flexFlow: 'row nowrap',

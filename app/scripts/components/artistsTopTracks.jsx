@@ -25,19 +25,57 @@ const styles = {
 		paddingTop: 10,
 		paddingBottom: 10
 	},
-
+	playIcon: {
+		marginTop: 6
+	}
 };
 
 
 var Track = React.createClass({
 
 	mixins: [Backbone.React.Component.mixin],
+	getInitialState: function() {
+		return {
+			playing: false,
+			audio: null
+		};
+	},
+
+	onClick: function() {
+		var playing = this.state.playing;
+		if(!playing){
+			var audio = this.getModel().get('mp3Url');
+			console.log('AUDIO:', audio);
+			var audio = new Audio(audio);
+			console.log(audio);
+
+			audio.play();
+
+			this.setState({playing: true, audio: audio});
+
+
+		}
+		else {
+			console.log('pausing');
+			this.state.audio.pause();
+
+			this.setState({playing: false})
+		}
+	},
+
+
 
 	render: function() {
 		var track = this.getModel();
 		return (
 			<ListItem
+				onTouchTap={this.onClick}
 				innerDivStyle={styles.track}
+				leftIcon={
+					this.state.playing ?
+					<i style={styles.playIcon} className="material-icons">pause</i>  :
+					<i style={styles.playIcon} className="material-icons">play_arrow</i>
+				}
 				primaryText={
 					<div style={styles.trackName}>
 						{track.get('name')}
@@ -61,6 +99,21 @@ var TopTracks = React.createClass({
 
 	mixins: [Backbone.React.Component.mixin],
 
+	// getInitialState: function() {
+	// 	return {
+	// 		playingTrack: null
+	// 	};
+	// },
+	//
+	// select: function(track){
+	// 	if(track != this.state.playingTrack){
+	// 		this.setState({playingTrack: track})
+	// 	}
+	// 	else{
+	//
+	// 	}
+	// }
+
 
   componentWillUpdate: function(nextProps, nextState) {
 
@@ -74,9 +127,10 @@ var TopTracks = React.createClass({
 
 	render: function() {
 		var tracks = [];
-		this.getCollection().each(function(artist, i){
+		this.getCollection().each(function(artist,j){
 			console.log('render artist',artist.get('name'));
-			artist.get('tracks').each(function(track, j){
+			artist.get('tracks').each(function(track,i){
+				console.log(i +'from'+ j);
 				console.log('render tracks', track.get('name'));
 				tracks.push(<Track model={track} key={i +'from'+ j}/>);
 				console.log('tracks',tracks);
