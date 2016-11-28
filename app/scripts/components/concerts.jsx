@@ -28,6 +28,7 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'flex-start',
+		paddingBottom: 8,
 		maxWidth: 800
 	},
 	artist: {
@@ -48,8 +49,18 @@ const styles = {
 	label: {
 		lineHeight: '36px'
 	},
+	cardHeader:{
+		paddingTop: 8,
+		paddingBottom: 8
+	},
 	cardTitle: {
-		fontSize: 18
+		fontSize: 20
+	},
+	header:{
+		paddingBottom: 8
+	},
+	date:{
+
 	}
 
 };
@@ -146,12 +157,11 @@ var Concerts = React.createClass({
 	},
 
 	componentDidMount: function() {
-		var trip    = this.getModel();
+		var trip     = this.getModel();
 		var concerts = this.getCollection();
 
-		var arrival = moment(trip.get('startDate')).format('YYYY-MM-DD');
+		var arrival   = moment(trip.get('startDate')).format('YYYY-MM-DD');
 		var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
-
 
 		var self = this;
 
@@ -197,10 +207,12 @@ var Concerts = React.createClass({
 			return (
 				<Card key={i} style={styles.concert}>
 					<CardHeader
+						style={styles.header}
 						title={day}
 						subtitle={time}/>
 				  <CardTitle
-						style={styles.cardTitle}
+						style={styles.cardHeader}
+						titleStyle={styles.cardTitle}
 					  title={concert.get('title')}
 					  subtitle={concert.get('venue').name}/>
 

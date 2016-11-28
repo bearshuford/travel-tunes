@@ -8,8 +8,9 @@ var ArtistCollection = Backbone.Collection.extend({
   model: Artist,
 
 
-  getTopTracks: function(number){
-    var tracks = this.map(function(artist){
+  getTopTracks: function(number, callback){
+
+    var tracks = this.map(function(artist, i){
       // artist.getTopTracks().then();
       return artist.getTopTracks();
     });

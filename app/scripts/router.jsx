@@ -10,9 +10,9 @@ import Calendar   from './components/calendar.jsx';
 import TripDetail from './components/tripDetail.jsx';
 
 /* models & collections */
-import Trip            from './models/Trip';
-import EventCollection from './models/SeatGeekEventCollection.js';
-
+import Trip             from './models/Trip';
+import EventCollection  from './models/SeatGeekEventCollection.js';
+import ArtistCollection from './models/SpotifyArtistCollection.js';
 
 
 var AppRouter = Backbone.Router.extend({
@@ -78,7 +78,7 @@ var AppRouter = Backbone.Router.extend({
       success: function(){
         console.log('fetched');
         ReactDOM.render(
-          <TripDetail model={trip}/>,
+          <TripDetail model={trip} collection={new ArtistCollection()}/>,
           document.getElementById('root')
         );
         self.loginRedirect();

@@ -71,8 +71,10 @@ var TripRow = React.createClass({
 		var state = trip.get('state');
 		var startDate = moment(trip.get('startDate')).format('ll');
 		var endDate   = moment(trip.get('endDate')).format('ll');
+		var imgUrl = trip.get('imageUrl');
 		return (
 			<TableRow>
+				<TableRowColumn>{ imgUrl && <img src={imgUrl}/>   }   </TableRowColumn>
 				<TableRowColumn> {city}      </TableRowColumn>
 				<TableRowColumn> {state}     </TableRowColumn>
 				<TableRowColumn> {startDate} </TableRowColumn>
@@ -116,6 +118,9 @@ var Calendar = React.createClass({
 								displaySelectAll={false}
 							>
 								<TableRow>
+									<TableHeaderColumn>
+										<i className="material-icons">image</i>
+										</TableHeaderColumn>
 									<TableHeaderColumn>City</TableHeaderColumn>
 									<TableHeaderColumn>State</TableHeaderColumn>
 									<TableHeaderColumn>Start Date</TableHeaderColumn>
@@ -174,11 +179,11 @@ var CalendarContainer = React.createClass({
 		var trip = new Trip(data);
 		trip.save().done(function(data){
 			var id = data.objectId;
+			console.log(trip.get('user'));
 			Backbone.history.navigate('trips/'+id, {trigger:true});
 		}.bind(this));
 
 	},
-
 
   render: function() {
 

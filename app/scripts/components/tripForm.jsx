@@ -2,12 +2,12 @@ import $ from 'jquery';
 import React from 'react';
 import moment from 'moment';
 
-
-
 import Formsy from 'formsy-react';
 import {FormsySelect, FormsyText, FormsyDate} from 'formsy-material-ui/lib';
 import {FlatButton, RaisedButton, MenuItem} from 'material-ui';
 
+import setupParse from './../setupParse.js';
+import Image from './../models/Image.js';
 
 const styles = {
   form: {
@@ -48,6 +48,29 @@ const styles = {
   },
   cancel:{
     marginRight: 12
+  },
+  imageInput:{
+    cursor: 'pointer',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    width: '100%',
+    opacity: 0
+  },
+  imagePreview: {
+    height: 80,
+    marginLeft: 30
+  },
+  imageUpload: {
+    height: 80,
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    width: '100%',
+    justifyContent: 'flex-start',
+    alignItems: 'center'
+
   }
 
 };
@@ -60,13 +83,64 @@ var TripForm = React.createClass({
     var today = new Date();
     return {
       today: today,
-      startDate: today
+      startDate: today,
+      imageFile: null,
+      imagePreviewUrl: null
     };
   },
 
+  beforeImageSubmit: function(xhr) {
+    console.log('beforeImageSubmit');
+    var imageFile = this.state.imageFile;
+    var type = imageFile.type;
+    xhr.setRequestHeader("Content-Type", type);
+    setupParse(xhr);
+
+  },
+
   submitForm: function(data){
-    console.log('submitForm', arguments)
-    this.props.handleSubmit(data);
+    console.log('submitForm', arguments);
+    var formData = data;
+    var imageFile = this.state.imageFile;
+    var handleSubmit = this.props.handleSubmit;
+
+    var success = function(response){
+      console.log('image url:', response.url);
+      formData.imageUrl = response.url;
+      handleSubmit(formData);
+    };
+
+    var error = function(response){
+      console.log('image upload error:', response);
+
+    };
+
+
+    if(imageFile !== null){
+      console.log(imageFile);
+      // var settings = ;
+      // settings.beforeSend = this.beforeImageSubmit;
+      // settings.url = 'https://maeve.herokuapp.com/files';
+      // settings.data = imageFile;
+      // settings.type = 'POST';
+      // settings.success = success;
+      // console.log('beforeAjax', settings);
+      $.ajax({
+        beforeSend: this.beforeImageSubmit,
+        url:        'https://maeve.herokuapp.com/files/'+imageFile.name,
+        data:       imageFile,
+        type:       'POST',
+        success:    success,
+        error:      error,
+        processData: false
+      }).then(function(){
+        console.log('ajaxed!')
+      });
+    }
+    else{
+      this.props.handleSubmit(data);
+    }
+
   },
 
   handleStartDate: function(e, date){
@@ -76,18 +150,50 @@ var TripForm = React.createClass({
 
   formatDate: function(date){
     return moment(date).format('ll');
+  },
 
+  onImageChange: function(e){
+    e.preventDefault();
+
+    let reader = new FileReader();
+    let file = e.target.files[0];
+
+    reader.onloadend = () => {
+      this.setState({
+        imageFile: file,
+        imagePreviewUrl: reader.result
+      });
+    }
+
+    reader.readAsDataURL(file)
   },
 
 
   render: function() {
+    var imagePreview = (this.state.imagePreviewUrl !== null);
+
     return (
+      <div>
+        <div style={styles.imageUpload}>
+          <RaisedButton
+            label="Choose an Image"
+            labelPosition="before"
+            style={styles.button}
+          >
+            <input
+              type="file"
+              style={styles.imageInput}
+              onChange={this.onImageChange}/>
+          </RaisedButton>
+          <img
+            src={this.state.imagePreviewUrl}
+            style={styles.imagePreview}/>
+        </div>
+
       <Formsy.Form
         style={styles.form}
         onSubmit={this.submitForm}
       >
-
-
 
       <div style={styles.location}>
 
@@ -190,6 +296,8 @@ var TripForm = React.createClass({
 
 
 
+
+
       <div style={styles.buttons}>
         <FlatButton
           style={styles.cancel}
@@ -206,6 +314,7 @@ var TripForm = React.createClass({
       </div>
 
       </Formsy.Form>
+    </div>
     );
   }
 

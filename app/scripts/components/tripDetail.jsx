@@ -7,6 +7,7 @@ import {Paper, Drawer, MenuItem, Chip, Avatar, RaisedButton, FloatingActionButto
 
 import App from './app.jsx';
 import Concerts from './concerts.jsx';
+import TopTracks from './artistsTopTracks.jsx';
 
 import Trip from './../models/Trip';
 import ArtistCollection from './../models/SpotifyArtistCollection';
@@ -19,9 +20,10 @@ const styles = {
 	page:{
 		position: 'relative',
 		display: 'flex',
-		flexFlow: 'column nowrap',
-		alignItems: 'center',
-		fontFamily: '"Roboto", sans-serif'
+		flexFlow: 'row nowrap',
+		alignItems: 'space-between',
+		fontFamily: '"Roboto", sans-serif',
+		marginRight: 240
 	},
 	selectedArtists: {
 		position: 'fixed',
@@ -65,6 +67,17 @@ const styles = {
 	floatingActionButton: {
 		marginRight: 10
 	},
+	playlist: {
+		position: 'fixed',
+		right: 0,
+		top: 64,
+		bottom: 0,
+		width: 240,
+		background: 'white',
+		zIndex: 5,
+		height: '100vh',
+		overflow: 'scroll'
+	}
 
 };
 
@@ -107,9 +120,10 @@ var SelectedArtists = React.createClass({
 
 
 	getTracks: function(){
-		this.getCollection().each(function(artist){
-			 artist.getTopTracks();
+		this.getCollection().each(function(artist,i){
+			 artist.getTopTracks(3);
 		});
+
 	},
 
 	removeArtist(artist){
@@ -163,13 +177,16 @@ var TripDetail = React.createClass({
 
 	addArtist: function(artist){
 		var artists = this.state.selectedArtists;
+		 artist.getTopTracks(6);
 		artists.add(artist);
+		// this.setState({selectedArtists: artists});
 	},
 
 	removeArtist: function(artist){
 		var artists = this.state.selectedArtists;
 		artist.set('added', false);
 		artists.remove(artist);
+		// this.setState({selectedArtists: artists});
 	},
 
 
@@ -192,22 +209,30 @@ var TripDetail = React.createClass({
 				title={title}
 				fixed={true}
 				handleBack={this.handleBack}>
+
 				<div style={styles.page}>
 
-					<div style={styles.selectedArtists}>
-
+{	/*				<div style={styles.selectedArtists}>
 						<SelectedArtists
 							collection={this.state.selectedArtists}
 							removeArtist={this.removeArtist}
 							/>
-
 					</div>
+*/}
+
 					<Concerts
 						model={trip}
 						collection={EventCollection}
 						addArtist={this.addArtist}
 						removeArtist={this.removeArtist}/>
+
+					<div style={styles.playlist}>
+						<TopTracks collection={this.state.selectedArtists}
+							artistCount={this.state.selectedArtists.length}/>
+					</div>
+
 				</div>
+
 			</App>
 
 		);

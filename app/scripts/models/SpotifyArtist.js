@@ -5,14 +5,13 @@ import Spotify from 'spotify-web-api-js';
 
 import TrackCollection from './SpotifyTrackCollection';
 
-
-import setupParse from './../setupParse'; // setupParse(clear=true)
+import ParseModel from './ParseModel';
 
 
 var SpotifyApi = new Spotify();
 
 
-var Artist = Backbone.Model.extend({
+var Artist = ParseModel.extend({
 
   spotifyApi: SpotifyApi,
 
@@ -22,7 +21,10 @@ var Artist = Backbone.Model.extend({
     name: '',
     spotify: false,
     added: false,
-    tracks: new TrackCollection()
+    tracks: new TrackCollection(),
+    tracksFetched: 0,
+    fetching: false,
+    fetched: true
   },
 
   getTopTracks: function(number, callback){
@@ -44,6 +46,8 @@ var Artist = Backbone.Model.extend({
 
         var tracks = data.tracks.slice(0,number).map(function(track){
 
+          self.set({fetching: true});
+
           var album = {
             type:   track.album['album_type'],
             id:     track.album.id,
@@ -59,12 +63,20 @@ var Artist = Backbone.Model.extend({
             mp3Url:     track['preview_url'],
             duration:   track['duration_ms'],
             number:     track['track_number'],
-            popularity: track.popularity
+            popularity: track.popularity,
+            artist:     self
           };
 
         });
         console.log('tracks', tracks);
         self.get('tracks').set(tracks);
+        self.set({
+          tracksFetched: tracks.length,
+          fetching: false,
+          fetched: true
+        });
+        console.log('self artist', self);
+
         return tracks;
       },
 
