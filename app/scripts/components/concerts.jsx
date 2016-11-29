@@ -5,7 +5,7 @@ import React 		from 'react';
 import moment 	from 'moment';
 import Backbone from 'backbone';
 
-import {Avatar, Card, CardHeader, CardTitle, CardText, Chip} from 'material-ui';
+import {Avatar, Card, CardHeader, CardTitle, CardText, Chip, IconButton} from 'material-ui';
 
 import Trip   from './../models/Trip';
 import Artist from './../models/SpotifyArtist';
@@ -72,18 +72,10 @@ var ArtistChip = React.createClass({
 
   mixins: [Backbone.React.Component.mixin],
 
-
-
 	componentWillMount: function() {
 		var artist = this.getModel();
 		artist.search();
 	},
-
-	addArtist: function(artist){
-	},
-
-
-
 
 	handleClick: function(e){
 		e.preventDefault();
@@ -100,22 +92,19 @@ var ArtistChip = React.createClass({
 			artist.set({added: false})
 			this.props.removeArtist(artist);
 		}
-
 	},
 
-
-
 	render: function(){
-		var artist = this.getModel();
+		var artist  = this.getModel();
 		var spotify = artist.get('spotify');
-		var added = artist.get('added');
-		var images = artist.get('images');
+		var added   = artist.get('added');
+		var images  = artist.get('images');
 
 		var labelStyle  = spotify && added ? styles.spotify : styles.label;
 		var href 			  = spotify ? artist.get('spotifyLink') : null;
 		var handleClick = spotify ? this.handleClick : undefined;
 
-		var color = spotify && added ? '#23CF5F'  : null;
+		var color 		= spotify && added ? '#23CF5F'  : null;
 		var iconColor = spotify && !added ? '#23CF5F'  : null;
 
 		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">playlist_add</i>;
@@ -146,90 +135,164 @@ var ArtistChip = React.createClass({
 
 
 
+
+
+
+
+
+
+
+var ConcertCard = React.createClass({
+	mixins: [Backbone.React.Component.mixin],
+
+	onExpandChange: function(favorite){
+		console.log('favorite:', favorite);
+		var concert = this.getModel();
+
+		if(favorite){
+			this.props.addFavorite(concert.get('sgId'));
+		}
+		else{
+			this.props.removeFavorite(concert.get('sgId'));
+		}
+
+		//  concert.set({'favorite': favorite});
+	},
+
+
+	render: function() {
+		var concert = this.getModel();
+		var m    = moment(concert.get('date'));
+		var day  = m.format('ddd, MMM Do');
+		var time = m.format('h:mm a');
+		var self = this;
+		return (
+			<Card
+				style={styles.concert}
+				expanded={concert.get('favorite')}
+				onExpandChange={this.onExpandChange}
+			>
+
+				<CardHeader
+					style={styles.header}
+					title={day}
+					subtitle={time}
+					showExpandableButton={true}
+					openIcon={<i className="material-icons">favorite</i>}
+					closeIcon={<i className="material-icons">favorite_border</i>} />
+
+				<CardTitle
+					style={styles.cardHeader}
+					titleStyle={styles.cardTitle}
+					title={concert.get('title')}
+					subtitle={concert.get('venue').name}/>
+
+				<CardText style={styles.artists}>
+
+					{concert.get('artists').map(
+						function(artist, i){
+
+							return  <ArtistChip
+												key={i}
+												model={artist}
+												addArtist={self.props.addArtist}
+												removeArtist={self.props.removeArtist}/>;
+					})}
+
+				</CardText>
+
+			</Card>
+		);
+	}
+
+});
+
+
+
+
+
+
+
+
 var Concerts = React.createClass({
 
 	mixins: [Backbone.React.Component.mixin],
 
 	getInitialState: function() {
-		return {
-			fetched: false
-		};
+		return {fetched: false};
 	},
 
-	componentDidMount: function() {
+	componentWillReceiveProps: function(nextProps){
 		var trip     = this.getModel();
 		var concerts = this.getCollection();
 
+		console.log('~~~concerts cdm trip:', trip.get('startDate'));
+
 		var arrival   = moment(trip.get('startDate')).format('YYYY-MM-DD');
 		var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
+
+
+
+		console.log('arrival', arrival);
 
 		var self = this;
 
 		console.log(concerts);
 		concerts.fetch({
         withCredentials: false,
-				crossDomain: true,
+				crossDomain:     true,
 		  data : {
-				// 'sort': 'score.desc',
-				'per_page': "50",
-				'taxonomies.name': 'concert',
-		    'venue.state': trip.get('state'),
-				'venue.city': trip.get('city'),
+				'per_page': 			    '50',
+				'taxonomies.name':    'concert',
+		    'venue.state': 			  trip.get('state'),
+				'venue.city': 			  trip.get('city'),
 				'datetime_local.gte': arrival,
 				'datetime_local.lte': departure
 		  },
-		  success : function(collection, response, options) {
-		    console.log(collection);
-				console.log('fetched events');
+		  success: function(collection, response, options) {
+				console.log('concerts fetched', collection.toJSON());
+
 				self.getCollection().set(collection.toJSON());
+
 		  },
-		  error : function(collection, response, options) {
+		  error: function(collection, response, options) {
 		    console.error(response.statusText);
 		  }
 		});
 
 	},
 
-
 	render: function() {
+		console.log('render concerts', this.getCollection());
 		var self = this;
-
-		console.log('concerts');
-		console.log(this.getCollection());
-
-		var concerts = this.getCollection().map(function(concert,i){
-			var date = moment(concert.get('date'));
-			var day  = date.format('ddd, MMM Do');
-			var time = date.format('h:mm a');
-			console.log('title',concert.get('title'));
+		var concerts = this.getCollection();
 
 
-			return (
-				<Card key={i} style={styles.concert}>
-					<CardHeader
-						style={styles.header}
-						title={day}
-						subtitle={time}/>
-				  <CardTitle
-						style={styles.cardHeader}
-						titleStyle={styles.cardTitle}
-					  title={concert.get('title')}
-					  subtitle={concert.get('venue').name}/>
+		var faves = self.props.favorites;
 
-					<CardText style={styles.artists}>
-						{concert.get('artists').map(
-							function(artist, i){
+		// set favorites
+		concerts.map(function(concert,i){
+			var favorite =_.contains(faves, concert.get('sgId'))
+			console.log('favorite~');
+			concert.set({'favorite': favorite});
 
-								return  <ArtistChip
-													key={i}
-													model={artist}
-													addArtist={self.props.addArtist}
-													removeArtist={self.props.removeArtist}/>;
-							})}
-					</CardText>
-				</Card>
-			);
+
+			if(favorite){
+				console.log('favorite', i);
+			}
+			return concert;
 		});
+
+		 concerts = concerts.map( function(concert, i){
+			return <ConcertCard
+			          key={i}
+								model={concert}
+								addArtist={self.props.addArtist}
+								removeArtist={self.props.removeArtist}
+								addFavorite={self.props.addFavorite}
+								removeFavorite={self.props.removeFavorite}/>;
+		});
+
 		return (
 			<div style={styles.concerts}>
 				{concerts}
@@ -238,4 +301,5 @@ var Concerts = React.createClass({
 	}
 
 });
+
 export default Concerts;

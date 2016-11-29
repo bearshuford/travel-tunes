@@ -71,19 +71,15 @@ var AppRouter = Backbone.Router.extend({
 		this.loginRedirect();
 	},
 
-	tripDetail: function(tripId){
-    var trip = new Trip({'objectId': tripId});
+  tripDetail: function(tripId){
+
     var self = this;
-    trip.fetch({
-      success: function(){
-        console.log('fetched');
-        ReactDOM.render(
-          <TripDetail model={trip} collection={new ArtistCollection()}/>,
-          document.getElementById('root')
-        );
-        self.loginRedirect();
-      }
-    });
+
+    ReactDOM.render(
+      <TripDetail tripId={tripId} />,
+      document.getElementById('root')
+    );
+    self.loginRedirect();
 
 	}
 

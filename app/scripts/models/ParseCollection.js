@@ -20,8 +20,7 @@ var ParseCollection = Backbone.Collection.extend({
   url: function(){
     var url = this.baseUrl;
 
-    console.log('whereClause', this.whereClause)
-    if(this.whereClause.field){
+    if(this.whereClause.field) {
       var field = this.whereClause.field;
       delete this.whereClause.field;
       url += '?where={"' + field + '":' + JSON.stringify(this.whereClause) + '}';
@@ -31,27 +30,25 @@ var ParseCollection = Backbone.Collection.extend({
   },
 
   sync: function(method, model, options){
-    options = options || {};
-    var beforeSend = options.beforeSend;
-
+    var options        = options || {};
+    var beforeSend     = options.beforeSend;
     options.beforeSend = setupParse;
 
-    if (beforeSend) return beforeSend.apply(this, arguments);
-
+    if(beforeSend) {
+      return beforeSend.apply(this, arguments);
+    }
     return Backbone.Model.prototype.sync.apply(this, arguments);
   },
 
   fetch: function(options) {
-    console.log('fetch');
-
-    options = options || {};
-    options = options || {};
-    var beforeSend = options.beforeSend;
-
+    var options        = options || {};
+    var beforeSend     = options.beforeSend;
     options.beforeSend = setupParse;
 
-    if (beforeSend) return beforeSend.apply(this, arguments);
-    
+    if(beforeSend) {
+      return beforeSend.apply(this, arguments);
+    }
+
     return Backbone.Collection.prototype.fetch.apply(this, arguments);
   },
 

@@ -1,78 +1,75 @@
-import $ from 'jquery';
-import React from 'react';
+import $      from 'jquery';
+import React  from 'react';
 import moment from 'moment';
-
 import Formsy from 'formsy-react';
+
 import {FormsySelect, FormsyText, FormsyDate} from 'formsy-material-ui/lib';
-import {FlatButton, RaisedButton, MenuItem} from 'material-ui';
+import {FlatButton, RaisedButton, MenuItem}   from 'material-ui';
 
 import setupParse from './../setupParse.js';
-import Image from './../models/Image.js';
 
 const styles = {
   form: {
 
   },
   location: {
-    width: '100%',
-    display: 'flex',
-    flexFlow: 'row wrap',
+    width:          '100%',
+    display:        'flex',
+    flexFlow:       'row wrap',
     justifyContent: 'flex-start'
   },
-  city:{
+  city: {
     flex: '1 0 45%'
   },
-  state:{
+  state: {
     flex: '1 0 45%'
   },
-  cityInput:{
+  cityInput: {
     width: 256
   },
-  stateInput:{
+  stateInput: {
     width: 256
   },
-  dates:{
-    width: '100%',
-    display: 'flex',
-    flexFlow: 'row wrap',
+  dates: {
+    width:          '100%',
+    display:        'flex',
+    flexFlow:       'row wrap',
     justifyContent: 'flex-start'
   },
   date:{
     flex: '1 0 45%'
   },
   buttons:{
-    display: 'flex',
-    width: '100%',
+    display:        'flex',
+    width:          '100%',
     justifyContent: 'flex-end',
-    marginTop: 30
+    marginTop:      30
   },
   cancel:{
     marginRight: 12
   },
   imageInput:{
-    cursor: 'pointer',
+    cursor:   'pointer',
     position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    width: '100%',
-    opacity: 0
+    top:      0,
+    bottom:   0,
+    right:    0,
+    left:     0,
+    opacity:  0,
+    width:    '100%'
   },
   imagePreview: {
-    height: 80,
+    height:     80,
     marginLeft: 30
   },
   imageUpload: {
-    height: 80,
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    width: '100%',
+    height:         80,
+    display:        'flex',
+    flexFlow:       'row nowrap',
+    width:          '100%',
     justifyContent: 'flex-start',
-    alignItems: 'center'
-
+    alignItems:     'center'
   }
-
 };
 
 
@@ -82,9 +79,9 @@ var TripForm = React.createClass({
   getInitialState: function() {
     var today = new Date();
     return {
-      today: today,
-      startDate: today,
-      imageFile: null,
+      today:           today,
+      startDate:       today,
+      imageFile:       null,
       imagePreviewUrl: null
     };
   },
@@ -92,49 +89,35 @@ var TripForm = React.createClass({
   beforeImageSubmit: function(xhr) {
     console.log('beforeImageSubmit');
     var imageFile = this.state.imageFile;
-    var type = imageFile.type;
+    var type      = imageFile.type;
     xhr.setRequestHeader("Content-Type", type);
     setupParse(xhr);
-
   },
 
   submitForm: function(data){
     console.log('submitForm', arguments);
-    var formData = data;
-    var imageFile = this.state.imageFile;
+    var formData     = data;
+    var imageFile    = this.state.imageFile;
     var handleSubmit = this.props.handleSubmit;
 
     var success = function(response){
-      console.log('image url:', response.url);
       formData.imageUrl = response.url;
       handleSubmit(formData);
     };
 
     var error = function(response){
       console.log('image upload error:', response);
-
     };
 
-
     if(imageFile !== null){
-      console.log(imageFile);
-      // var settings = ;
-      // settings.beforeSend = this.beforeImageSubmit;
-      // settings.url = 'https://maeve.herokuapp.com/files';
-      // settings.data = imageFile;
-      // settings.type = 'POST';
-      // settings.success = success;
-      // console.log('beforeAjax', settings);
       $.ajax({
-        beforeSend: this.beforeImageSubmit,
-        url:        'https://maeve.herokuapp.com/files/'+imageFile.name,
-        data:       imageFile,
-        type:       'POST',
-        success:    success,
-        error:      error,
+        beforeSend:  this.beforeImageSubmit,
+        url:         'https://maeve.herokuapp.com/files/'+imageFile.name,
+        data:        imageFile,
+        type:        'POST',
+        success:     success,
+        error:       error,
         processData: false
-      }).then(function(){
-        console.log('ajaxed!')
       });
     }
     else{
@@ -147,7 +130,6 @@ var TripForm = React.createClass({
     this.setState({startDate: date});
   },
 
-
   formatDate: function(date){
     return moment(date).format('ll');
   },
@@ -155,12 +137,12 @@ var TripForm = React.createClass({
   onImageChange: function(e){
     e.preventDefault();
 
-    let reader = new FileReader();
-    let file = e.target.files[0];
+    var reader = new FileReader();
+    var file   = e.target.files[0];
 
     reader.onloadend = () => {
       this.setState({
-        imageFile: file,
+        imageFile:       file,
         imagePreviewUrl: reader.result
       });
     }
@@ -265,8 +247,6 @@ var TripForm = React.createClass({
         </div>
       </div>
 
-
-
         <div style={styles.dates}>
 
           <FormsyDate
@@ -293,10 +273,6 @@ var TripForm = React.createClass({
             required
           />
         </div>
-
-
-
-
 
       <div style={styles.buttons}>
         <FlatButton

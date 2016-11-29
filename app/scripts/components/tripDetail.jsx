@@ -17,71 +17,74 @@ require('backbone-react-component');
 
 
 const styles = {
+
 	page:{
-		position: 'relative',
-		display: 'flex',
-		flexFlow: 'row nowrap',
-		alignItems: 'space-between',
-		fontFamily: '"Roboto", sans-serif',
+		position: 	 'relative',
+		display: 		 'flex',
+		flexFlow: 	 'row nowrap',
+		alignItems:  'space-between',
+		fontFamily:  '"Roboto", sans-serif',
 		marginRight: 240
 	},
+
 	selectedArtists: {
-		position: 'fixed',
-		top: 64,
-		left: 5,
-		width: '100%',
-		display: 'flex',
-		flexFlow: 'row nowrap',
+		position:   		'fixed',
+		top: 			  		64,
+		left: 		  		5,
+		paddingTop: 		10,
+		zIndex: 				4,
+		width: 		  		'100%',
+		display:    		'flex',
+		flexFlow:   		'row nowrap',
 		justifyContent: 'space-between',
-		alignItems: 'flex-start',
-		paddingTop: 10,
-		zIndex: 4,
-		background: 'white'
+		alignItems: 		'flex-start',
+		background: 		'white'
 	},
+
 	eventDetails:{
 		flex: '0 0 auto'
 	},
+
 	artist: {
-		marginRight: 8,
+		marginRight:  8,
 		marginBottom: 6
-
 	},
+
 	playlistForm: {
-		display: 'flex',
-		flexFlow: 'row nowrap',
+		padding: 				0,
+		minWidth: 			0,
+		marginLeft: 		20,
+		display: 				'flex',
+		flexFlow: 			'row nowrap',
 		justifyContent: 'space-between',
-		alignItems: 'flex-start',
-		padding: 0,
-		flex: '1 1 auto',
-		minWidth: 0,
-		marginLeft: 20
+		alignItems: 		'flex-start',
+		flex: 					'1 1 auto'
 	},
-	selected: {
 
-		display: 'flex',
-		flexFlow: 'row wrap',
-		alignItems: 'flex-start',
+	selected: {
+		display: 				'flex',
+		flexFlow: 			'row wrap',
+		alignItems: 		'flex-start',
 		justifyContent: 'flex-start',
-		alignContent: 'flex-start'
+		alignContent: 	'flex-start'
 	},
+
 	floatingActionButton: {
 		marginRight: 10
 	},
+
 	playlist: {
-		position: 'fixed',
-		right: 0,
-		top: 64,
-		bottom: 0,
-		width: 240,
+		zIndex: 		5,
+		right: 			0,
+		bottom: 		0,
+		top: 				64,
+		width: 			240,
+		position: 	'fixed',
 		background: 'white',
-		zIndex: 5,
-		height: '100vh',
-		overflow: 'scroll'
+		height: 		'100vh',
+		overflow: 	'scroll'
 	}
-
 };
-
-
 
 
 
@@ -113,52 +116,6 @@ var ArtistChip = React.createClass({
 
 
 
-
-var SelectedArtists = React.createClass({
-
-	mixins: [Backbone.React.Component.mixin],
-
-
-	getTracks: function(){
-		this.getCollection().each(function(artist,i){
-			 artist.getTopTracks(3);
-		});
-
-	},
-
-	removeArtist(artist){
-		this.getCollection().remove(artist);
-	},
-
-	render: function() {
-		var self = this;
-
-		var artistChips = this.getCollection().map(function(artist,i){
-			return <ArtistChip
-								key={i}
-								model={artist}
-								removeArtist={self.removeArtist}/>;
-						});
-		return (
-			<div style={styles.playlistForm}>
-				<div style={styles.selected}>{artistChips}</div>
-
-					<FloatingActionButton
-						children={<i className="material-icons">playlist_play</i>}
-						onTouchTap={this.getTracks}
-						style={styles.floatingActionButton}
-						mini={false}/>
-
-			</div>
-		);
-	}
-
-});
-
-
-
-
-
 var TripDetail = React.createClass({
 
 	mixins: [Backbone.React.Component.mixin],
@@ -169,6 +126,21 @@ var TripDetail = React.createClass({
 		};
 	},
 
+	getDefaultProps: function(){
+		var trip = new Trip();
+		return {
+			model: trip
+		}
+	},
+
+	componentDidMount: function() {
+		var tripId = this.props.tripId;
+		var self = this;
+
+		this.props.model.set({'objectId': this.props.tripId});
+		this.props.model.fetch();
+
+	},
 
 	handleBack: function(){
 		Backbone.history.navigate('#trips', {trigger:true});
@@ -177,7 +149,7 @@ var TripDetail = React.createClass({
 
 	addArtist: function(artist){
 		var artists = this.state.selectedArtists;
-		 artist.getTopTracks(6);
+		artist.getTopTracks(6);
 		artists.add(artist);
 		// this.setState({selectedArtists: artists});
 	},
@@ -190,19 +162,36 @@ var TripDetail = React.createClass({
 	},
 
 
+  addFavorite: function(sgId){
+    console.log('addFavorite', sgId);
+		var favorites = this.getModel().get('favorites');
+		favorites.push(sgId);
+		this.getModel().save('favorites',favorites);
+		 console.log(this.getModel().get('favorites'));
+
+		// this.props.addFavorite(sgId);
+  },
+
+  removeFavorite: function(sgId){
+    console.log('removeFavorite', sgId);
+  },
+
+
+
   render: function() {
 
 		var trip = this.getModel();
 
+		console.log('tripDetail render', trip);
+
 		var startTitle = moment(trip.get('startDate')).format('l');
-		var endTitle = moment(trip.get('endTitle')).format('l');
+		var endTitle   = moment(trip.get('endDate')).format('l');
 
-		var location = trip.get('city') + ', ' + trip.get('state');
-		var daterange = startTitle + ' - ' + endTitle;
-		var title = location + ' | ' + daterange;
+		var location  = trip.get('city') + ', '  + trip.get('state');
+		var daterange = startTitle       + ' - ' + endTitle;
+		var title     = location         + ' | ' + daterange;
 
-		var EventCollection = new SGEventCollection();
-
+		var concerts = new SGEventCollection();
 
     return (
 			<App
@@ -212,35 +201,28 @@ var TripDetail = React.createClass({
 
 				<div style={styles.page}>
 
-{	/*				<div style={styles.selectedArtists}>
-						<SelectedArtists
-							collection={this.state.selectedArtists}
-							removeArtist={this.removeArtist}
-							/>
-					</div>
-*/}
-
 					<Concerts
-						model={trip}
-						collection={EventCollection}
+						model={this.getModel()}
+						collection={concerts}
 						addArtist={this.addArtist}
-						removeArtist={this.removeArtist}/>
+						removeArtist={this.removeArtist}
+						addFavorite={this.addFavorite}
+						removeFavorite={this.removeFavorite}
+						favorites={trip.get('favorites')}/>
 
 					<div style={styles.playlist}>
-						<TopTracks collection={this.state.selectedArtists}
+						<TopTracks
+							collection={this.state.selectedArtists}
 							artistCount={this.state.selectedArtists.length}/>
 					</div>
 
 				</div>
 
 			</App>
-
 		);
   }
 
 });
-
-
 
 
 

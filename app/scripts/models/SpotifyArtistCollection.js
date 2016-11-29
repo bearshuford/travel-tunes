@@ -3,32 +3,16 @@ import Backbone from 'backbone';
 
 
 import Artist from './SpotifyArtist';
+import ParseCollection from './ParseCollection';
 
-var ArtistCollection = Backbone.Collection.extend({
+var ArtistCollection = ParseCollection.extend({
   model: Artist,
 
-
-  getTopTracks: function(number, callback){
-
-    var tracks = this.map(function(artist, i){
-      // artist.getTopTracks().then();
-      return artist.getTopTracks();
+  getTopTracks: function(number){
+    return this.map(function(artist){
+      return artist.getTopTracks(number);
     });
-
-    console.log('tracks:',tracks);
-    return tracks;
-  },
-
-  spotifyArtists: function(){
-    var sa = this.map(function(artist){
-      if(artist.get('spotify'))
-        console.log('SPOTIFY!!!', artist.get('name'));
-        return artist;
-    });
-    console.log('saaa',sa);
-    return new ArtistCollection(sa);
   }
-
 });
 
 export default ArtistCollection;

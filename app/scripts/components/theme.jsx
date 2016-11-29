@@ -9,11 +9,9 @@ const muiTheme = getMuiTheme({
     primary2Color: '#000'
   },
   appBar: {
-    // height: 50,
+
   },
 });
-
-
 
 var Theme = React.createClass({
   render: function() {

@@ -127,13 +127,12 @@ var TopTracks = React.createClass({
 
 	render: function() {
 		var tracks = [];
+		console.log('playlist collection', this.getCollection().toJSON());
 		this.getCollection().each(function(artist,j){
-			console.log('render artist',artist.get('name'));
 			artist.get('tracks').each(function(track,i){
-				console.log(i +'from'+ j);
-				console.log('render tracks', track.get('name'));
-				tracks.push(<Track model={track} key={i +'from'+ j}/>);
-				console.log('tracks',tracks);
+				console.log('track '+ i +' from '+ artist.get('name'));
+				tracks.push(<Track model={track} key={track.cid}/>);
+				// console.log('tracks',tracks);
 			});
 		});
 		return (

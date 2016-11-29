@@ -1,38 +1,34 @@
-import React from 'react';
+import React    from 'react';
 import Backbone from 'backbone';
 
 import {Paper, RaisedButton} from 'material-ui'
 
-import Formsy from 'formsy-react';
+import Formsy       from 'formsy-react';
 import {FormsyText} from 'formsy-material-ui/lib';
 
-import App from './app.jsx';
+import App  from './app.jsx';
 import User from './../models/User';
-
-
 
 
 const styles = {
   login: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
+    display:        'flex',
+    flexFlow:       'row nowrap',
     justifyContent: 'center'
   },
   header: {
-    marginBottom: 4,
-    marginTop: 4
+    marginTop:    4,
+    marginBottom: 4
   },
   paper: {
-    width: 300,
-    margin: '10px 20px',
-    padding: 20
+    padding: 20,
+    width:   300,
+    margin:  '10px 20px'
   },
   submit: {
     marginTop: 32
   }
-
 };
-
 
 
 var UserForm = React.createClass({
@@ -88,10 +84,7 @@ var UserForm = React.createClass({
 
 
 
-
-
 var Login = React.createClass({
-
 
 	getDefaultProps(){
 		var user = new User();
@@ -99,10 +92,8 @@ var Login = React.createClass({
 	},
 
 	navigate: function() {
-      console.log('i got called at least');
 		Backbone.history.navigate('', {trigger: true});
 	},
-
 
   handleSignUp: function(userData){
 		this.props.user.signup(userData.username, userData.password, this.navigate);

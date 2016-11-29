@@ -1,12 +1,11 @@
-import Backbone from 'backbone';
+import Backbone        from 'backbone';
 
-import Trip from './Trip';
+import Trip            from './Trip';
 import ParseCollection from './ParseCollection';
 
 var TripCollection = ParseCollection.extend({
-  model: Trip,
+  model:   Trip,
   baseUrl: 'https://maeve.herokuapp.com/classes/Trip'
-
 });
 
 export default TripCollection;

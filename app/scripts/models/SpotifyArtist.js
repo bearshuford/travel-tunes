@@ -27,25 +27,20 @@ var Artist = ParseModel.extend({
     fetched: true
   },
 
+  
+
   getTopTracks: function(number, callback){
     var self = this;
+    number = (number) ? number : 3;
 
-    if(!this.get('spotify')){
-      console.log('bail');
+    if(! this.get('spotify') ){
       return false;
     }
 
-    if(!number) {
-      number = 3;
-    }
-    console.log('top track yeah');
     this.spotifyApi.getArtistTopTracks(this.get('spotifyId'), 'US')
       .then(function(data){
 
-        console.log('top tracks:', data.tracks);
-
         var tracks = data.tracks.slice(0,number).map(function(track){
-
           self.set({fetching: true});
 
           var album = {
@@ -55,7 +50,7 @@ var Artist = ParseModel.extend({
             uri:    track.album.uri
           };
           return {
-            album:      track.album,
+            album:      album,
             uri:        track.uri,
             id:         track.id,
             name:       track.name,
@@ -68,15 +63,13 @@ var Artist = ParseModel.extend({
           };
 
         });
-        console.log('tracks', tracks);
+
         self.get('tracks').set(tracks);
         self.set({
           tracksFetched: tracks.length,
-          fetching: false,
-          fetched: true
+          fetching:      false,
+          fetched:       true
         });
-        console.log('self artist', self);
-
         return tracks;
       },
 
@@ -87,32 +80,30 @@ var Artist = ParseModel.extend({
 
   search: function(){
     var self = this;
+
     this.spotifyApi.searchArtists(this.get('name'), {limit: 1})
     .then(function(data) {
       var artist = {};
-      var items = data.artists.items
+      var items  = data.artists.items
 
       if(items.length < 1) {
-        artist = {
-          spotify: false
-        };
+        artist.spotify = false;
       }
       else {
-        var r = data.artists.items[0];
-        console.log('Search artists by', self.get('name'), ':', data);
+        var r     = data.artists.items[0];
+        var match = self.get('name').toUpperCase() !== r.name.toUpperCase()
 
-        if(self.get('name').toUpperCase() !== r.name.toUpperCase()){
-          artist = {
-            spotify: false
-          };        }
+        if(match){
+          artist.spotify = false;
+        }
         else {
           artist = {
-            spotify: true,
-            spotifyId: r.id,
-            uri: r.uri,
-            genres: r.genres,
-            images: r.images,
-            popularity: r.popularity,
+            spotify:     true,
+            spotifyId:   r.id,
+            uri:         r.uri,
+            genres:      r.genres,
+            images:      r.images,
+            popularity:  r.popularity,
             spotifyName: r.name,
             spotifyLink: r['external_urls'].spotify
           };
@@ -120,21 +111,14 @@ var Artist = ParseModel.extend({
       }
 
       self.set(artist);
-      console.log(self.toJSON());
+    },
 
-    }, function(err) {
+    function(err) {
       console.error(err);
     });
-  },
-
-
-  setAccessToken: function(token){
-
   }
 
 });
-
-
 
 
 export default Artist;

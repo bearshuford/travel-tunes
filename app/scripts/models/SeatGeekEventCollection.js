@@ -2,15 +2,15 @@ import $ from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
 
-import setupParse from './../setupParse'; // setupParse(clear=true)
-
 import Artist from './SpotifyArtist';
 import ArtistCollection from './SpotifyArtistCollection';
 
 
-var Concert = Backbone.Model.extend();
-
-// Backbone & JSONP - https://gist.github.com/michielvaneerd/5989839
+var Concert = Backbone.Model.extend({
+  defaults: {
+    favorite: false
+  }
+});
 
 
 var ConcertCollection = Backbone.Collection.extend({
@@ -22,42 +22,44 @@ var ConcertCollection = Backbone.Collection.extend({
     var concerts = response.events.map(function(r){
 
       var artists = r.performers.map(function(artist){
-        return new Artist({name: artist.name});
+        return new Artist({
+          name: artist.name,
+          sgId: artist.id
+        });
       });
 
       return {
-        title: r.title,
         artists: new ArtistCollection(artists),
-        date: r['datetime_local'],
-        //date: r['datetime_utc'],
-        type: r.type,
+        date:    r['datetime_local'],
+        title:   r.title,
+        type:    r.type,
+        score:   r.score,
+        sgUrl:   r.url,
+        sgId:    r.id,
         venue: {
-          name: r.venue.name,
-          address: r.venue.address,
-          location: r.venue.location
+          name:     r.venue.name,
+          address:  r.venue.address,
+          location: r.venue.location,
+          url:      r.venue.url
         }
       };
     });
     return concerts;
   },
 
-  getAllArtists: function(){
-    console.log('this',this);
-    var self = this;
-    var a = new ArtistCollection();
-    self.each(function(concert){
-      concert.get('artists').each(function(artist){
-        a.add(artist, {silent:true})
-      });
-    });
+  // getAllArtists: function(){
+  //   console.log('this',this);
+  //   var self = this;
+  //   var a = new ArtistCollection();
+  //   self.each(function(concert){
+  //     concert.get('artists').each(function(artist){
+  //       a.add(artist, {silent:true})
+  //     });
+  //   });
 
-
-    console.log('all artists',a);
-    return a;
-  }
-
-
-
+  //   console.log('all artists',a);
+  //   return a;
+  // }
 });
 
 
