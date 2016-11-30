@@ -42,6 +42,8 @@ var Track = React.createClass({
 	},
 
 	onClick: function() {
+
+		// this.props.select()
 		var playing = this.state.playing;
 		if(!playing){
 			var audio = this.getModel().get('mp3Url');
@@ -49,7 +51,8 @@ var Track = React.createClass({
 			var audio = new Audio(audio);
 			console.log(audio);
 
-			audio.play();
+			// audio.play();
+			this.props.selectTrack(audio);
 
 			this.setState({playing: true, audio: audio});
 
@@ -99,20 +102,32 @@ var TopTracks = React.createClass({
 
 	mixins: [Backbone.React.Component.mixin],
 
-	// getInitialState: function() {
-	// 	return {
-	// 		playingTrack: null
-	// 	};
-	// },
-	//
-	// select: function(track){
-	// 	if(track != this.state.playingTrack){
-	// 		this.setState({playingTrack: track})
-	// 	}
-	// 	else{
-	//
-	// 	}
-	// }
+	getInitialState: function() {
+		return {
+			playingTrack: null,
+			playing: false
+		};
+	},
+
+	select: function(track){
+		var playing = this.state.playing;
+		var playingTrack = this.state.playingTrack;
+
+		if(playing){
+			playingTrack.pause();
+			playing = false;
+		}
+		if(track != playingTrack){
+
+			track.play();
+			playingTrack = track;
+		}
+		this.setState({playingTrack: playingTrack, playing: playing})
+	},
+
+	componentDidMount: function() {
+
+	},
 
 
   componentWillUpdate: function(nextProps, nextState) {
@@ -127,11 +142,12 @@ var TopTracks = React.createClass({
 
 	render: function() {
 		var tracks = [];
+		var self = this;
 		console.log('playlist collection', this.getCollection().toJSON());
 		this.getCollection().each(function(artist,j){
 			artist.get('tracks').each(function(track,i){
 				console.log('track '+ i +' from '+ artist.get('name'));
-				tracks.push(<Track model={track} key={track.cid}/>);
+				tracks.push(<Track model={track} key={track.cid} selectTrack={self.select}/>);
 				// console.log('tracks',tracks);
 			});
 		});

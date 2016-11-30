@@ -6,7 +6,12 @@ import moment 	from 'moment';
 import Backbone from 'backbone';
 
 import {Avatar, Card, CardHeader, CardTitle, CardText,
-				Chip, IconButton, Toggle} from 'material-ui';
+				Chip, IconButton, Toggle, Checkbox} from 'material-ui';
+
+import ActionFavorite from 'material-ui/svg-icons/action/favorite';
+import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
+import EventSeat from 'material-ui/svg-icons/action/event-seat';
+
 
 import Trip   from './../models/Trip';
 import Artist from './../models/SpotifyArtist';
@@ -23,6 +28,7 @@ const styles = {
 		marginTop: 70
 	},
 	concert: {
+		position: 'relative',
 		margin: 8
 	},
 	artists: {
@@ -62,7 +68,29 @@ const styles = {
 	},
 	date:{
 
+	},
+	seat: {
+		position: 'absolute',
+		top: 0,
+		right: 42,
+		// padding: 12,
+		// height: 48,
+		// width: 48,
+		marginTop: 5,
+		marginBottom: 5
+	},
+	fave: {
+		position: 'absolute',
+		top: 0,
+		right: 4,
+		// padding: 12,
+		// height: 48,
+		// width: 48,
+		marginTop: 5,
+		marginBottom: 5
 	}
+
+
 
 };
 
@@ -73,7 +101,7 @@ var ArtistChip = React.createClass({
 
   mixins: [Backbone.React.Component.mixin],
 
-	componentWillMount: function() {
+	componentDidMount: function() {
 		var artist = this.getModel();
 		artist.search();
 	},
@@ -108,7 +136,7 @@ var ArtistChip = React.createClass({
 		var color 		= spotify && added ? '#23CF5F'  : null;
 		var iconColor = spotify && !added ? '#23CF5F'  : null;
 
-		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">playlist_add</i>;
+		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">queue_music</i>;
 
 		return (
 			<Chip
@@ -118,8 +146,6 @@ var ArtistChip = React.createClass({
 				onTouchTap={handleClick}
 				href={null}
 				labelStyle={labelStyle}
-				onMouseOver={this.onMouseOver}
-				onMouseLeave={this.onMouseLeave}
 			>
 
 			{spotify && images.length > 2 &&
@@ -146,11 +172,11 @@ var ArtistChip = React.createClass({
 var ConcertCard = React.createClass({
 	mixins: [Backbone.React.Component.mixin],
 
-	onExpandChange: function(favorite){
-		console.log('favorite:', favorite);
+	onExpandChange: function(){
+		console.log('favorite:');
 		var concert = this.getModel();
 
-		if(favorite){
+		if(!concert.get('favorite')){
 			this.props.addFavorite(concert.get('sgId'));
 		}
 		else{
@@ -167,6 +193,11 @@ var ConcertCard = React.createClass({
 		var day  = m.format('ddd, MMM Do');
 		var time = m.format('h:mm a');
 		var self = this;
+
+		var price = concert.get('price') ? 'from $'+ concert.get('price'): null;
+		var chair = (concert.get('price') == null );
+		//? {color: 'gray', fill: 'currentColor'} : null;
+
 		return (
 			<Card
 				style={styles.concert}
@@ -178,10 +209,39 @@ var ConcertCard = React.createClass({
 					style={styles.header}
 					title={day}
 					subtitle={time}
-					showExpandableButton={true}
+					showExpandableButton={false}
 					openIcon={<span><i style={{color: '#E91E63'}} className="material-icons">favorite</i></span>}
 					closeIcon={<span><i style={{color: '#E91E63'}} className="material-icons">favorite_border</i></span> }
 				/>
+
+				<div style={styles.seat}>
+					<IconButton
+						tooltip={price}
+						disabled={chair}
+						iconStyle={{cursor:'default'}}
+						tooltipPosition="top-center"
+						href={concert.get('sgUrl')}
+						>
+						<EventSeat style={{color: 'blue', fill: 'currentColor'}}/>
+					</IconButton>
+
+				</div>
+
+				<div style={styles.fave}>
+					<IconButton
+						iconStyle={{color: '#E91E63'}}
+						onTouchTap={this.onExpandChange}
+						>
+						{concert.get('favorite') ? <ActionFavorite /> : <ActionFavoriteBorder/>}
+					</IconButton>
+
+
+
+				</div>
+
+
+
+
 
 				<CardTitle
 					style={styles.cardHeader}
@@ -305,13 +365,22 @@ var Concerts = React.createClass({
 
 		return (
 			<div style={styles.concerts}>
-				<div style={{width:'100%'}}>
-					<Toggle
+				<div style={{width:'100%', paddingLeft: 30, margin: 10}}>
+					{ /*<Toggle
 						toggled={this.state.favorites}
 						onToggle={this.handleToggle}
 						labelPosition="right"
-						label="favorites"
-						/>
+						label={<i style={{color: '#E91E63'}} className="material-icons">favorite</i>}
+						/> */ }
+					<Checkbox
+							checked={this.state.favorites}
+							onCheck={this.handleToggle}
+							checkedIcon={<ActionFavorite />}
+				      uncheckedIcon={<ActionFavoriteBorder />}
+							iconStyle={{color: '#E91E63', fill: 'currentColor'}}
+							label={'Favorites'}
+							labelStyle={{color: '#E91E63', marginLeft: -8}}
+							/>
 				</div>
 
 				{concerts}

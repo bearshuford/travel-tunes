@@ -31,6 +31,7 @@ var ConcertCollection = Backbone.Collection.extend({
       return {
         artists: new ArtistCollection(artists),
         date:    r['datetime_local'],
+        price:   r.stats['lowest_price'],
         title:   r.title,
         type:    r.type,
         score:   r.score,
