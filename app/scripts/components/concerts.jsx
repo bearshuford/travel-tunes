@@ -5,7 +5,8 @@ import React 		from 'react';
 import moment 	from 'moment';
 import Backbone from 'backbone';
 
-import {Avatar, Card, CardHeader, CardTitle, CardText, Chip, IconButton} from 'material-ui';
+import {Avatar, Card, CardHeader, CardTitle, CardText,
+				Chip, IconButton, Toggle} from 'material-ui';
 
 import Trip   from './../models/Trip';
 import Artist from './../models/SpotifyArtist';
@@ -178,8 +179,9 @@ var ConcertCard = React.createClass({
 					title={day}
 					subtitle={time}
 					showExpandableButton={true}
-					openIcon={<i className="material-icons">favorite</i>}
-					closeIcon={<i className="material-icons">favorite_border</i>} />
+					openIcon={<span><i style={{color: '#E91E63'}} className="material-icons">favorite</i></span>}
+					closeIcon={<span><i style={{color: '#E91E63'}} className="material-icons">favorite_border</i></span> }
+				/>
 
 				<CardTitle
 					style={styles.cardHeader}
@@ -219,7 +221,9 @@ var Concerts = React.createClass({
 	mixins: [Backbone.React.Component.mixin],
 
 	getInitialState: function() {
-		return {fetched: false};
+		return {
+      favorites: false
+    };
 	},
 
 	componentWillReceiveProps: function(nextProps){
@@ -262,26 +266,32 @@ var Concerts = React.createClass({
 
 	},
 
+
+	handleToggle: function(event, toggle) {
+		 this.setState({favorites: toggle});
+	 },
+
 	render: function() {
 		console.log('render concerts', this.getCollection());
 		var self = this;
 		var concerts = this.getCollection();
 
 
-		var faves = self.props.favorites;
+		var faves = this.getModel().get('favorites');
+
+
 
 		// set favorites
 		concerts.map(function(concert,i){
 			var favorite =_.contains(faves, concert.get('sgId'))
-			console.log('favorite~');
 			concert.set({'favorite': favorite});
 
-
-			if(favorite){
-				console.log('favorite', i);
-			}
 			return concert;
 		});
+
+		if(self.state.favorites === true){
+			concerts = concerts.where({favorite:true});
+		}
 
 		 concerts = concerts.map( function(concert, i){
 			return <ConcertCard
@@ -295,6 +305,15 @@ var Concerts = React.createClass({
 
 		return (
 			<div style={styles.concerts}>
+				<div style={{width:'100%'}}>
+					<Toggle
+						toggled={this.state.favorites}
+						onToggle={this.handleToggle}
+						labelPosition="right"
+						label="favorites"
+						/>
+				</div>
+
 				{concerts}
 			</div>
 		);

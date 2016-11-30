@@ -87,32 +87,36 @@ const styles = {
 };
 
 
+//
+// var ArtistChip = React.createClass({
+//
+// 	mixins: [Backbone.React.Component.mixin],
+//
+// 	removeArtist: function(){
+// 		this.getModel().set({added: false});
+// 		this.props.removeArtist(this.getModel());
+// 	},
+//
+// 	render: function() {
+// 		var artist = this.getModel();
+// 		var images = artist.get('images');
+// 		return (
+// 			<Chip
+// 				style={styles.artist}
+// 				onTouchTap={this.props.onTouchTap}
+// 				onRequestDelete={this.removeArtist}
+// 				>
+// 				{/* <Avatar
+// 					src={images[images.length -1].url}/>*/}
+// 				{artist.get('name')}
+// 			</Chip>
+// 		);
+// 	}
+// });
 
-var ArtistChip = React.createClass({
 
-	mixins: [Backbone.React.Component.mixin],
 
-	removeArtist: function(){
-		this.getModel().set({added: false});
-		this.props.removeArtist(this.getModel());
-	},
 
-	render: function() {
-		var artist = this.getModel();
-		var images = artist.get('images');
-		return (
-			<Chip
-				style={styles.artist}
-				onTouchTap={this.props.onTouchTap}
-				onRequestDelete={this.removeArtist}
-				>
-				{/* <Avatar
-					src={images[images.length -1].url}/>*/}
-				{artist.get('name')}
-			</Chip>
-		);
-	}
-});
 
 
 
@@ -122,7 +126,8 @@ var TripDetail = React.createClass({
 
 	getInitialState: function() {
 		return {
-			selectedArtists: new ArtistCollection()
+			selectedArtists: new ArtistCollection(),
+			favorite: false
 		};
 	},
 
@@ -166,16 +171,25 @@ var TripDetail = React.createClass({
     console.log('addFavorite', sgId);
 		var favorites = this.getModel().get('favorites');
 		favorites.push(sgId);
-		this.getModel().save('favorites',favorites);
+		this.getModel().save('favorites', favorites);
 		 console.log(this.getModel().get('favorites'));
 
 		// this.props.addFavorite(sgId);
   },
 
   removeFavorite: function(sgId){
-    console.log('removeFavorite', sgId);
-  },
 
+		var favorites = this.getModel().get('favorites');
+
+    var found = favorites.indexOf(sgId);
+
+    while (found !== -1) {
+      favorites.splice(found, 1);
+      found = favorites.indexOf(sgId);
+    }
+
+		this.getModel().save('favorites', favorites);
+  },
 
 
   render: function() {
@@ -208,7 +222,7 @@ var TripDetail = React.createClass({
 						removeArtist={this.removeArtist}
 						addFavorite={this.addFavorite}
 						removeFavorite={this.removeFavorite}
-						favorites={trip.get('favorites')}/>
+						favorites={this.state.favorites}/>
 
 					<div style={styles.playlist}>
 						<TopTracks
