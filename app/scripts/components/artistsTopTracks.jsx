@@ -45,10 +45,13 @@ var Track = React.createClass({
 
 		// this.props.select()
 		var playing = this.state.playing;
+		var audio = this.state.audio;
 		if(!playing){
-			var audio = this.getModel().get('mp3Url');
+			var audioUrl = this.getModel().get('mp3Url');
 			console.log('AUDIO:', audio);
-			var audio = new Audio(audio);
+			if (audio === null){
+				audio = new Audio(audioUrl);
+			}
 			console.log(audio);
 
 			// audio.play();
@@ -60,7 +63,7 @@ var Track = React.createClass({
 		}
 		else {
 			console.log('pausing');
-			this.state.audio.pause();
+			this.props.selectTrack(audio);
 
 			this.setState({playing: false})
 		}
@@ -120,6 +123,7 @@ var TopTracks = React.createClass({
 		if(track != playingTrack){
 
 			track.play();
+			playing = true;
 			playingTrack = track;
 		}
 		this.setState({playingTrack: playingTrack, playing: playing})

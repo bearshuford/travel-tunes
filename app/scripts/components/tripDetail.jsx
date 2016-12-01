@@ -27,24 +27,6 @@ const styles = {
 		marginRight: 240
 	},
 
-	selectedArtists: {
-		position:   		'fixed',
-		top: 			  		64,
-		left: 		  		5,
-		paddingTop: 		10,
-		zIndex: 				4,
-		width: 		  		'100%',
-		display:    		'flex',
-		flexFlow:   		'row nowrap',
-		justifyContent: 'space-between',
-		alignItems: 		'flex-start',
-		background: 		'white'
-	},
-
-	eventDetails:{
-		flex: '0 0 auto'
-	},
-
 	artist: {
 		marginRight:  8,
 		marginBottom: 6
@@ -85,34 +67,6 @@ const styles = {
 		overflow: 	'scroll'
 	}
 };
-
-
-//
-// var ArtistChip = React.createClass({
-//
-// 	mixins: [Backbone.React.Component.mixin],
-//
-// 	removeArtist: function(){
-// 		this.getModel().set({added: false});
-// 		this.props.removeArtist(this.getModel());
-// 	},
-//
-// 	render: function() {
-// 		var artist = this.getModel();
-// 		var images = artist.get('images');
-// 		return (
-// 			<Chip
-// 				style={styles.artist}
-// 				onTouchTap={this.props.onTouchTap}
-// 				onRequestDelete={this.removeArtist}
-// 				>
-// 				{/* <Avatar
-// 					src={images[images.length -1].url}/>*/}
-// 				{artist.get('name')}
-// 			</Chip>
-// 		);
-// 	}
-// });
 
 
 
@@ -198,8 +152,8 @@ var TripDetail = React.createClass({
 
 		console.log('tripDetail render', trip);
 
-		var startTitle = moment(trip.get('startDate')).format('l');
-		var endTitle   = moment(trip.get('endDate')).format('l');
+		var startTitle = moment(trip.get('startDate')).format('MMM D');
+		var endTitle   = moment(trip.get('endDate')).format('MMM D');
 
 		var location  = trip.get('city') + ', '  + trip.get('state');
 		var daterange = startTitle       + ' - ' + endTitle;

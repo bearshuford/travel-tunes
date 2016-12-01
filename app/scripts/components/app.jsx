@@ -79,7 +79,7 @@ var App = React.createClass({
     var back = this.props.handleBack !== undefined;
     console.log('back',back);
 
-    var title = this.props.title ? this.props.title : "final project";
+    var title = this.props.title ? this.props.title : "TravelTunes";
 
     return (
       <Theme>

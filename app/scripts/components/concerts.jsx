@@ -190,7 +190,7 @@ var ConcertCard = React.createClass({
 	render: function() {
 		var concert = this.getModel();
 		var m    = moment(concert.get('date'));
-		var day  = m.format('ddd, MMM Do');
+		var day  = m.format('ddd, MMM D');
 		var time = m.format('h:mm a');
 		var self = this;
 
@@ -220,6 +220,7 @@ var ConcertCard = React.createClass({
 						disabled={chair}
 						iconStyle={{cursor:'default'}}
 						tooltipPosition="top-center"
+						tooltipStyles={{fontSize: 12}}
 						href={concert.get('sgUrl')}
 						>
 						<EventSeat style={{color: 'blue', fill: 'currentColor'}}/>
