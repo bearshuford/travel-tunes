@@ -27,6 +27,14 @@ const styles = {
 		marginRight: 240
 	},
 
+	pageFull:{
+		position: 	 'relative',
+		display: 		 'flex',
+		flexFlow: 	 'row nowrap',
+		alignItems:  'space-between',
+		fontFamily:  '"Roboto", sans-serif',
+	},
+
 	artist: {
 		marginRight:  8,
 		marginBottom: 6
@@ -65,6 +73,9 @@ const styles = {
 		background: 'white',
 		height: 		'100vh',
 		overflow: 	'scroll'
+	},
+	playlistEmpty: {
+		display: 'none'
 	}
 };
 
@@ -160,6 +171,8 @@ var TripDetail = React.createClass({
 		var title     = location         + ' | ' + daterange;
 
 		var concerts = new SGEventCollection();
+
+
 
     return (
 			<App
