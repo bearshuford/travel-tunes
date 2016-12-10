@@ -13,20 +13,27 @@ import User from './../models/User';
 const styles = {
   login: {
     display:        'flex',
-    flexFlow:       'row nowrap',
-    justifyContent: 'center'
+    flexFlow:       'row wrap',
+    justifyContent: 'center',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '100%'
   },
   header: {
     marginTop:    4,
-    marginBottom: 4
+    marginBottom: 0,
+    paddingBottom: 0
   },
   paper: {
     padding: 20,
     width:   300,
-    margin:  '10px 20px'
+    minWidth: 240,
+    margin:  '8px 16px',
+    zIndex: 3000,
+    overflow: 'hidden'
   },
   submit: {
-    marginTop: 32
+    marginTop: 20
   }
 };
 

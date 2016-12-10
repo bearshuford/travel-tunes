@@ -307,7 +307,7 @@ var Concerts = React.createClass({
         withCredentials: false,
 				crossDomain:     true,
 		  data : {
-				'per_page': 			    '50',
+				'per_page': 			    '100',
 				'taxonomies.name':    'concert',
 		    'venue.state': 			  trip.get('state'),
 				'venue.city': 			  trip.get('city'),
