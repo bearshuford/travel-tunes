@@ -81,6 +81,17 @@ var Track = React.createClass({
 		};
 	},
 
+	componentDidUpdate: function(prevProps, prevState) {
+		if(this.props.autoplay && !prevProps.autoplay){
+			console.log('CDU', this.props, prevProps);
+			this.onClick();
+		}
+	},
+
+	componentWillUpdate: function(nextProps, nextState) {
+
+	},
+
 	onClick: function() {
 
 		// this.props.select()
@@ -101,6 +112,7 @@ var Track = React.createClass({
 					self.setState({ended: true});
 					self.props.ended();
 				};
+
 			}
 
 			this.props.selectTrack(audio, this.props.pos);
@@ -144,7 +156,8 @@ var TopTracks = React.createClass({
 		return {
 			playingTrack: null,
 			playingPos: null,
-			playing: false
+			playing: false,
+			autoplay: null
 		};
 	},
 
@@ -152,6 +165,7 @@ var TopTracks = React.createClass({
 		var playing = this.state.playing;
 		var playingTrack = this.state.playingTrack;
 		var artist = this.getCollection().at(0);
+		var t = artist.get('tracks').at(pos);
 		var same = this.state.playingPos === pos;
 
 		if(playing){
@@ -178,7 +192,14 @@ var TopTracks = React.createClass({
 	},
 
 	ended: function() {
-		this.setState({playing:false});
+		var autoplay = this.state.playingPos+1;
+		console.log('autoplay',autoplay);
+
+		this.setState({playing:false, autoplay: autoplay});
+	},
+
+	playNext() {
+
 	},
 
 
@@ -193,12 +214,13 @@ var TopTracks = React.createClass({
   },
 
 	render: function() {
-		var tracks = [];
-		var self   = this;
-    var name   = null;
-		var img    = null;
-		var genres = null;
-		var ended  = this.ended;
+		var tracks   = [];
+		var self     = this;
+    var name     = null;
+		var img      = null;
+		var genres   = null;
+		var ended    = this.ended;
+		var autoplay = this.state.autoplay;
 		var imgCount;
 		console.log('playlist collection', this.getCollection().toJSON());
 		this.getCollection().each(function(artist,j){
@@ -215,6 +237,7 @@ var TopTracks = React.createClass({
 											key={track.cid}
 											pos={i}
 											ended={ended}
+											autoplay={i === autoplay}
 											selectTrack={self.select}/>);
 			});
 		});
