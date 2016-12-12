@@ -2,8 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import Backbone from 'backbone';
 
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import {Paper, Dialog, FlatButton, IconButton, FloatingActionButton} from 'material-ui';
+import {Avatar, List, ListItem, Paper, Dialog, FlatButton, IconButton, FloatingActionButton} from 'material-ui';
 
 import App from './app.jsx';
 import TripForm from './tripForm.jsx';
@@ -22,7 +21,7 @@ const styles = {
 	},
 	paper:{
 		maxWidth: 800,
-		marginTop: 20,
+		marginTop: 0,
 		display: 'flex',
 		flexFlow: 'row nowrap',
 		justifyContent: 'center',
@@ -30,8 +29,8 @@ const styles = {
 	},
 	addButton: {
 		position: 'absolute',
-		right: 100,
-		bottom: -100,
+		right: '20%',
+		top: -36,
 		zIndex: 1300
 	},
 	linkIcon: {
@@ -63,6 +62,11 @@ const styles = {
 
 var TripRow = React.createClass({
 
+	navigate: function(){
+		var id = this.props.trip.get('objectId');
+		Backbone.history.navigate('#trips/' + id,{trigger:true});
+	},
+
 
 	render: function() {
 		var trip = this.props.trip;
@@ -72,32 +76,21 @@ var TripRow = React.createClass({
 		var startDate = moment(trip.get('startDate')).format('ll');
 		var endDate   = moment(trip.get('endDate')).format('ll');
 		var imgUrl = trip.get('imageUrl');
-		return (
-			<TableRow>
-				<TableRowColumn>{ imgUrl && <img src={imgUrl}/>   }   </TableRowColumn>
-				<TableRowColumn> {city}      </TableRowColumn>
-				<TableRowColumn> {state}     </TableRowColumn>
-				<TableRowColumn> {startDate} </TableRowColumn>
-				<TableRowColumn> {endDate}   </TableRowColumn>
-				<TableRowColumn style={styles.iconColumn}>
-					<IconButton
-						iconStyle={styles.linkIcon}
-						href={ '#trips/' + id}
-						iconClassName="material-icons"
-						children="music_note"
-					/>
 
-				</TableRowColumn>
-
-			</TableRow>
-		);
+    return (
+      <ListItem
+        primaryText={city+' '+state}
+        secondaryText={startDate+' to '+endDate}
+        leftAvatar={imgUrl ? <Avatar src={imgUrl}/> : null}
+				insetChildren={imgUrl ? false : true}
+				onTouchTap={this.navigate}
+      />
+    );
 	}
 });
 
 
 var Calendar = React.createClass({
-
-
 
   render: function() {
 		var trips = this.props.trips.map(function(trip, i){
@@ -110,33 +103,7 @@ var Calendar = React.createClass({
     return (
 			<Paper style={styles.paper}>
 
-				{
-					hasTrips ?
-						(<Table>
-							<TableHeader
-								adjustForCheckbox={false}
-								displaySelectAll={false}
-							>
-								<TableRow>
-									<TableHeaderColumn>
-										<i className="material-icons">image</i>
-										</TableHeaderColumn>
-									<TableHeaderColumn>City</TableHeaderColumn>
-									<TableHeaderColumn>State</TableHeaderColumn>
-									<TableHeaderColumn>Start Date</TableHeaderColumn>
-									<TableHeaderColumn>End Date</TableHeaderColumn>
-									<TableHeaderColumn style={styles.iconColumn}/>
-							</TableRow>
-							</TableHeader>
-							<TableBody
-								displayRowCheckbox={false}
-								children={trips}
-							/>
-						</Table>)
-					:
-						<div style={styles.direction}>add a trip</div>
-				}
-
+				<List>{trips}</List>
 			</Paper>
 		);
   }
