@@ -124,6 +124,7 @@ var Track = React.createClass({
 				innerDivStyle={styles.track}
 				leftIcon={icon}
 				primaryText={<span style={styles.trackName}>{name}</span>}
+
 			/>
 		);
 	}
@@ -193,16 +194,19 @@ var TopTracks = React.createClass({
 
 	render: function() {
 		var tracks = [];
-		var self = this;
-    var name = null;
-		var img  = null;
+		var self   = this;
+    var name   = null;
+		var img    = null;
+		var genres = null;
+		var ended  = this.ended;
 		var imgCount;
-		var ended = this.ended;
 		console.log('playlist collection', this.getCollection().toJSON());
 		this.getCollection().each(function(artist,j){
       name      = artist.get('name');
 			imgCount  = artist.get('images').length
 			img       = artist.get('images')[0];
+			genres		= artist.get('genres')[0];
+			console.log('genres~~',genres);
 
 
 			artist.get('tracks').each(function(track,i){
@@ -225,6 +229,8 @@ var TopTracks = React.createClass({
 						&&
 						<ListItem
 							primaryText={name}
+							secondaryText={genres}
+							autoGenerateNestedIndicator={false}
 							leftAvatar={<Avatar src={img.url} />}
 							nestedItems={tracks}
 							initiallyOpen={true}
