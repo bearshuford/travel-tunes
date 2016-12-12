@@ -198,19 +198,16 @@ var TopTracks = React.createClass({
 		this.setState({playing:false, autoplay: autoplay});
 	},
 
-	playNext() {
-
-	},
 
 
   componentWillUpdate: function(nextProps, nextState) {
 
-    this.getCollection().each(function(artist){
-			console.log('componentWillMount', artist);
-			if(!artist.get('fetched') && !artist.get('fetching')){
-      	artist.getTopTracks(5);
-			}
-    });
+    // this.getCollection().each(function(artist){
+		// 	console.log('componentWillMount', artist);
+		// 	if(!artist.get('fetched') && !artist.get('fetching')){
+    //   	artist.getTopTracks(5);
+		// 	}
+    // });
   },
 
 	render: function() {

@@ -119,7 +119,7 @@ var TripDetail = React.createClass({
 
 	addArtist: function(artist){
 		var artists = this.state.selectedArtists;
-		artist.getTopTracks(6);
+		artist.getTopTracks(10);
 		artists.add(artist);
 		// this.setState({selectedArtists: artists});
 	},
