@@ -98,7 +98,7 @@ var Track = React.createClass({
 				audio.onended = function(){
 					var a = self.state.audio;
 					a.currentTime = 0;
-					self.setState({ended: true, audio: a});
+					self.setState({ended: true});
 					self.props.ended();
 				};
 			}
