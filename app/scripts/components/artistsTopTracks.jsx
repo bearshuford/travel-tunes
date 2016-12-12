@@ -1,11 +1,14 @@
 
 import $ 				from 'jquery';
 import _ 				from 'underscore';
-import React 		from 'react';
-
 import Backbone from 'backbone';
 
-import {List, ListItem, Avatar} from 'material-ui';
+import React, {Component, PropTypes} from 'react';
+
+import {List, ListItem, makeSelectable, Avatar, Subheader} from 'material-ui';
+import Pause from 'material-ui/svg-icons/av/pause-circle-filled';
+import Play  from 'material-ui/svg-icons/av/play-circle-outline';
+import Replay  from 'material-ui/svg-icons/av/replay';
 
 import Trip   from './../models/Trip';
 import Artist from './../models/SpotifyArtist';
@@ -13,22 +16,58 @@ import ArtistCollection from './../models/SpotifyArtistCollection';
 
 require('backbone-react-component');
 
-
 const styles = {
 	trackName: {
-		fontSize: 14
-	},
-	artistName:{
-		fontSize: 12
+		fontSize: 14,
+		whiteSpace: 'nowrap',
+		overflow: 'hidden',
+		display: 'block',
+		textOverflow: 'ellipsis',
 	},
 	track: {
-		paddingTop: 10,
-		paddingBottom: 10
-	},
-	playIcon: {
-		marginTop: 6
+		paddingLeft: 56
 	}
+
 };
+
+
+// let SelectableList = makeSelectable(List);
+//
+// function wrapState(ComposedComponent) {
+//   return class SelectableList extends Component {
+//     // const propTypes = {
+//     //   children: PropTypes.node.isRequired,
+//     //   defaultValue: PropTypes.number.isRequired
+//     // };
+//
+//     componentWillMount() {
+//       this.setState({
+//         selectedIndex: this.props.defaultValue
+//       });
+//     }
+//
+//     handleRequestChange = (event, index) => {
+//       this.setState({
+//         selectedIndex: index
+//       });
+//     };
+//
+//     render() {
+//       return (
+//         <ComposedComponent
+//           value={this.state.selectedIndex}
+//           onChange={this.handleRequestChange}
+//         >
+//           {this.props.children}
+//         </ComposedComponent>
+//       );
+//     }
+//   };
+// }
+//
+// SelectableList = wrapState(SelectableList);
+
+
 
 
 var Track = React.createClass({
@@ -37,59 +76,54 @@ var Track = React.createClass({
 	getInitialState: function() {
 		return {
 			playing: false,
-			audio: null
+			ended:   false,
+			audio:   null
 		};
 	},
 
 	onClick: function() {
 
 		// this.props.select()
-		var playing = this.state.playing;
+		var playing = this.getModel().get('playing');
 		var audio = this.state.audio;
 		if(!playing){
 			var audioUrl = this.getModel().get('mp3Url');
-			console.log('AUDIO:', audio);
+
 			if (audio === null){
+				var self = this;
 				audio = new Audio(audioUrl);
+				audio.onpause = function(){
+					self.setState({playing: false, ended: false});
+				};
+				audio.onended = function(){
+					var a = self.state.audio;
+					a.currentTime = 0;
+					self.setState({ended: true, audio: a});
+					self.props.ended();
+				};
 			}
-			console.log(audio);
 
-			// audio.play();
-			this.props.selectTrack(audio);
-
+			this.props.selectTrack(audio, this.props.pos);
 			this.setState({playing: true, audio: audio});
-
-
 		}
 		else {
-			console.log('pausing');
 			this.props.selectTrack(audio);
-
-			this.setState({playing: false})
 		}
 	},
 
 
 
 	render: function() {
-		var track = this.getModel();
+		var name = this.getModel().get('name');
+	  var icon = this.state.ended ? <Replay/>:<Play color="white"/>;
+		icon = this.state.playing ?  <Pause/> : icon;
+
 		return (
 			<ListItem
 				onTouchTap={this.onClick}
 				innerDivStyle={styles.track}
-				leftIcon={
-					this.state.playing ?
-					<i style={styles.playIcon} className="material-icons">pause</i>  :
-					<i style={styles.playIcon} className="material-icons">play_arrow</i>
-				}
-				primaryText={
-					<div style={styles.trackName}>
-						{track.get('name')}
-					</div>}
-				secondaryText={
-					<div style={styles.artistName}>
-						{track.get('artist').get('name')}
-					</div>}
+				leftIcon={icon}
+				primaryText={<span style={styles.trackName}>{name}</span>}
 			/>
 		);
 	}
@@ -108,29 +142,42 @@ var TopTracks = React.createClass({
 	getInitialState: function() {
 		return {
 			playingTrack: null,
+			playingPos: null,
 			playing: false
 		};
 	},
 
-	select: function(track){
+	select: function(track, pos){
 		var playing = this.state.playing;
 		var playingTrack = this.state.playingTrack;
+		var artist = this.getCollection().at(0);
+		var same = this.state.playingPos === pos;
 
 		if(playing){
+			console.log('~~select: something is playing~~');
 			playingTrack.pause();
 			playing = false;
 		}
-		if(track != playingTrack){
-
+		if(!same){
+			console.log('~~select: !same~~')
 			track.play();
 			playing = true;
 			playingTrack = track;
 		}
-		this.setState({playingTrack: playingTrack, playing: playing})
+		else if(!this.state.playing){
+			track.play();
+			playing = true;
+		}
+
+		this.setState({
+			playingTrack: playingTrack,
+			playing: playing,
+			playingPos: pos
+		});
 	},
 
-	componentDidMount: function() {
-
+	ended: function() {
+		this.setState({playing:false});
 	},
 
 
@@ -147,17 +194,42 @@ var TopTracks = React.createClass({
 	render: function() {
 		var tracks = [];
 		var self = this;
+    var name = null;
+		var img  = null;
+		var imgCount;
+		var ended = this.ended;
 		console.log('playlist collection', this.getCollection().toJSON());
 		this.getCollection().each(function(artist,j){
+      name      = artist.get('name');
+			imgCount  = artist.get('images').length
+			img       = artist.get('images')[0];
+
+
 			artist.get('tracks').each(function(track,i){
-				console.log('track '+ i +' from '+ artist.get('name'));
-				tracks.push(<Track model={track} key={track.cid} selectTrack={self.select}/>);
-				// console.log('tracks',tracks);
+				tracks.push(<Track
+											model={track}
+											key={track.cid}
+											pos={i}
+											ended={ended}
+											selectTrack={self.select}/>);
 			});
 		});
+		var hasTracks = (tracks.length > 0);
+		var hasArtist = (name !== null);
 		return (
 			<List >
-		      {tracks}
+					{hasTracks
+						&&
+						<Subheader children="top tracks"/>}
+					{hasArtist
+						&&
+						<ListItem
+							primaryText={name}
+							leftAvatar={<Avatar src={img.url} />}
+							nestedItems={tracks}
+							initiallyOpen={true}
+	          />
+					}
 			</List>
 		);
 	}
