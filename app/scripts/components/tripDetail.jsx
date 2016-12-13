@@ -86,7 +86,7 @@ const styles = {
 	drawerContainer: {
 		height: 'calc(100% - 92px)',
 		top: 78,
-		bottom: 14
+		bottom: 0
 	}
 };
 

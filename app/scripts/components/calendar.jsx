@@ -2,7 +2,10 @@ import React from 'react';
 import moment from 'moment';
 import Backbone from 'backbone';
 
-import {Avatar, List, ListItem, Paper, Dialog, FlatButton, IconButton, FloatingActionButton} from 'material-ui';
+import Place  from 'material-ui/svg-icons/maps/place';
+
+import {Avatar, List, ListItem, Paper, Dialog,
+	FlatButton, IconButton, FloatingActionButton, Divider} from 'material-ui';
 
 import App from './app.jsx';
 import TripForm from './tripForm.jsx';
@@ -75,7 +78,7 @@ var TripRow = React.createClass({
       <ListItem
         primaryText={city+' '+state}
         secondaryText={startDate+' to '+endDate}
-        leftAvatar={imgUrl ? <Avatar src={imgUrl}/> : null}
+        leftAvatar={imgUrl ? <Avatar src={imgUrl}/> : <Avatar icon={<Place/>}/>}
 				insetChildren={imgUrl ? false : true}
 				onTouchTap={this.navigate}
       />
@@ -156,9 +159,6 @@ var CalendarContainer = React.createClass({
 	},
 
   render: function() {
-
-
-
     return (
 			<App>
 				<div style={styles.page}>
