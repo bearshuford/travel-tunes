@@ -20,7 +20,8 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'column nowrap',
 		alignItems: 'center',
-		fontFamily: '"Roboto", sans-serif'
+		fontFamily: '"Roboto", sans-serif',
+		marginTop: 22
 	},
 	paper:{
 		maxWidth: 800,
@@ -41,7 +42,6 @@ const styles = {
 	},
 	dialogTitle:{
 		border: 0
-		// marginBottom: 16
 	},
 	dialogBody: {
 
@@ -96,7 +96,7 @@ var Calendar = React.createClass({
 								key={i}
 							/>
 					}.bind(this));
-		trips.push(
+		trips.unshift(
 			<ListItem innerDivStyle={{padding:0}}>
 				<FlatButton
 					style={{width: '100%', height: '100%'}}
@@ -162,7 +162,7 @@ var CalendarContainer = React.createClass({
     return (
 			<App>
 				<div style={styles.page}>
-					<h1>My Trips</h1>
+					{/*<h1>My Trips</h1>*/}
 					<Calendar trips={this.state.trips}/>
 
 				</div>

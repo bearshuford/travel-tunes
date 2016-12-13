@@ -4,7 +4,7 @@ import moment from 'moment';
 import Formsy from 'formsy-react';
 
 import {FormsySelect, FormsyText, FormsyDate} from 'formsy-material-ui/lib';
-import {FlatButton, RaisedButton, MenuItem}   from 'material-ui';
+import {FlatButton, RaisedButton, MenuItem, Avatar}   from 'material-ui';
 
 import setupParse from './../setupParse.js';
 
@@ -51,19 +51,20 @@ const styles = {
   imageInput:{
     cursor:   'pointer',
     position: 'absolute',
+    width:    '100%',
     top:      0,
     bottom:   0,
     right:    0,
     left:     0,
-    opacity:  0,
-    width:    '100%'
+    opacity:  0
   },
   imagePreview: {
-    height:     80,
+    width:      64,
+    height:     64,
     marginLeft: 30
   },
   imageUpload: {
-    height:         80,
+    height:         64,
     display:        'flex',
     flexFlow:       'row nowrap',
     width:          '100%',
@@ -167,9 +168,11 @@ var TripForm = React.createClass({
               style={styles.imageInput}
               onChange={this.onImageChange}/>
           </RaisedButton>
-          <img
+          { imagePreview &&
+            <Avatar
             src={this.state.imagePreviewUrl}
             style={styles.imagePreview}/>
+          }
         </div>
 
       <Formsy.Form
