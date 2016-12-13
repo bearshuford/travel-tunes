@@ -188,6 +188,7 @@ var TripDetail = React.createClass({
 
 					<Drawer
 						style={styles.drawer}
+						containerStyle={{height: 'calc(100% - 80px)', top: 80}}
 						children={
 							<TopTracks
 								collection={this.state.selectedArtists}

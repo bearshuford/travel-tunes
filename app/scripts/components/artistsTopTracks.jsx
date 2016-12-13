@@ -28,7 +28,7 @@ const styles = {
 		paddingLeft: 56
 	},
 	list: {
-		paddingTop: 64
+		top: 100
 	}
 
 };
