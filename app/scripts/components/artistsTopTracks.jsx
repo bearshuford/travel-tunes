@@ -26,6 +26,9 @@ const styles = {
 	},
 	track: {
 		paddingLeft: 56
+	},
+	list: {
+		paddingTop: 64
 	}
 
 };
@@ -241,7 +244,7 @@ var TopTracks = React.createClass({
 		var hasTracks = (tracks.length > 0);
 		var hasArtist = (name !== null);
 		return (
-			<List >
+			<List style={styles.list}>
 					{hasTracks
 						&&
 						<Subheader children="top tracks"/>}

@@ -10,11 +10,13 @@ import User from './../models/User'
 const styles = {
   appBar: {
   	marginBottom: '8px',
+    zIndex: 1500
 	},
   fixed: {
     position: 'fixed',
     top: 0,
-    left: 0
+    left: 0,
+    zIndex: 1500
   },
 	icon: {
     fontSize: 26,

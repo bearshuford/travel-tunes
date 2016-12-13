@@ -76,6 +76,9 @@ const styles = {
 	},
 	playlistEmpty: {
 		display: 'none'
+	},
+	drawer: {
+		zIndex: 1300
 	}
 };
 
@@ -92,7 +95,8 @@ var TripDetail = React.createClass({
 	getInitialState: function() {
 		return {
 			selectedArtists: new ArtistCollection(),
-			favorite: false
+			favorite: false,
+			open: false
 		};
 	},
 
@@ -109,7 +113,6 @@ var TripDetail = React.createClass({
 
 		this.props.model.set({'objectId': this.props.tripId});
 		this.props.model.fetch();
-
 	},
 
 	handleBack: function(){
@@ -121,38 +124,29 @@ var TripDetail = React.createClass({
 		var artists = this.state.selectedArtists;
 		artist.getTopTracks(10);
 		artists.add(artist);
-		// this.setState({selectedArtists: artists});
 	},
 
 	removeArtist: function(artist){
 		var artists = this.state.selectedArtists;
 		artist.set('added', false);
 		artists.remove(artist);
-		// this.setState({selectedArtists: artists});
 	},
 
 
   addFavorite: function(sgId){
-    console.log('addFavorite', sgId);
 		var favorites = this.getModel().get('favorites');
 		favorites.push(sgId);
 		this.getModel().save('favorites', favorites);
-		 console.log(this.getModel().get('favorites'));
-
-		// this.props.addFavorite(sgId);
   },
 
   removeFavorite: function(sgId){
-
 		var favorites = this.getModel().get('favorites');
-
     var found = favorites.indexOf(sgId);
 
     while (found !== -1) {
       favorites.splice(found, 1);
       found = favorites.indexOf(sgId);
     }
-
 		this.getModel().save('favorites', favorites);
   },
 
@@ -172,7 +166,8 @@ var TripDetail = React.createClass({
 
 		var concerts = new SGEventCollection();
 
-
+		var hasArtist = (this.state.selectedArtists.length > 0);
+		console.log('~~hasArtist',this.state.selectedArtists);
 
     return (
 			<App
@@ -191,11 +186,17 @@ var TripDetail = React.createClass({
 						removeFavorite={this.removeFavorite}
 						favorites={this.state.favorites}/>
 
-					<div style={styles.playlist}>
-						<TopTracks
-							collection={this.state.selectedArtists}
-							artistCount={this.state.selectedArtists.length}/>
-					</div>
+					<Drawer
+						style={styles.drawer}
+						children={
+							<TopTracks
+								collection={this.state.selectedArtists}
+								artistCount={this.state.selectedArtists.length}/>
+						}
+						openSecondary={true}
+						open={true}
+					/>
+
 
 				</div>
 

@@ -31,7 +31,7 @@ const styles = {
 		position: 'absolute',
 		right: '20%',
 		top: -36,
-		zIndex: 1300
+		zIndex: 1600
 	},
 	linkIcon: {
 		color: '#23CF5F'

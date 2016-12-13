@@ -73,9 +73,6 @@ const styles = {
 		position: 'absolute',
 		top: 0,
 		right: 42,
-		// padding: 12,
-		// height: 48,
-		// width: 48,
 		marginTop: 5,
 		marginBottom: 5
 	},
@@ -83,9 +80,6 @@ const styles = {
 		position: 'absolute',
 		top: 0,
 		right: 4,
-		// padding: 12,
-		// height: 48,
-		// width: 48,
 		marginTop: 5,
 		marginBottom: 5
 	}
