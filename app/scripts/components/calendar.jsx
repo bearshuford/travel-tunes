@@ -27,12 +27,6 @@ const styles = {
 		justifyContent: 'center',
 		alignItems: 'center'
 	},
-	addButton: {
-		position: 'absolute',
-		right: '20%',
-		top: -36,
-		zIndex: 1600
-	},
 	linkIcon: {
 		color: '#23CF5F'
 	},
@@ -99,10 +93,19 @@ var Calendar = React.createClass({
 								key={i}
 							/>
 					}.bind(this));
+		trips.push(
+			<ListItem innerDivStyle={{padding:0}}>
+				<FlatButton
+					style={{width: '100%', height: '100%'}}
+					label="Add a Trip"
+					secondary={true}
+					href="#trips/new"
+				/>
+			</ListItem>
+		);
 		var hasTrips = (trips.length > 0);
     return (
 			<Paper style={styles.paper}>
-
 				<List>{trips}</List>
 			</Paper>
 		);
@@ -162,10 +165,6 @@ var CalendarContainer = React.createClass({
 					<h1>My Trips</h1>
 					<Calendar trips={this.state.trips}/>
 
-					<FloatingActionButton style={styles.addButton}
-						secondary={true}
-						children={<i className="material-icons">add</i>}
-						href="#trips/new"/>
 				</div>
 				<Dialog
           title="Add a Trip"
