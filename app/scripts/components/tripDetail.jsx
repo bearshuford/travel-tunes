@@ -74,11 +74,19 @@ const styles = {
 		height: 		'100vh',
 		overflow: 	'scroll'
 	},
+
 	playlistEmpty: {
 		display: 'none'
 	},
+
 	drawer: {
 		zIndex: 1300
+	},
+
+	drawerContainer: {
+		height: 'calc(100% - 92px)',
+		top: 78,
+		bottom: 14
 	}
 };
 
@@ -122,7 +130,7 @@ var TripDetail = React.createClass({
 
 	addArtist: function(artist){
 		var artists = this.state.selectedArtists;
-		artist.getTopTracks(10);
+		artist.getTopTracks(9);
 		artists.add(artist);
 	},
 
@@ -188,7 +196,7 @@ var TripDetail = React.createClass({
 
 					<Drawer
 						style={styles.drawer}
-						containerStyle={{height: 'calc(100% - 80px)', top: 80}}
+						containerStyle={styles.drawerContainer}
 						children={
 							<TopTracks
 								collection={this.state.selectedArtists}

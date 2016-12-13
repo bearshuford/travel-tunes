@@ -9,6 +9,8 @@ import {List, ListItem, makeSelectable, Avatar, Subheader} from 'material-ui';
 import Pause from 'material-ui/svg-icons/av/pause-circle-filled';
 import Play  from 'material-ui/svg-icons/av/play-circle-outline';
 import Replay  from 'material-ui/svg-icons/av/replay';
+import Queue  from 'material-ui/svg-icons/av/queue-music';
+
 
 import Trip   from './../models/Trip';
 import Artist from './../models/SpotifyArtist';
@@ -28,7 +30,7 @@ const styles = {
 		paddingLeft: 56
 	},
 	list: {
-		top: 100
+		paddingBottom: 2
 	}
 
 };
@@ -203,16 +205,6 @@ var TopTracks = React.createClass({
 
 
 
-  componentWillUpdate: function(nextProps, nextState) {
-
-    // this.getCollection().each(function(artist){
-		// 	console.log('componentWillMount', artist);
-		// 	if(!artist.get('fetched') && !artist.get('fetching')){
-    //   	artist.getTopTracks(5);
-		// 	}
-    // });
-  },
-
 	render: function() {
 		var tracks   = [];
 		var self     = this;
@@ -245,9 +237,17 @@ var TopTracks = React.createClass({
 		var hasArtist = (name !== null);
 		return (
 			<List style={styles.list}>
-					{hasTracks
-						&&
-						<Subheader children="top tracks"/>}
+					{
+
+						<Subheader
+							children={
+								<div style={{display:'flex', alignItems:'center', padding: 'auto 26px'}}>
+									<Queue color={'#757575'}/>
+									<span style={{marginLeft: 12}}>{hasTracks ? 'top tracks' : 'select an artist for tunes'}</span>
+								</div>
+							}
+						/>
+					}
 					{hasArtist
 						&&
 						<ListItem
