@@ -2,6 +2,9 @@
 
 Find music to see live on your travels.
 
+
+![travel-tunes](https://cloud.githubusercontent.com/assets/21989005/21206671/929f8c60-c231-11e6-96d1-a81385122a2c.png)
+
 ## Use
 
 Try the [live demo](https://bearshuford.github.io/travel-tunes/).
@@ -32,3 +35,9 @@ Try the [live demo](https://bearshuford.github.io/travel-tunes/).
 * [Moment.js](http://momentjs.com/) - date parsing, manipulation, and display
 
 * [Parse Server](https://parse.com/) - server for user authentication, trips, and favorite events
+
+
+## TODO
+
+- [ ] make playlist responsive
+- [ ] improve favoriting
