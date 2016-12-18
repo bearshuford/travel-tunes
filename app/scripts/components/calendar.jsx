@@ -40,9 +40,7 @@ const styles = {
 	dialog:{
 
 	},
-	dialogTitle:{
-		border: 0
-	},
+
 	dialogBody: {
 
 	},
@@ -97,7 +95,7 @@ var Calendar = React.createClass({
 							/>
 					}.bind(this));
 		trips.unshift(
-			<ListItem innerDivStyle={{padding:0}}>
+			<ListItem innerDivStyle={{padding:0}} key="3210">
 				<FlatButton
 					style={{width: '100%', height: '100%'}}
 					label="Add a Trip"
@@ -167,8 +165,8 @@ var CalendarContainer = React.createClass({
 
 				</div>
 				<Dialog
-          title="Add a Trip"
-					titleStyle={styles.dialogTitle}
+					title="Add a Trip~"
+					titleStyle={{display:'none'}}
 					bodyStyle={styles.dialogBody}
 					contentStyle={styles.dialogContent}
           open={(this.props.new === true)}

@@ -14,7 +14,7 @@
     "browserify-shim": "^3.8.12",
     "eslint": "^2.2.0",
     "eslint-plugin-react": "^4.0.0",
-    "formsy-material-ui": "^0.5.2",
+    "formsy-material-ui": "^0.5.3",
     "formsy-react": "^0.18.1",
     "git-directory-deploy": "^1.4.0",
     "imagemin-cli": "^2.1.0",

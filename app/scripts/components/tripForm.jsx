@@ -3,14 +3,34 @@ import React  from 'react';
 import moment from 'moment';
 import Formsy from 'formsy-react';
 
-import {FormsySelect, FormsyText, FormsyDate} from 'formsy-material-ui/lib';
-import {FlatButton, RaisedButton, MenuItem, Avatar}   from 'material-ui';
+import {FormsySelect, FormsyText, FormsyDate, FormsyAutoComplete} from 'formsy-material-ui/lib';
+import {FlatButton, RaisedButton, IconButton, MenuItem, Avatar, AutoComplete}   from 'material-ui';
+
+import AddPhoto from 'material-ui/svg-icons/image/add-a-photo';
 
 import setupParse from './../setupParse.js';
 
 const styles = {
   form: {
+    position: 'relative'
+  },
+  header: {
+    marginTop:      10,
+    height:         76,
+    width:          '100%',
+    display:        'flex',
+    flexFlow:       'row nowrap',
+    justifyContent: 'flex-start',
+    alignItems:     'center'
+  },
 
+  title: {
+    fontSize:   22,
+    fontWeight: 400,
+    border:     0,
+    lineHeight: '32px',
+    margin:     '0px 0px -1px ',
+    color:      'rgba(0, 0, 0, 0.870588)'
   },
   location: {
     width:          '100%',
@@ -19,13 +39,13 @@ const styles = {
     justifyContent: 'flex-start'
   },
   city: {
-    flex: '1 0 45%'
+    flex: '1 0 50%'
   },
   state: {
-    flex: '1 0 45%'
+    flex: '1 0 50%'
   },
   cityInput: {
-    width: 256
+    width: '100%'
   },
   stateInput: {
     width: 256
@@ -34,7 +54,7 @@ const styles = {
     width:          '100%',
     display:        'flex',
     flexFlow:       'row wrap',
-    justifyContent: 'flex-start'
+    justifyContent: 'space-between'
   },
   date:{
     flex: '1 0 45%'
@@ -43,6 +63,8 @@ const styles = {
     display:        'flex',
     width:          '100%',
     justifyContent: 'flex-end',
+    flexFlow:       'row wrap',
+    alignItems:     'center',
     marginTop:      30
   },
   cancel:{
@@ -52,6 +74,7 @@ const styles = {
     cursor:   'pointer',
     position: 'absolute',
     width:    '100%',
+    height:    '100%',
     top:      0,
     bottom:   0,
     right:    0,
@@ -61,17 +84,25 @@ const styles = {
   imagePreview: {
     width:      64,
     height:     64,
-    marginLeft: 30
+    marginLeft: 36,
+    position:  'relative'
   },
+  imagePreviewButton: {
+    width:      64,
+    height:     64,
+    marginLeft: 36,
+    cursor:    'pointer',
+    position:  'relative'
+  },
+
   imageUpload: {
-    height:         64,
-    display:        'flex',
-    flexFlow:       'row nowrap',
-    width:          '100%',
-    justifyContent: 'flex-start',
-    alignItems:     'center'
+    // height:         64,
+    // flex:           '1 0 auto'
   }
 };
+
+// https://gist.githubusercontent.com/norcal82/42440bd06a67eb7d9616/raw/882838c2fa2dca4ae350589fe2ec7dd632a85d88/city_names.js
+var cityNames = ["Aberdeen", "Abilene", "Akron", "Albany", "Albuquerque", "Alexandria", "Allentown", "Amarillo", "Anaheim", "Anchorage", "Ann Arbor", "Antioch", "Apple Valley", "Appleton", "Arlington", "Arvada", "Asheville", "Athens", "Atlanta", "Atlantic City", "Augusta", "Aurora", "Austin", "Bakersfield", "Baltimore", "Barnstable", "Baton Rouge", "Beaumont", "Bel Air", "Bellevue", "Berkeley", "Bethlehem", "Billings", "Birmingham", "Bloomington", "Boise", "Boise City", "Bonita Springs", "Boston", "Boulder", "Bradenton", "Bremerton", "Bridgeport", "Brighton", "Brownsville", "Bryan", "Buffalo", "Burbank", "Burlington", "Cambridge", "Canton", "Cape Coral", "Carrollton", "Cary", "Cathedral City", "Cedar Rapids", "Champaign", "Chandler", "Charleston", "Charlotte", "Chattanooga", "Chesapeake", "Chicago", "Chula Vista", "Cincinnati", "Clarke County", "Clarksville", "Clearwater", "Cleveland", "College Station", "Colorado Springs", "Columbia", "Columbus", "Concord", "Coral Springs", "Corona", "Corpus Christi", "Costa Mesa", "Dallas", "Daly City", "Danbury", "Davenport", "Davidson County", "Dayton", "Daytona Beach", "Deltona", "Denton", "Denver", "Des Moines", "Detroit", "Downey", "Duluth", "Durham", "El Monte", "El Paso", "Elizabeth", "Elk Grove", "Elkhart", "Erie", "Escondido", "Eugene", "Evansville", "Fairfield", "Fargo", "Fayetteville", "Fitchburg", "Flint", "Fontana", "Fort Collins", "Fort Lauderdale", "Fort Smith", "Fort Walton Beach", "Fort Wayne", "Fort Worth", "Frederick", "Fremont", "Fresno", "Fullerton", "Gainesville", "Garden Grove", "Garland", "Gastonia", "Gilbert", "Glendale", "Grand Prairie", "Grand Rapids", "Grayslake", "Green Bay", "GreenBay", "Greensboro", "Greenville", "Gulfport-Biloxi", "Hagerstown", "Hampton", "Harlingen", "Harrisburg", "Hartford", "Havre de Grace", "Hayward", "Hemet", "Henderson", "Hesperia", "Hialeah", "Hickory", "High Point", "Hollywood", "Honolulu", "Houma", "Houston", "Howell", "Huntington", "Huntington Beach", "Huntsville", "Independence", "Indianapolis", "Inglewood", "Irvine", "Irving", "Jackson", "Jacksonville", "Jefferson", "Jersey City", "Johnson City", "Joliet", "Kailua", "Kalamazoo", "Kaneohe", "Kansas City", "Kennewick", "Kenosha", "Killeen", "Kissimmee", "Knoxville", "Lacey", "Lafayette", "Lake Charles", "Lakeland", "Lakewood", "Lancaster", "Lansing", "Laredo", "Las Cruces", "Las Vegas", "Layton", "Leominster", "Lewisville", "Lexington", "Lincoln", "Little Rock", "Long Beach", "Lorain", "Los Angeles", "Louisville", "Lowell", "Lubbock", "Macon", "Madison", "Manchester", "Marina", "Marysville", "McAllen", "McHenry", "Medford", "Melbourne", "Memphis", "Merced", "Mesa", "Mesquite", "Miami", "Milwaukee", "Minneapolis", "Miramar", "Mission Viejo", "Mobile", "Modesto", "Monroe", "Monterey", "Montgomery", "Moreno Valley", "Murfreesboro", "Murrieta", "Muskegon", "Myrtle Beach", "Naperville", "Naples", "Nashua", "Nashville", "New Bedford", "New Haven", "New London", "New Orleans", "New York", "New York City", "Newark", "Newburgh", "Newport News", "Norfolk", "Normal", "Norman", "North Charleston", "North Las Vegas", "North Port", "Norwalk", "Norwich", "Oakland", "Ocala", "Oceanside", "Odessa", "Ogden", "Oklahoma City", "Olathe", "Olympia", "Omaha", "Ontario", "Orange", "Orem", "Orlando", "Overland Park", "Oxnard", "Palm Bay", "Palm Springs", "Palmdale", "Panama City", "Pasadena", "Paterson", "Pembroke Pines", "Pensacola", "Peoria", "Philadelphia", "Phoenix", "Pittsburgh", "Plano", "Pomona", "Pompano Beach", "Port Arthur", "Port Orange", "Port Saint Lucie", "Port St. Lucie", "Portland", "Portsmouth", "Poughkeepsie", "Providence", "Provo", "Pueblo", "Punta Gorda", "Racine", "Raleigh", "Rancho Cucamonga", "Reading", "Redding", "Reno", "Richland", "Richmond", "Richmond County", "Riverside", "Roanoke", "Rochester", "Rockford", "Roseville", "Round Lake Beach", "Sacramento", "Saginaw", "Saint Louis", "Saint Paul", "Saint Petersburg", "Salem", "Salinas", "Salt Lake City", "San Antonio", "San Bernardino", "San Buenaventura", "San Diego", "San Francisco", "San Jose", "Santa Ana", "Santa Barbara", "Santa Clara", "Santa Clarita", "Santa Cruz", "Santa Maria", "Santa Rosa", "Sarasota", "Savannah", "Scottsdale", "Scranton", "Seaside", "Seattle", "Sebastian", "Shreveport", "Simi Valley", "Sioux City", "Sioux Falls", "South Bend", "South Lyon", "Spartanburg", "Spokane", "Springdale", "Springfield", "St. Louis", "St. Paul", "St. Petersburg", "Stamford", "Sterling Heights", "Stockton", "Sunnyvale", "Syracuse", "Tacoma", "Tallahassee", "Tampa", "Temecula", "Tempe", "Thornton", "Thousand Oaks", "Toledo", "Topeka", "Torrance", "Trenton", "Tucson", "Tulsa", "Tuscaloosa", "Tyler", "Utica", "Vallejo", "Vancouver", "Vero Beach", "Victorville", "Virginia Beach", "Visalia", "Waco", "Warren", "Washington", "Waterbury", "Waterloo", "West Covina", "West Valley City", "Westminster", "Wichita", "Wilmington", "Winston", "Winter Haven", "Worcester", "Yakima", "Yonkers", "York", "Youngstown"];
 
 
 
@@ -157,36 +188,47 @@ var TripForm = React.createClass({
 
     return (
       <div>
-        <div style={styles.imageUpload}>
-          <RaisedButton
-            label="Choose an Image"
-            labelPosition="before"
-            style={styles.button}
-          >
-            <input
-              type="file"
-              style={styles.imageInput}
-              onChange={this.onImageChange}/>
-          </RaisedButton>
-          { imagePreview &&
-            <Avatar
-            src={this.state.imagePreviewUrl}
-            style={styles.imagePreview}/>
-          }
-        </div>
+
+
+
 
       <Formsy.Form
         style={styles.form}
         onSubmit={this.submitForm}
       >
 
+      <div style={styles.header}>
+
+      <h3 style={styles.title}>Add a Trip</h3>
+
+      { imagePreview ?
+        <Avatar
+          src={this.state.imagePreviewUrl}
+          style={styles.imagePreview}
+        /> :
+
+        <Avatar style={styles.imagePreviewButton} size={64}>
+          <AddPhoto color="white"/>
+          <input
+            type="file"
+            style={styles.imageInput}
+            onChange={this.onImageChange}/>
+        </Avatar>
+      }
+    </div>
+
       <div style={styles.location}>
 
-        <div style={styles.state}>
-          <FormsyText
+        <div style={styles.city}>
+          <FormsyAutoComplete
+            dataSource={cityNames}
             style={styles.cityInput}
+            filter={AutoComplete.caseInsensitiveFilter}
+            maxSearchResults={5}
             name="city"
             floatingLabelText="City"
+            disableFocusRipple={false}
+            required
           />
         </div>
 
@@ -278,6 +320,23 @@ var TripForm = React.createClass({
         </div>
 
       <div style={styles.buttons}>
+        <div style={styles.imageUpload}>
+
+          {/* imagePreview ?
+            <Avatar
+              src={this.state.imagePreviewUrl}
+              style={styles.imagePreview}
+            /> :
+
+            <Avatar style={styles.imagePreview}>
+              <AddPhoto />
+              <input
+                type="file"
+                style={styles.imageInput}
+                onChange={this.onImageChange}/>
+            </Avatar>
+          */}
+        </div>
         <FlatButton
           style={styles.cancel}
           label="Cancel"
