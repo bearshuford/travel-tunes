@@ -20,8 +20,9 @@ const styles = {
     width:          '100%',
     display:        'flex',
     flexFlow:       'row nowrap',
-    justifyContent: 'flex-start',
-    alignItems:     'center'
+    justifyContent: 'space-between',
+    alignItems:     'center',
+    marginBottom: -14
   },
 
   title: {
@@ -30,7 +31,8 @@ const styles = {
     border:     0,
     lineHeight: '32px',
     margin:     '0px 0px -1px ',
-    color:      'rgba(0, 0, 0, 0.870588)'
+    color:      'rgba(0, 0, 0, 0.870588)',
+    paddingBottom: 14
   },
   location: {
     width:          '100%',
@@ -45,10 +47,10 @@ const styles = {
     flex: '1 0 50%'
   },
   cityInput: {
-    width: '100%'
+    minWidth: 256
   },
   stateInput: {
-    width: 256
+    minWidth: 256
   },
   dates: {
     width:          '100%',

@@ -45,7 +45,7 @@ const styles = {
 
 	},
 	dialogContent: {
-
+			maxWidth: 309
 	},
 	direction: {
 		padding: 20,
@@ -172,6 +172,7 @@ var CalendarContainer = React.createClass({
           open={(this.props.new === true)}
 					autoScrollBodyContent={true}
 					modal={true}
+					style={styles.dialog}
         >
 					<TripForm
 						handleSubmit={this.handleSubmit}
