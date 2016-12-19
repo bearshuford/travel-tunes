@@ -82,7 +82,12 @@ const styles = {
 		right: 4,
 		marginTop: 5,
 		marginBottom: 5
-	}
+	},
+  detail: {
+    width:'100%',
+    paddingLeft: 30,
+    margin: 10
+  }
 
 
 
@@ -301,7 +306,7 @@ var Concerts = React.createClass({
         withCredentials: false,
 				crossDomain:     true,
 		  data : {
-				'per_page': 			    '100',
+				'per_page': 			    '300',
 				'taxonomies.name':    'concert',
 		    'venue.state': 			  trip.get('state'),
 				'venue.city': 			  trip.get('city'),
@@ -360,13 +365,7 @@ var Concerts = React.createClass({
 
 		return (
 			<div style={styles.concerts}>
-				<div style={{width:'100%', paddingLeft: 30, margin: 10}}>
-					{ /*<Toggle
-						toggled={this.state.favorites}
-						onToggle={this.handleToggle}
-						labelPosition="right"
-						label={<i style={{color: '#E91E63'}} className="material-icons">favorite</i>}
-						/> */ }
+				<div style={styles.detail}>
 					<Checkbox
 							checked={this.state.favorites}
 							onCheck={this.handleToggle}

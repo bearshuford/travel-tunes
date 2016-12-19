@@ -26,31 +26,33 @@ const styles = {
   },
 
   title: {
-    fontSize:   22,
-    fontWeight: 400,
-    border:     0,
-    lineHeight: '32px',
-    margin:     '0px 0px -1px ',
-    color:      'rgba(0, 0, 0, 0.870588)',
+    fontSize:      22,
+    fontWeight:    400,
+    lineHeight:    '32px',
+    margin:        '0px 0px -1px ',
+    color:         'rgba(0, 0, 0, 0.870588)',
     paddingBottom: 14
   },
   location: {
     width:          '100%',
     display:        'flex',
-    flexFlow:       'row wrap',
-    justifyContent: 'flex-start'
+    flexFlow:       'row nowrap',
+    justifyContent: 'space-between'
   },
   city: {
-    flex: '1 0 50%'
+    flex: '1 0 100px'
   },
   state: {
-    flex: '1 0 50%'
+    flex: '1 0 20%'
   },
   cityInput: {
-    minWidth: 256
+     width: 174
+  },
+  cityField: {
+    width: 160
   },
   stateInput: {
-    minWidth: 256
+    width: 80
   },
   dates: {
     width:          '100%',
@@ -59,7 +61,8 @@ const styles = {
     justifyContent: 'space-between'
   },
   date:{
-    flex: '1 0 45%'
+    flex: '1 0 45%',
+    marginTop: 0
   },
   buttons:{
     display:        'flex',
@@ -95,11 +98,6 @@ const styles = {
     marginLeft: 36,
     cursor:    'pointer',
     position:  'relative'
-  },
-
-  imageUpload: {
-    // height:         64,
-    // flex:           '1 0 auto'
   }
 };
 
@@ -116,7 +114,8 @@ var TripForm = React.createClass({
       today:           today,
       startDate:       today,
       imageFile:       null,
-      imagePreviewUrl: null
+      imagePreviewUrl: null,
+      city: ''
     };
   },
 
@@ -184,10 +183,13 @@ var TripForm = React.createClass({
     reader.readAsDataURL(file)
   },
 
+  updateCity: function(searchText){
+    this.setState({city:searchText});
+  },
 
   render: function() {
     var imagePreview = (this.state.imagePreviewUrl !== null);
-
+    var self = this;
     return (
       <div>
 
@@ -203,21 +205,21 @@ var TripForm = React.createClass({
 
       <h3 style={styles.title}>Add a Trip</h3>
 
-      { imagePreview ?
-        <Avatar
-          src={this.state.imagePreviewUrl}
-          style={styles.imagePreview}
-        /> :
+        { imagePreview ?
+          <Avatar
+            src={this.state.imagePreviewUrl}
+            style={styles.imagePreview}
+          /> :
 
-        <Avatar style={styles.imagePreviewButton} size={64}>
-          <AddPhoto color="white"/>
-          <input
-            type="file"
-            style={styles.imageInput}
-            onChange={this.onImageChange}/>
-        </Avatar>
-      }
-    </div>
+          <Avatar style={styles.imagePreviewButton} size={64}>
+            <AddPhoto color="white"/>
+            <input
+              type="file"
+              style={styles.imageInput}
+              onChange={this.onImageChange}/>
+          </Avatar>
+        }
+      </div>
 
       <div style={styles.location}>
 
@@ -225,11 +227,16 @@ var TripForm = React.createClass({
           <FormsyAutoComplete
             dataSource={cityNames}
             style={styles.cityInput}
+            textFieldStyle={styles.cityField}
             filter={AutoComplete.caseInsensitiveFilter}
             maxSearchResults={5}
             name="city"
             floatingLabelText="City"
             disableFocusRipple={false}
+            onNewRequest={this.updateCity}
+            onUpdateInput={this.updateCity}
+            searchText={this.state.city}
+            value={this.state.city}
             required
           />
         </div>
@@ -238,6 +245,7 @@ var TripForm = React.createClass({
           <FormsySelect
             name="state"
             floatingLabelText="State"
+            autoWidth={true}
             style={styles.stateInput}
           >
             <MenuItem value="AL" primaryText="Alabama"/>
@@ -300,45 +308,28 @@ var TripForm = React.createClass({
             name="startDate"
             floatingLabelText="Arival"
             hintText="Arival"
-            style={styles.date}
+            style={{}}
             minDate={this.state.today}
             onChange={this.handleStartDate}
             formatDate={this.formatDate}
             autoOk={true}
-            mode="landscape"
+            mode="portrait"
             required
           />
           <FormsyDate
             name="endDate"
             floatingLabelText="Departure"
             hintText="Departure"
-            style={styles.date}
+            style={{}}
             minDate={this.state.startDate}
             formatDate={this.formatDate}
             autoOk={true}
-            mode="landscape"
+            mode="portrait"
             required
           />
         </div>
 
       <div style={styles.buttons}>
-        <div style={styles.imageUpload}>
-
-          {/* imagePreview ?
-            <Avatar
-              src={this.state.imagePreviewUrl}
-              style={styles.imagePreview}
-            /> :
-
-            <Avatar style={styles.imagePreview}>
-              <AddPhoto />
-              <input
-                type="file"
-                style={styles.imageInput}
-                onChange={this.onImageChange}/>
-            </Avatar>
-          */}
-        </div>
         <FlatButton
           style={styles.cancel}
           label="Cancel"
