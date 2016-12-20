@@ -3,9 +3,12 @@ import moment from 'moment';
 import Backbone from 'backbone';
 
 import Place  from 'material-ui/svg-icons/maps/place';
+import More from 'material-ui/svg-icons/navigation/more-vert';
 
-import {Avatar, List, ListItem, Paper, Dialog,
-	FlatButton, IconButton, FloatingActionButton, Divider} from 'material-ui';
+import {Avatar, Paper, Dialog, Divider, Drawer, IconMenu, MenuItem,
+	FlatButton, IconButton, FloatingActionButton} from 'material-ui';
+
+import {List, ListItem, makeSelectable} from 'material-ui/List';
 
 import App from './app.jsx';
 import TripForm from './tripForm.jsx';
@@ -14,14 +17,18 @@ import Trip from './../models/Trip';
 import TripCollection from './../models/TripCollection';
 
 
+const SelectableList = makeSelectable(List);
+
 const styles = {
 	page:{
 		position: 'relative',
-		display: 'flex',
-		flexFlow: 'column nowrap',
-		alignItems: 'center',
-		fontFamily: '"Roboto", sans-serif',
-		marginTop: 22
+		paddingLeft: 260,
+		paddingRight: 50
+		// display: 'flex',
+		// flexFlow: 'column nowrap',
+		// alignItems: 'flex-start',
+		// fontFamily: '"Roboto", sans-serif',
+		// marginTop: 22
 	},
 	paper:{
 		maxWidth: 800,
@@ -30,12 +37,6 @@ const styles = {
 		flexFlow: 'row nowrap',
 		justifyContent: 'center',
 		alignItems: 'center'
-	},
-	linkIcon: {
-		color: '#23CF5F'
-	},
-	iconColumn: {
-		width: 80
 	},
 	dialog:{
 
@@ -55,47 +56,94 @@ const styles = {
 };
 
 
-var TripRow = React.createClass({
-
-	navigate: function(){
-		var id = this.props.trip.get('objectId');
-		Backbone.history.navigate('#trips/' + id,{trigger:true});
-	},
-
-
-	render: function() {
-		var trip = this.props.trip;
-		var id = trip.get('objectId');
-		var city = trip.get('city');
-		var state = trip.get('state');
-		var startDate = moment(trip.get('startDate')).format('ll');
-		var endDate   = moment(trip.get('endDate')).format('ll');
-		var imgUrl = trip.get('imageUrl');
-
-    return (
-      <ListItem
-        primaryText={city+' '+state}
-        secondaryText={startDate+' to '+endDate}
-        leftAvatar={imgUrl ? <Avatar src={imgUrl}/> : <Avatar icon={<Place/>}/>}
-				insetChildren={imgUrl ? false : true}
-				onTouchTap={this.navigate}
-      />
-    );
-	}
-});
-
-
 var Calendar = React.createClass({
 
+
+
+	componentDidUpdate: function() {
+
+	//  var path = this.props.path;
+	// 	var value = path ? path : this.state.selectedIndex;
+	 //
+	 //
+	// 	if(path && this.props.trips.length > 1){
+	// 		console.log('~~PATH');
+	// 		this.setState({selectedIndex: path});
+	// 	}
+	// 	else if(value === null && this.props.trips.length > 1){
+	// 		value = '#trips/' + this.props.trips.at(1).get('objectId');
+	// 		// this.setState({selectedIndex: value});
+	// 	}
+
+
+	},
+
+	handleRequestChange: function(event, index) {
+		console.log('handleRequestChange', index);
+		if(index !== 'add-button'){
+			Backbone.history.navigate(index,{trigger:true});
+		}
+  },
+
   render: function() {
+
 		var trips = this.props.trips.map(function(trip, i){
-			return <TripRow
-								trip={trip}
-								key={i}
-							/>
-					}.bind(this));
+			var self = this;
+			var id = trip.get('objectId');
+			var city = trip.get('city');
+			var state = trip.get('state');
+			var startDate = moment(trip.get('startDate')).format('ll');
+			var endDate   = moment(trip.get('endDate')).format('ll');
+			var imgUrl = trip.get('imageUrl');
+
+			return (
+				<ListItem
+					key={i}
+					primaryText={<span style={{display:'block', paddingLeft:14}}>
+												{city+' '+state}
+											 </span>}
+					secondaryText={<p style={{display:'block', paddingLeft:14}}>
+													{startDate}<br/>{endDate}
+												 </p>}
+					secondaryTextLines={2}
+					leftAvatar= {
+						imgUrl ?
+							<Avatar
+								size={52}
+								style={{top: 16}}
+								src={imgUrl}
+							/> :
+							<Avatar
+								size={52}
+								style={{top: 16}}
+								icon={<Place/>}
+							/>}
+					insetChildren={true}
+					rightIconButton={
+						<IconMenu
+      				iconButtonElement={<IconButton><More/></IconButton>}
+      				anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+      				targetOrigin={{horizontal: 'left', vertical: 'top'}}
+						>
+							<MenuItem
+								onTouchTap={function(){
+									self.props.deleteTrip(trip);
+								}}
+							>
+								Delete
+							</MenuItem>
+    				</IconMenu>
+					}
+					value={'#trips/' + id}
+				/>
+			);
+		}.bind(this));
 		trips.unshift(
-			<ListItem innerDivStyle={{padding:0}} key="3210">
+			<ListItem
+				innerDivStyle={{padding:0}}
+				key="3210"
+				value={'add-button'}
+				>
 				<FlatButton
 					style={{width: '100%', height: '100%'}}
 					label="Add a Trip"
@@ -105,10 +153,17 @@ var Calendar = React.createClass({
 			</ListItem>
 		);
 		var hasTrips = (trips.length > 0);
+		var self = this;
+		var value = this.props.path ? this.props.path : null;
+		console.log('value', value);
     return (
-			<Paper style={styles.paper}>
-				<List>{trips}</List>
-			</Paper>
+			<Drawer width={240} containerStyle={{top:80, bottom:20, height:'calc(100vh-100px)'}}>
+				<SelectableList
+					value={value}
+					onChange={this.handleRequestChange}>
+					{trips}
+				</SelectableList>
+			</Drawer>
 		);
   }
 
@@ -121,11 +176,11 @@ var CalendarContainer = React.createClass({
 	getInitialState: function() {
 		return {
 			trips: new TripCollection(),
-			state: open
+			open: false
 		};
 	},
 
-	componentWillMount: function() {
+	componentDidMount: function() {
 		var trips = this.state.trips;
 		var userId = localStorage.getItem('userId');
 		trips.parseWhere('user','_User', userId).fetch().then(
@@ -145,25 +200,39 @@ var CalendarContainer = React.createClass({
 		this.setState({open: false});
 	},
 
-	handleSubmit(data) {
-		console.log('handlesubmit',data);
+	handleSubmit: function(data) {
 		var trip = new Trip(data);
 		trip.save().done(function(data){
 			var id = data.objectId;
 			console.log(trip.get('user'));
 			Backbone.history.navigate('trips/'+id, {trigger:true});
 		}.bind(this));
+	},
 
+	deleteTrip: function(trip) {
+		var trips = this.state.trips;
+		trips.remove(trip);
+		trip.destroy();
+		this.setState({trips: trips});
 	},
 
   render: function() {
+		var path = this.props.path ? this.props.path : false;
     return (
-			<App>
-				<div style={styles.page}>
-					{/*<h1>My Trips</h1>*/}
-					<Calendar trips={this.state.trips}/>
+			<App fixed={true}>
 
-				</div>
+				<Calendar
+					trips={this.state.trips}
+					path={path}
+					deleteTrip={this.deleteTrip}
+				/>
+
+				{ path &&
+					<div style={styles.page}>
+						{this.props.children}
+					</div>
+				}
+
 				<Dialog
 					title="Add a Trip~"
 					titleStyle={{display:'none'}}
@@ -178,6 +247,7 @@ var CalendarContainer = React.createClass({
 						handleSubmit={this.handleSubmit}
 					/>
         </Dialog>
+
 			</App>
 
 		);

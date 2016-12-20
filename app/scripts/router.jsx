@@ -75,8 +75,12 @@ var AppRouter = Backbone.Router.extend({
 
     var self = this;
 
+    console.log('~router / tripDetail:', tripId);
+
     ReactDOM.render(
-      <TripDetail tripId={tripId} />,
+      <Calendar path={'#trips/'+tripId}>
+        <TripDetail tripId={tripId} model={new Trip()}/>
+      </Calendar>,
       document.getElementById('root')
     );
     self.loginRedirect();

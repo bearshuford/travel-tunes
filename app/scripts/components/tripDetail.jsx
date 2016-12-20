@@ -10,6 +10,8 @@ import Concerts from './concerts.jsx';
 import TopTracks from './artistsTopTracks.jsx';
 
 import Trip from './../models/Trip';
+import Artist from './../models/SpotifyArtist';
+
 import ArtistCollection from './../models/SpotifyArtistCollection';
 import SGEventCollection from './../models/SeatGeekEventCollection';
 
@@ -102,41 +104,88 @@ var TripDetail = React.createClass({
 
 	getInitialState: function() {
 		return {
+			concerts : new SGEventCollection(),
 			selectedArtists: new ArtistCollection(),
+			selectedArtistId: '',
 			favorite: false,
 			open: false
 		};
 	},
 
-	getDefaultProps: function(){
-		var trip = new Trip();
-		return {
-			model: trip
+
+	fetchConcerts: function(){
+		var self = this;
+		var concerts = this.state.concerts;
+		var trip   = this.getModel();
+
+		var arrival   = moment(trip.get('startDate')).format('YYYY-MM-DD');
+		var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
+
+		concerts.fetch({
+				withCredentials: false,
+				crossDomain:     true,
+			data : {
+				'per_page': 			    '300',
+				'taxonomies.name':    'concert',
+				'venue.state': 			  trip.get('state'),
+				'venue.city': 			  trip.get('city'),
+				'datetime_local.gte': arrival,
+				'datetime_local.lte': departure
+			},
+			success: function(collection, response, options) {
+				self.setState({collection: collection});
+			},
+			error: function(collection, response, options) {
+				console.error(response.statusText);
+			}
+		});
+	},
+
+	fetchTrips: function(){
+		var self = this;
+		var tripId = this.props.tripId;
+
+		this.getModel().set({'objectId': this.props.tripId});
+		this.getModel().fetch().then(function(){self.fetchConcerts()});
+
+
+	},
+
+
+
+
+	componentDidUpdate: function(prevProps, prevState) {
+		var tripId = this.props.tripId;
+		var self = this;
+
+		if(prevProps.tripId !== tripId){
+			this.getModel().clear();
+			this.getModel().set({'objectId': tripId});
+			this.getModel().fetch().then(self.fetchConcerts);
 		}
 	},
 
 	componentDidMount: function() {
-		var tripId = this.props.tripId;
-		var self = this;
-
-		this.props.model.set({'objectId': this.props.tripId});
-		this.props.model.fetch();
+		this.fetchTrips();
 	},
-
-	handleBack: function(){
-		Backbone.history.navigate('#trips', {trigger:true});
-	},
-
 
 	addArtist: function(artist){
 		var artists = this.state.selectedArtists;
+		var selectedArtistId = this.state.selectedArtistId;
 		artist.getTopTracks(9);
 		artists.add(artist);
+
+		if(selectedArtistId !== artist.get('spotifyId'))
+			this.setState({selectedArtistId: artist.get('spotifyId')})
+		else{
+			this.removeArtist(artist);
+			this.setState({selectedArtistId: ''});
+		}
 	},
 
 	removeArtist: function(artist){
 		var artists = this.state.selectedArtists;
-		artist.set('added', false);
+		// artist.set('added', false);
 		artists.remove(artist);
 	},
 
@@ -163,7 +212,6 @@ var TripDetail = React.createClass({
 
 		var trip = this.getModel();
 
-		console.log('tripDetail render', trip);
 
 		var startTitle = moment(trip.get('startDate')).format('MMM D');
 		var endTitle   = moment(trip.get('endDate')).format('MMM D');
@@ -172,16 +220,12 @@ var TripDetail = React.createClass({
 		var daterange = startTitle       + ' - ' + endTitle;
 		var title     = location         + ' | ' + daterange;
 
-		var concerts = new SGEventCollection();
+		var concerts = this.state.concerts;
 
 		var hasArtist = (this.state.selectedArtists.length > 0);
-		console.log('~~hasArtist',this.state.selectedArtists);
+
 
     return (
-			<App
-				title={title}
-				fixed={true}
-				handleBack={this.handleBack}>
 
 				<div style={styles.page}>
 
@@ -192,7 +236,8 @@ var TripDetail = React.createClass({
 						removeArtist={this.removeArtist}
 						addFavorite={this.addFavorite}
 						removeFavorite={this.removeFavorite}
-						favorites={this.state.favorites}/>
+						favorites={this.state.favorites}
+						selectedArtistId={this.state.selectedArtistId}/>
 
 					<Drawer
 						style={styles.drawer}
@@ -208,8 +253,6 @@ var TripDetail = React.createClass({
 
 
 				</div>
-
-			</App>
 		);
   }
 

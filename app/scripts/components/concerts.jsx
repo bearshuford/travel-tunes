@@ -102,7 +102,8 @@ var ArtistChip = React.createClass({
 
 	componentDidMount: function() {
 		var artist = this.getModel();
-		artist.search();
+    if(!artist.get('searched'))
+		  artist.search();
 	},
 
 	handleClick: function(e){
@@ -110,22 +111,27 @@ var ArtistChip = React.createClass({
 		console.log(this.getModel().toJSON());
 
 		var artist =  this.getModel();
-		var added  =  artist.get('added');
+		this.props.addArtist(artist);
 
-		if(!added) {
-			artist.set({added: true});
-			this.props.addArtist(artist);
-		}
-		else {
-			artist.set({added: false})
-			this.props.removeArtist(artist);
-		}
+		// var artist =  this.getModel();
+		// var added  =  artist.get('added');
+		//
+		// if(!added) {
+		// 	artist.set({added: true});
+		// 	this.props.addArtist(artist);
+		// }
+		// else {
+		// 	artist.set({added: false})
+		// 	this.props.removeArtist(artist);
+		// }
 	},
 
 	render: function(){
 		var artist  = this.getModel();
 		var spotify = artist.get('spotify');
-		var added   = artist.get('added');
+		var spotifyId = artist.get('spotifyId')
+		var added = spotifyId === this.props.selectedArtistId && spotifyId;
+		if(added) {console.log('ADDED', artist.get('spotifyId'));}
 		var images  = artist.get('images');
 
 		var labelStyle  = spotify && added ? styles.spotify : styles.label;
@@ -136,6 +142,8 @@ var ArtistChip = React.createClass({
 		var iconColor = spotify && !added ? '#23CF5F'  : null;
 
 		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">queue_music</i>;
+
+		console.log('~~~~~~~~',spotifyId, this.props.selectedArtistId);
 
 		return (
 			<Chip
@@ -253,12 +261,13 @@ var ConcertCard = React.createClass({
 
 					{concert.get('artists').map(
 						function(artist, i){
-
 							return  <ArtistChip
 												key={i}
 												model={artist}
 												addArtist={self.props.addArtist}
-												removeArtist={self.props.removeArtist}/>;
+												removeArtist={self.props.removeArtist}
+												selectedArtistId={self.props.selectedArtistId}
+												/>;
 					})}
 
 				</CardText>
@@ -287,42 +296,32 @@ var Concerts = React.createClass({
 	},
 
 	componentWillReceiveProps: function(nextProps){
-		var trip     = this.getModel();
-		var concerts = this.getCollection();
-
-		console.log('~~~concerts cdm trip:', trip.get('startDate'));
-
-		var arrival   = moment(trip.get('startDate')).format('YYYY-MM-DD');
-		var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
-
-
-
-		console.log('arrival', arrival);
-
-		var self = this;
-
-		console.log(concerts);
-		concerts.fetch({
-        withCredentials: false,
-				crossDomain:     true,
-		  data : {
-				'per_page': 			    '300',
-				'taxonomies.name':    'concert',
-		    'venue.state': 			  trip.get('state'),
-				'venue.city': 			  trip.get('city'),
-				'datetime_local.gte': arrival,
-				'datetime_local.lte': departure
-		  },
-		  success: function(collection, response, options) {
-				console.log('concerts fetched', collection.toJSON());
-
-				self.getCollection().set(collection.toJSON());
-
-		  },
-		  error: function(collection, response, options) {
-		    console.error(response.statusText);
-		  }
-		});
+		// var trip     = this.getModel();
+		// var concerts = this.getCollection();
+		//
+		// var arrival   = moment(trip.get('startDate')).format('YYYY-MM-DD');
+		// var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
+		//
+		// var self = this;
+		//
+		// concerts.fetch({
+    //     withCredentials: false,
+		// 		crossDomain:     true,
+		//   data : {
+		// 		'per_page': 			    '300',
+		// 		'taxonomies.name':    'concert',
+		//     'venue.state': 			  trip.get('state'),
+		// 		'venue.city': 			  trip.get('city'),
+		// 		'datetime_local.gte': arrival,
+		// 		'datetime_local.lte': departure
+		//   },
+		//   success: function(collection, response, options) {
+		// 		self.getCollection().set(collection.toJSON());
+		//   },
+		//   error: function(collection, response, options) {
+		//     console.error(response.statusText);
+		//   }
+		// });
 
 	},
 
@@ -332,14 +331,10 @@ var Concerts = React.createClass({
 	 },
 
 	render: function() {
-		console.log('render concerts', this.getCollection());
 		var self = this;
 		var concerts = this.getCollection();
 
-
 		var faves = this.getModel().get('favorites');
-
-
 
 		// set favorites
 		concerts.map(function(concert,i){
@@ -360,7 +355,8 @@ var Concerts = React.createClass({
 								addArtist={self.props.addArtist}
 								removeArtist={self.props.removeArtist}
 								addFavorite={self.props.addFavorite}
-								removeFavorite={self.props.removeFavorite}/>;
+								removeFavorite={self.props.removeFavorite}
+								selectedArtistId={self.props.selectedArtistId}/>;
 		});
 
 		return (

@@ -46,13 +46,14 @@ const styles = {
     flex: '1 0 20%'
   },
   cityInput: {
-     width: 174
+     width: 178
   },
   cityField: {
-    width: 160
+    width: 164
   },
   stateInput: {
-    width: 80
+    width: 72,
+    paddingLeft: 4
   },
   dates: {
     width:          '100%',
@@ -246,58 +247,59 @@ var TripForm = React.createClass({
             name="state"
             floatingLabelText="State"
             autoWidth={true}
+            maxHeight={340}
             style={styles.stateInput}
           >
-            <MenuItem value="AL" primaryText="Alabama"/>
-            <MenuItem value="AK" primaryText="Alaska"/>
-            <MenuItem value="AZ" primaryText="Arizona"/>
-            <MenuItem value="AR" primaryText="Arkansas"/>
-            <MenuItem value="CA" primaryText="California"/>
-            <MenuItem value="CO" primaryText="Colorado"/>
-            <MenuItem value="CT" primaryText="Connecticut"/>
-            <MenuItem value="DE" primaryText="Delaware"/>
-            <MenuItem value="FL" primaryText="Florida"/>
-            <MenuItem value="GA" primaryText="Georgia"/>
-            <MenuItem value="HI" primaryText="Hawaii"/>
-            <MenuItem value="ID" primaryText="Idaho"/>
-            <MenuItem value="IL" primaryText="Illinois"/>
-            <MenuItem value="IN" primaryText="Indiana"/>
-            <MenuItem value="IA" primaryText="Iowa"/>
-            <MenuItem value="KS" primaryText="Kansas"/>
-            <MenuItem value="KY" primaryText="Kentucky"/>
-            <MenuItem value="LA" primaryText="Louisiana"/>
-            <MenuItem value="ME" primaryText="Maine"/>
-            <MenuItem value="MD" primaryText="Maryland"/>
-            <MenuItem value="MA" primaryText="Massachusetts"/>
-            <MenuItem value="MI" primaryText="Michigan"/>
-            <MenuItem value="MN" primaryText="Minnesota"/>
-            <MenuItem value="MS" primaryText="Mississippi"/>
-            <MenuItem value="MO" primaryText="Missouri"/>
-            <MenuItem value="MT" primaryText="Montana"/>
-            <MenuItem value="NE" primaryText="Nebraska"/>
-            <MenuItem value="NV" primaryText="Nevada"/>
-            <MenuItem value="NH" primaryText="New Hampshire"/>
-            <MenuItem value="NJ" primaryText="New Jersey"/>
-            <MenuItem value="NM" primaryText="New Mexico"/>
-            <MenuItem value="NY" primaryText="New York"/>
-            <MenuItem value="NC" primaryText="North Carolina"/>
-            <MenuItem value="ND" primaryText="North Dakota"/>
-            <MenuItem value="OH" primaryText="Ohio"/>
-            <MenuItem value="OK" primaryText="Oklahoma"/>
-            <MenuItem value="OR" primaryText="Oregon"/>
-            <MenuItem value="PA" primaryText="Pennsylvania"/>
-            <MenuItem value="RI" primaryText="Rhode Island"/>
-            <MenuItem value="SC" primaryText="South Carolina"/>
-            <MenuItem value="SD" primaryText="South Dakota"/>
-            <MenuItem value="TN" primaryText="Tennessee"/>
-            <MenuItem value="TX" primaryText="Texas"/>
-            <MenuItem value="UT" primaryText="Utah"/>
-            <MenuItem value="VT" primaryText="Vermont"/>
-            <MenuItem value="VA" primaryText="Virginia"/>
-            <MenuItem value="WA" primaryText="Washington"/>
-            <MenuItem value="WV" primaryText="West Virginia"/>
-            <MenuItem value="WI" primaryText="Wisconsin"/>
-            <MenuItem value="WY" primaryText="Wyoming"/>
+            <MenuItem value="AL" label="AL" primaryText="Alabama"/>
+            <MenuItem value="AK" label="AK" primaryText="Alaska"/>
+            <MenuItem value="AZ" label="AZ" primaryText="Arizona"/>
+            <MenuItem value="AR" label="AR" primaryText="Arkansas"/>
+            <MenuItem value="CA" label="CA" primaryText="California"/>
+            <MenuItem value="CO" label="CO" primaryText="Colorado"/>
+            <MenuItem value="CT" label="CT" primaryText="Connecticut"/>
+            <MenuItem value="DE" label="DE" primaryText="Delaware"/>
+            <MenuItem value="FL" label="FL" primaryText="Florida"/>
+            <MenuItem value="GA" label="GA" primaryText="Georgia"/>
+            <MenuItem value="HI" label="HI" primaryText="Hawaii"/>
+            <MenuItem value="ID" label="ID" primaryText="Idaho"/>
+            <MenuItem value="IL" label="IL" primaryText="Illinois"/>
+            <MenuItem value="IN" label="IN" primaryText="Indiana"/>
+            <MenuItem value="IA" label="IA" primaryText="Iowa"/>
+            <MenuItem value="KS" label="KS" primaryText="Kansas"/>
+            <MenuItem value="KY" label="KY" primaryText="Kentucky"/>
+            <MenuItem value="LA" label="LA" primaryText="Louisiana"/>
+            <MenuItem value="ME" label="ME" primaryText="Maine"/>
+            <MenuItem value="MD" label="MD" primaryText="Maryland"/>
+            <MenuItem value="MA" label="MA" primaryText="Massachusetts"/>
+            <MenuItem value="MI" label="MI" primaryText="Michigan"/>
+            <MenuItem value="MN" label="MN" primaryText="Minnesota"/>
+            <MenuItem value="MS" label="MS" primaryText="Mississippi"/>
+            <MenuItem value="MO" label="MO" primaryText="Missouri"/>
+            <MenuItem value="MT" label="MT" primaryText="Montana"/>
+            <MenuItem value="NE" label="NE" primaryText="Nebraska"/>
+            <MenuItem value="NV" label="NV" primaryText="Nevada"/>
+            <MenuItem value="NH" label="NH" primaryText="New Hampshire"/>
+            <MenuItem value="NJ" label="NJ" primaryText="New Jersey"/>
+            <MenuItem value="NM" label="NM" primaryText="New Mexico"/>
+            <MenuItem value="NY" label="NY" primaryText="New York"/>
+            <MenuItem value="NC" label="NC" primaryText="North Carolina"/>
+            <MenuItem value="ND" label="ND" primaryText="North Dakota"/>
+            <MenuItem value="OH" label="OH" primaryText="Ohio"/>
+            <MenuItem value="OK" label="OK" primaryText="Oklahoma"/>
+            <MenuItem value="OR" label="OR" primaryText="Oregon"/>
+            <MenuItem value="PA" label="PA" primaryText="Pennsylvania"/>
+            <MenuItem value="RI" label="RI" primaryText="Rhode Island"/>
+            <MenuItem value="SC" label="SC" primaryText="South Carolina"/>
+            <MenuItem value="SD" label="SD" primaryText="South Dakota"/>
+            <MenuItem value="TN" label="TN" primaryText="Tennessee"/>
+            <MenuItem value="TX" label="TX" primaryText="Texas"/>
+            <MenuItem value="UT" label="UT" primaryText="Utah"/>
+            <MenuItem value="VT" label="VT" primaryText="Vermont"/>
+            <MenuItem value="VA" label="VA" primaryText="Virginia"/>
+            <MenuItem value="WA" label="WA" primaryText="Washington"/>
+            <MenuItem value="WV" label="WV" primaryText="West Virginia"/>
+            <MenuItem value="WI" label="WI" primaryText="Wisconsin"/>
+            <MenuItem value="WY" label="WY" primaryText="Wyoming"/>
           </FormsySelect>
         </div>
       </div>

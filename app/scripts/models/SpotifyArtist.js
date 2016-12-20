@@ -20,6 +20,7 @@ var Artist = ParseModel.extend({
   defaults: {
     name: '',
     spotify: false,
+    searched: false,
     added: false,
     tracks: new TrackCollection(),
     tracksFetched: 0,
@@ -27,7 +28,7 @@ var Artist = ParseModel.extend({
     fetched: true
   },
 
-  
+
 
   getTopTracks: function(number, callback){
     var self = this;
@@ -86,6 +87,8 @@ var Artist = ParseModel.extend({
       var artist = {};
       var items  = data.artists.items
 
+      artist.searched = true;
+
       if(items.length < 1) {
         artist.spotify = false;
       }
@@ -100,6 +103,7 @@ var Artist = ParseModel.extend({
           artist = {
             spotify:     true,
             spotifyId:   r.id,
+            id:          r.id,
             uri:         r.uri,
             genres:      r.genres,
             images:      r.images,
