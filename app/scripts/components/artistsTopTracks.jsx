@@ -36,45 +36,6 @@ const styles = {
 };
 
 
-// let SelectableList = makeSelectable(List);
-//
-// function wrapState(ComposedComponent) {
-//   return class SelectableList extends Component {
-//     // const propTypes = {
-//     //   children: PropTypes.node.isRequired,
-//     //   defaultValue: PropTypes.number.isRequired
-//     // };
-//
-//     componentWillMount() {
-//       this.setState({
-//         selectedIndex: this.props.defaultValue
-//       });
-//     }
-//
-//     handleRequestChange = (event, index) => {
-//       this.setState({
-//         selectedIndex: index
-//       });
-//     };
-//
-//     render() {
-//       return (
-//         <ComposedComponent
-//           value={this.state.selectedIndex}
-//           onChange={this.handleRequestChange}
-//         >
-//           {this.props.children}
-//         </ComposedComponent>
-//       );
-//     }
-//   };
-// }
-//
-// SelectableList = wrapState(SelectableList);
-
-
-
-
 var Track = React.createClass({
 
 	mixins: [Backbone.React.Component.mixin],
@@ -93,13 +54,8 @@ var Track = React.createClass({
 		}
 	},
 
-	componentWillUpdate: function(nextProps, nextState) {
-
-	},
-
 	onClick: function() {
 
-		// this.props.select()
 		var playing = this.getModel().get('playing');
 		var audio = this.state.audio;
 		if(!playing){
@@ -129,7 +85,6 @@ var Track = React.createClass({
 	},
 
 
-
 	render: function() {
 		var name = this.getModel().get('name');
 	  var icon = this.state.ended ? <Replay/>:<Play color="white"/>;
@@ -151,8 +106,7 @@ var Track = React.createClass({
 
 
 
-
-/* props: collection={ArtistCollection} */
+/* props: model={Artist} */
 var TopTracks = React.createClass({
 
 	mixins: [Backbone.React.Component.mixin],
@@ -206,39 +160,37 @@ var TopTracks = React.createClass({
 
 
 	render: function() {
-		var tracks   = [];
 		var self     = this;
-    var name     = null;
-		var img      = null;
-		var genres   = null;
-		var ended    = this.ended;
-		var autoplay = this.state.autoplay;
-		var imgCount;
-		console.log('playlist collection', this.getCollection().toJSON());
-		this.getCollection().each(function(artist,j){
-      name      = artist.get('name');
-			imgCount  = artist.get('images').length
-			img       = artist.get('images')[0];
-			genres		= artist.get('genres')[0];
-			console.log('genres~~',genres);
+    var tracks = [];
+    var artist = this.getModel();
 
+		var name = artist.get('name')
+		var imgCount = 0;
 
-			artist.get('tracks').each(function(track,i){
-				tracks.push(<Track
-											model={track}
-											key={track.cid}
-											pos={i}
-											ended={ended}
-											autoplay={i === autoplay}
-											selectTrack={self.select}/>);
-			});
-		});
+		if(name.length > 1){
+			tracks = artist.get('tracks').map(function(track,i){
+	      return (<Track
+	                model={track}
+	                key={track.cid}
+	                pos={i}
+	                ended={self.ended}
+	                autoplay={i === self.state.autoplay}
+	                selectTrack={self.select}/>);
+	    });
+		}
+
 		var hasTracks = (tracks.length > 0);
-		var hasArtist = (name !== null);
+		var img   = null;
+    var genre = null;
+
+		if(hasTracks){
+			img = this.getModel().get('images')[0].url;
+			genre = this.getModel().get('genres')[0].url;
+		}
+
 		return (
 			<List style={styles.list}>
 					{
-
 						<Subheader
 							children={
 								<div style={{display:'flex', alignItems:'center', padding: 'auto 26px'}}>
@@ -248,13 +200,13 @@ var TopTracks = React.createClass({
 							}
 						/>
 					}
-					{hasArtist
+					{hasTracks
 						&&
 						<ListItem
 							primaryText={name}
-							secondaryText={genres}
+							secondaryText={genre}
 							autoGenerateNestedIndicator={false}
-							leftAvatar={<Avatar src={img.url} />}
+							leftAvatar={<Avatar src={img} />}
 							nestedItems={tracks}
 							initiallyOpen={true}
 	          />

@@ -107,6 +107,7 @@ var TripDetail = React.createClass({
 			concerts : new SGEventCollection(),
 			selectedArtists: new ArtistCollection(),
 			selectedArtistId: '',
+			selectedArtist: new Artist(),
 			favorite: false,
 			open: false
 		};
@@ -147,11 +148,7 @@ var TripDetail = React.createClass({
 
 		this.getModel().set({'objectId': this.props.tripId});
 		this.getModel().fetch().then(function(){self.fetchConcerts()});
-
-
 	},
-
-
 
 
 	componentDidUpdate: function(prevProps, prevState) {
@@ -170,17 +167,20 @@ var TripDetail = React.createClass({
 	},
 
 	addArtist: function(artist){
-		var artists = this.state.selectedArtists;
+		// var artists = this.state.selectedArtists;
 		var selectedArtistId = this.state.selectedArtistId;
 		artist.getTopTracks(9);
-		artists.add(artist);
 
 		if(selectedArtistId !== artist.get('spotifyId'))
-			this.setState({selectedArtistId: artist.get('spotifyId')})
-		else{
-			this.removeArtist(artist);
-			this.setState({selectedArtistId: ''});
-		}
+			this.setState({
+				selectedArtistId: artist.get('spotifyId'),
+				 selectedArtist: artist
+			});
+		else
+			this.setState({
+				selectedArtistId: '',
+				selectedArtist: new Artist()
+			});
 	},
 
 	removeArtist: function(artist){
@@ -222,7 +222,7 @@ var TripDetail = React.createClass({
 
 		var concerts = this.state.concerts;
 
-		var hasArtist = (this.state.selectedArtists.length > 0);
+		// var hasArtist = (this.state.selectedArtist.get('name').length > 0);
 
 
     return (
@@ -244,8 +244,8 @@ var TripDetail = React.createClass({
 						containerStyle={styles.drawerContainer}
 						children={
 							<TopTracks
-								collection={this.state.selectedArtists}
-								artistCount={this.state.selectedArtists.length}/>
+								model={this.state.selectedArtist}
+								artistCount={1}/>
 						}
 						openSecondary={true}
 						open={true}
