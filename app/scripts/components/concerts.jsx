@@ -6,7 +6,8 @@ import moment 	from 'moment';
 import Backbone from 'backbone';
 
 import {Avatar, Card, CardHeader, CardTitle, CardText,
-				Chip, IconButton, Toggle, Checkbox} from 'material-ui';
+				Chip, IconButton, Toggle, Checkbox,
+				BottomNavigation, BottomNavigationItem} from 'material-ui';
 
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
@@ -112,18 +113,6 @@ var ArtistChip = React.createClass({
 
 		var artist =  this.getModel();
 		this.props.addArtist(artist);
-
-		// var artist =  this.getModel();
-		// var added  =  artist.get('added');
-		//
-		// if(!added) {
-		// 	artist.set({added: true});
-		// 	this.props.addArtist(artist);
-		// }
-		// else {
-		// 	artist.set({added: false})
-		// 	this.props.removeArtist(artist);
-		// }
 	},
 
 	render: function(){
@@ -291,40 +280,14 @@ var Concerts = React.createClass({
 
 	getInitialState: function() {
 		return {
-      favorites: false
+      favorites: false,
+			index: 0
     };
 	},
 
-	componentWillReceiveProps: function(nextProps){
-		// var trip     = this.getModel();
-		// var concerts = this.getCollection();
-		//
-		// var arrival   = moment(trip.get('startDate')).format('YYYY-MM-DD');
-		// var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
-		//
-		// var self = this;
-		//
-		// concerts.fetch({
-    //     withCredentials: false,
-		// 		crossDomain:     true,
-		//   data : {
-		// 		'per_page': 			    '300',
-		// 		'taxonomies.name':    'concert',
-		//     'venue.state': 			  trip.get('state'),
-		// 		'venue.city': 			  trip.get('city'),
-		// 		'datetime_local.gte': arrival,
-		// 		'datetime_local.lte': departure
-		//   },
-		//   success: function(collection, response, options) {
-		// 		self.getCollection().set(collection.toJSON());
-		//   },
-		//   error: function(collection, response, options) {
-		//     console.error(response.statusText);
-		//   }
-		// });
-
+	select: function(index){
+		this.setState({favorites:(index===1), index: index});
 	},
-
 
 	handleToggle: function(event, toggle) {
 		 this.setState({favorites: toggle});
@@ -361,6 +324,18 @@ var Concerts = React.createClass({
 
 		return (
 			<div style={styles.concerts}>
+{/*				<BottomNavigation selectedIndex={this.state.index}>
+          <BottomNavigationItem
+            label="All"
+						icon={<ActionFavoriteBorder/>}
+            onTouchTap={() => this.select(0)}
+          />
+          <BottomNavigationItem
+            label="Favorites"
+            icon={<ActionFavorite/>}
+            onTouchTap={() => this.select(1)}
+          />
+        </BottomNavigation> */}
 				<div style={styles.detail}>
 					<Checkbox
 							checked={this.state.favorites}
@@ -374,6 +349,7 @@ var Concerts = React.createClass({
 				</div>
 
 				{concerts}
+
 			</div>
 		);
 	}

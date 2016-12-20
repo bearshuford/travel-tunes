@@ -36,13 +36,13 @@ const styles = {
 	},
 	pageRight:{
 		position: 'relative',
-		paddingLeft: 250,
-		marginRight: -206
+		marginLeft: 250,
+		paddingRight: -200
 	},
 	pageFull:{
 		position: 'relative',
 		paddingLeft: 0,
-		marginRight: -206
+		paddingRight: -200
 	},
 	paper:{
 		maxWidth: 800,
@@ -226,7 +226,7 @@ var CalendarContainer = React.createClass({
 			pageStyle = styles.page;
 		else if(!this.state.menu && this.state.music)
 		  pageStyle = styles.pageLeft;
-		else if(!this.state.menu && this.state.music)
+		else if(this.state.menu && !this.state.music)
 			pageStyle = styles.pageRight;
 		else
 			pageStyle = styles.pageFull;
