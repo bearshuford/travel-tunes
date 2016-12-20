@@ -190,12 +190,11 @@ var TripForm = React.createClass({
 
   render: function() {
     var imagePreview = (this.state.imagePreviewUrl !== null);
+    var path = this.props.path;
     var self = this;
+
     return (
       <div>
-
-
-
 
       <Formsy.Form
         style={styles.form}
@@ -336,7 +335,7 @@ var TripForm = React.createClass({
           style={styles.cancel}
           label="Cancel"
           secondary={true}
-          href="#trips"
+          href={path ? path : '#trips'}
           type="button"
         />
         <RaisedButton

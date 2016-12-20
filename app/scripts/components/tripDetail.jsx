@@ -191,9 +191,12 @@ var TripDetail = React.createClass({
 
 
   addFavorite: function(sgId){
+		console.log('add favorite!')
 		var favorites = this.getModel().get('favorites');
 		favorites.push(sgId);
-		this.getModel().save('favorites', favorites);
+		console.log('add favorite', sgId, favorites);
+		this.getModel().set('favorites', favorites);
+		this.getModel().save();
   },
 
   removeFavorite: function(sgId){

@@ -136,7 +136,7 @@ var Calendar = React.createClass({
 					style={{width: '100%', height: '100%'}}
 					label="Add a Trip"
 					secondary={true}
-					href={path? '#trips/'+path+'/new' : '#trips/new'}
+					href={path ? path+'/new' : '#trips/new'}
 				/>
 			</ListItem>
 		);
@@ -231,6 +231,11 @@ var CalendarContainer = React.createClass({
 		else
 			pageStyle = styles.pageFull;
 
+		var model = new Trip();
+		if(this.state.trips.length)(
+			model = this.state.trips.get(this.props.tripId)
+		)
+
     return (
 			<App
 				fixed={true}
@@ -250,7 +255,7 @@ var CalendarContainer = React.createClass({
 
 				{ path &&
 					<div style={pageStyle}>
-						<TripDetail tripId={this.props.tripId} model={new Trip()} music={this.state.music}/>
+						<TripDetail tripId={this.props.tripId} model={model} music={this.state.music}/>
 					</div>
 				}
 
@@ -264,6 +269,7 @@ var CalendarContainer = React.createClass({
         >
 					<TripForm
 						handleSubmit={this.handleSubmit}
+						path={path}
 					/>
         </Dialog>
 

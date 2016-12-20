@@ -21,7 +21,7 @@ var AppRouter = Backbone.Router.extend({
     '': 'index',
     'login': 'login',
 		'trips/new': 'tripAdd',
-    'trips/:id/new': 'tripAdd',
+    'trips/:id/new': 'tripDetailAdd',
 		'trips/:id': 'tripDetail',
 		'trips': 'calendar'
 
@@ -60,18 +60,12 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	tripAdd: function(){
-    if(tripId){
-      ReactDOM.render(
-        <Calendar tripId={tripId} path={'#trips/'+tripId}/>,
-        document.getElementById('root')
-      );
-    }
-		else {
-      ReactDOM.render(
-  			<Calendar new={true}/>,
-  			document.getElementById('root')
-  		);
-		}
+
+  ReactDOM.render(
+		<Calendar new={true}/>,
+		document.getElementById('root')
+	);
+
 		this.loginRedirect();
 	},
 
@@ -82,7 +76,16 @@ var AppRouter = Backbone.Router.extend({
     );
     this.loginRedirect();
 
-	}
+	},
+
+  tripDetailAdd: function(tripId){
+
+      ReactDOM.render(
+        <Calendar new={true} tripId={tripId} path={'#trips/'+tripId}/>,
+        document.getElementById('root')
+      );
+
+  }
 
 });
 

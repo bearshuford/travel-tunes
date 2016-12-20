@@ -132,8 +132,6 @@ var ArtistChip = React.createClass({
 
 		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">queue_music</i>;
 
-		console.log('~~~~~~~~',spotifyId, this.props.selectedArtistId);
-
 		return (
 			<Chip
 				style={styles.artist}
@@ -174,6 +172,7 @@ var ConcertCard = React.createClass({
 
 		if(!concert.get('favorite')){
 			this.props.addFavorite(concert.get('sgId'));
+			console.log('concert card– adding favorite:', concert.get('sgId'));
 		}
 		else{
 			this.props.removeFavorite(concert.get('sgId'));
