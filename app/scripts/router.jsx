@@ -21,18 +21,14 @@ var AppRouter = Backbone.Router.extend({
     '': 'index',
     'login': 'login',
 		'trips/new': 'tripAdd',
+    'trips/:id/new': 'tripAdd',
 		'trips/:id': 'tripDetail',
 		'trips': 'calendar'
 
   },
 
-  initialize: function(){
-
-  },
-
   loginRedirect: function(){
     var loggedIn = (localStorage.getItem('sessionToken') !== null);
-    console.log('loginRedirect');
     if(!loggedIn){
       this.navigate('login', {trigger: true});
     }
@@ -64,26 +60,27 @@ var AppRouter = Backbone.Router.extend({
 	},
 
 	tripAdd: function(){
-		ReactDOM.render(
-			<Calendar new={true}/>,
-			document.getElementById('root')
-		);
+    if(tripId){
+      ReactDOM.render(
+        <Calendar tripId={tripId} path={'#trips/'+tripId}/>,
+        document.getElementById('root')
+      );
+    }
+		else {
+      ReactDOM.render(
+  			<Calendar new={true}/>,
+  			document.getElementById('root')
+  		);
+		}
 		this.loginRedirect();
 	},
 
   tripDetail: function(tripId){
-
-    var self = this;
-
-    console.log('~router / tripDetail:', tripId);
-
     ReactDOM.render(
-      <Calendar path={'#trips/'+tripId}>
-        <TripDetail tripId={tripId} model={new Trip()}/>
-      </Calendar>,
+      <Calendar tripId={tripId} path={'#trips/'+tripId}/>,
       document.getElementById('root')
     );
-    self.loginRedirect();
+    this.loginRedirect();
 
 	}
 

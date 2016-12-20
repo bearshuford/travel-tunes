@@ -1,6 +1,9 @@
 import $ from 'jquery';
 import React from 'react';
 
+import ViewList from 'material-ui/svg-icons/action/view-agenda';
+import Music from 'material-ui/svg-icons/image/music-note';
+
 import {AppBar, FlatButton, IconButton, IconMenu, MenuItem, Divider, Snackbar} from 'material-ui';
 
 import Theme from './theme.jsx'
@@ -39,6 +42,7 @@ var UserMenu = React.createClass({
 
   render: function(){
     return (
+    <div>
       <IconMenu desktop={true}
         style={styles.iconButton}
         iconButtonElement={<IconButton iconStyle={styles.icon} iconClassName="material-icons">account_circle</IconButton>}
@@ -60,6 +64,12 @@ var UserMenu = React.createClass({
           onTouchTap={this.props.handleLogout}
           leftIcon={<i className="material-icons">power_settings_new</i>}/>
       </IconMenu>
+      {this.props.music &&
+        <IconButton onTouchTap={this.props.toggle}>
+          <Music color="white"/>
+        </IconButton>
+      }
+    </div>
     )
   }
 });
@@ -82,12 +92,22 @@ var App = React.createClass({
     console.log('back',back);
 
     var title = this.props.title ? this.props.title : "TravelTunes";
+    var menu = this.props.menu ? this.props.menu : null;
+    var left = back ? <IconButton
+                        iconStyle={styles.icon}
+                        iconClassName="material-icons"
+                        onTouchTap={this.props.handleBack}
+                        children="arrow_back"
+                      /> : null;
+    left = menu ? <IconButton>
+                    <ViewList/>
+                  </IconButton> : left;
 
     return (
       <Theme>
   			<AppBar
     			title={title}
-    			showMenuIconButton={back}
+    			showMenuIconButton={back || menu}
     			onTitleTouchTap={this.handleTitle}
     			style={this.props.fixed ? styles.fixed : styles.appBar}
           titleStyle={styles.titleDiv}
@@ -95,16 +115,12 @@ var App = React.createClass({
             <UserMenu
               label={username}
               handleLogout={this.handleLogout}
+              music={this.props.music}
+              toggle={this.props.toggleMusic}
 						/>
           }
-          iconElementLeft={
-            (<IconButton
-              iconStyle={styles.icon}
-              iconClassName="material-icons"
-              onTouchTap={this.props.handleBack}
-              children="arrow_back"
-            />)
-          }
+          iconElementLeft={left}
+          onLeftIconButtonTouchTap={this.props.toggle}
 				/>
         {this.props.children}
 

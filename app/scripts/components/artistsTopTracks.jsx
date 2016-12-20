@@ -123,7 +123,7 @@ var TopTracks = React.createClass({
 	select: function(track, pos){
 		var playing = this.state.playing;
 		var playingTrack = this.state.playingTrack;
-		var artist = this.getCollection().at(0);
+		var artist = this.getModel();
 		var t = artist.get('tracks').at(pos);
 		var same = this.state.playingPos === pos;
 
@@ -183,9 +183,9 @@ var TopTracks = React.createClass({
 		var img   = null;
     var genre = null;
 
-		if(hasTracks){
+		if(hasTracks && this.getModel().get('images')[0]){
 			img = this.getModel().get('images')[0].url;
-			genre = this.getModel().get('genres')[0].url;
+			genre = this.getModel().get('genres')[0];
 		}
 
 		return (

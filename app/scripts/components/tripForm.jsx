@@ -308,8 +308,8 @@ var TripForm = React.createClass({
 
           <FormsyDate
             name="startDate"
-            floatingLabelText="Arival"
-            hintText="Arival"
+            floatingLabelText="Arrival"
+            hintText="Arrival"
             style={{}}
             minDate={this.state.today}
             onChange={this.handleStartDate}

@@ -5,6 +5,8 @@ import Backbone from 'backbone';
 import Place  from 'material-ui/svg-icons/maps/place';
 import More from 'material-ui/svg-icons/navigation/more-vert';
 
+import {grey500} from 'material-ui/styles/colors';
+
 import {Avatar, Paper, Dialog, Divider, Drawer, IconMenu, MenuItem,
 	FlatButton, IconButton, FloatingActionButton} from 'material-ui';
 
@@ -16,19 +18,31 @@ import TripForm from './tripForm.jsx';
 import Trip from './../models/Trip';
 import TripCollection from './../models/TripCollection';
 
+import TripDetail from './TripDetail.jsx';
+
 
 const SelectableList = makeSelectable(List);
 
 const styles = {
 	page:{
 		position: 'relative',
-		paddingLeft: 260,
+		paddingLeft: 250,
 		paddingRight: 50
-		// display: 'flex',
-		// flexFlow: 'column nowrap',
-		// alignItems: 'flex-start',
-		// fontFamily: '"Roboto", sans-serif',
-		// marginTop: 22
+	},
+	pageLeft:{
+		position: 'relative',
+		paddingLeft: 0,
+		paddingRight: 50
+	},
+	pageRight:{
+		position: 'relative',
+		paddingLeft: 250,
+		marginRight: -206
+	},
+	pageFull:{
+		position: 'relative',
+		paddingLeft: 0,
+		marginRight: -206
 	},
 	paper:{
 		maxWidth: 800,
@@ -37,13 +51,6 @@ const styles = {
 		flexFlow: 'row nowrap',
 		justifyContent: 'center',
 		alignItems: 'center'
-	},
-	dialog:{
-
-	},
-
-	dialogBody: {
-
 	},
 	dialogContent: {
 			maxWidth: 309
@@ -58,26 +65,6 @@ const styles = {
 
 var Calendar = React.createClass({
 
-
-
-	componentDidUpdate: function() {
-
-	//  var path = this.props.path;
-	// 	var value = path ? path : this.state.selectedIndex;
-	 //
-	 //
-	// 	if(path && this.props.trips.length > 1){
-	// 		console.log('~~PATH');
-	// 		this.setState({selectedIndex: path});
-	// 	}
-	// 	else if(value === null && this.props.trips.length > 1){
-	// 		value = '#trips/' + this.props.trips.at(1).get('objectId');
-	// 		// this.setState({selectedIndex: value});
-	// 	}
-
-
-	},
-
 	handleRequestChange: function(event, index) {
 		console.log('handleRequestChange', index);
 		if(index !== 'add-button'){
@@ -87,6 +74,7 @@ var Calendar = React.createClass({
 
   render: function() {
 
+		var path = this.props.path;
 		var trips = this.props.trips.map(function(trip, i){
 			var self = this;
 			var id = trip.get('objectId');
@@ -99,10 +87,10 @@ var Calendar = React.createClass({
 			return (
 				<ListItem
 					key={i}
-					primaryText={<span style={{display:'block', paddingLeft:14}}>
+					primaryText={<span style={{display:'block', paddingLeft:20}}>
 												{city+' '+state}
 											 </span>}
-					secondaryText={<p style={{display:'block', paddingLeft:14}}>
+					secondaryText={<p style={{display:'block', paddingLeft:20}}>
 													{startDate}<br/>{endDate}
 												 </p>}
 					secondaryTextLines={2}
@@ -121,7 +109,7 @@ var Calendar = React.createClass({
 					insetChildren={true}
 					rightIconButton={
 						<IconMenu
-      				iconButtonElement={<IconButton><More/></IconButton>}
+      				iconButtonElement={<IconButton style={{paddingTop:12}}><More color={grey500} /></IconButton>}
       				anchorOrigin={{horizontal: 'left', vertical: 'top'}}
       				targetOrigin={{horizontal: 'left', vertical: 'top'}}
 						>
@@ -148,7 +136,7 @@ var Calendar = React.createClass({
 					style={{width: '100%', height: '100%'}}
 					label="Add a Trip"
 					secondary={true}
-					href="#trips/new"
+					href={path? '#trips/'+path+'/new' : '#trips/new'}
 				/>
 			</ListItem>
 		);
@@ -157,7 +145,11 @@ var Calendar = React.createClass({
 		var value = this.props.path ? this.props.path : null;
 		console.log('value', value);
     return (
-			<Drawer width={240} containerStyle={{top:80, bottom:20, height:'calc(100vh-100px)'}}>
+			<Drawer
+				open={this.props.open}
+				width={240}
+				containerStyle={{top:80, bottom:20, height:'calc(100vh-100px)'}}
+			>
 				<SelectableList
 					value={value}
 					onChange={this.handleRequestChange}>
@@ -172,11 +164,12 @@ var Calendar = React.createClass({
 
 var CalendarContainer = React.createClass({
 
-
 	getInitialState: function() {
 		return {
 			trips: new TripCollection(),
-			open: false
+			open: false,
+			menu: true,
+			music: true
 		};
 	},
 
@@ -216,32 +209,58 @@ var CalendarContainer = React.createClass({
 		this.setState({trips: trips});
 	},
 
+	toggleMenu: function(){
+		this.setState({menu: !this.state.menu});
+	},
+
+	toggleMusic: function(){
+		console.log('toggle music');
+		this.setState({music: !this.state.music});
+	},
+
   render: function() {
 		var path = this.props.path ? this.props.path : false;
+
+		var pageStyle = null;
+		if(this.state.menu && this.state.music)
+			pageStyle = styles.page;
+		else if(!this.state.menu && this.state.music)
+		  pageStyle = styles.pageLeft;
+		else if(!this.state.menu && this.state.music)
+			pageStyle = styles.pageRight;
+		else
+			pageStyle = styles.pageFull;
+
     return (
-			<App fixed={true}>
+			<App
+				fixed={true}
+				menu={true}
+				toggle={this.toggleMenu}
+				music={path !== false}
+				toggleMusic={this.toggleMusic}
+
+			>
 
 				<Calendar
 					trips={this.state.trips}
 					path={path}
 					deleteTrip={this.deleteTrip}
+					open={this.state.menu}
 				/>
 
 				{ path &&
-					<div style={styles.page}>
-						{this.props.children}
+					<div style={pageStyle}>
+						<TripDetail tripId={this.props.tripId} model={new Trip()} music={this.state.music}/>
 					</div>
 				}
 
 				<Dialog
 					title="Add a Trip~"
 					titleStyle={{display:'none'}}
-					bodyStyle={styles.dialogBody}
 					contentStyle={styles.dialogContent}
           open={(this.props.new === true)}
 					autoScrollBodyContent={true}
 					modal={true}
-					style={styles.dialog}
         >
 					<TripForm
 						handleSubmit={this.handleSubmit}

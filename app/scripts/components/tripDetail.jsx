@@ -81,9 +81,9 @@ const styles = {
 		display: 'none'
 	},
 
-	drawer: {
-		zIndex: 1300
-	},
+	// drawer: {
+	// 	zIndex: 1300
+	// },
 
 	drawerContainer: {
 		height: 'calc(100% - 92px)',
@@ -222,8 +222,7 @@ var TripDetail = React.createClass({
 
 		var concerts = this.state.concerts;
 
-		// var hasArtist = (this.state.selectedArtist.get('name').length > 0);
-
+		console.log('this.props.music');
 
     return (
 
@@ -240,7 +239,6 @@ var TripDetail = React.createClass({
 						selectedArtistId={this.state.selectedArtistId}/>
 
 					<Drawer
-						style={styles.drawer}
 						containerStyle={styles.drawerContainer}
 						children={
 							<TopTracks
@@ -248,7 +246,7 @@ var TripDetail = React.createClass({
 								artistCount={1}/>
 						}
 						openSecondary={true}
-						open={true}
+						open={this.props.music}
 					/>
 
 
