@@ -27,22 +27,22 @@ const styles = {
 	page:{
 		position: 'relative',
 		paddingLeft: 250,
-		paddingRight: 50
+		paddingRight: 240
 	},
 	pageLeft:{
 		position: 'relative',
 		paddingLeft: 0,
-		paddingRight: 50
+		paddingRight: 240
 	},
 	pageRight:{
 		position: 'relative',
 		marginLeft: 250,
-		paddingRight: -200
+		paddingRight: 0
 	},
 	pageFull:{
 		position: 'relative',
 		paddingLeft: 0,
-		paddingRight: -200
+		paddingRight: 0
 	},
 	paper:{
 		maxWidth: 800,
@@ -148,7 +148,7 @@ var Calendar = React.createClass({
 			<Drawer
 				open={this.props.open}
 				width={240}
-				containerStyle={{top:80, bottom:20, height:'calc(100vh-100px)'}}
+				containerStyle={{top:64, bottom:0, height:'calc(100vh-64px)'}}
 			>
 				<SelectableList
 					value={value}

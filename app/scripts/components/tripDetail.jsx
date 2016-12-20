@@ -25,8 +25,7 @@ const styles = {
 		display: 		 'flex',
 		flexFlow: 	 'row nowrap',
 		alignItems:  'space-between',
-		fontFamily:  '"Roboto", sans-serif',
-		marginRight: 240
+		fontFamily:  '"Roboto", sans-serif'
 	},
 
 	pageFull:{
@@ -34,7 +33,7 @@ const styles = {
 		display: 		 'flex',
 		flexFlow: 	 'row nowrap',
 		alignItems:  'space-between',
-		fontFamily:  '"Roboto", sans-serif',
+		fontFamily:  '"Roboto", sans-serif'
 	},
 
 	artist: {
@@ -81,14 +80,17 @@ const styles = {
 		display: 'none'
 	},
 
-	// drawer: {
-	// 	zIndex: 1300
-	// },
+	drawer: {
+		top: 63,
+		bottom: 0,
+		zIndex: 1300
+	},
 
 	drawerContainer: {
-		height: 'calc(100% - 92px)',
-		top: 78,
-		bottom: 0
+		 height: 'calc(100% - 64px)',
+		top: 63,
+		bottom: 0,
+		zIndex: 1300
 	}
 };
 
@@ -229,6 +231,7 @@ var TripDetail = React.createClass({
 
     return (
 
+			<div>
 				<div style={styles.page}>
 
 					<Concerts
@@ -240,9 +243,12 @@ var TripDetail = React.createClass({
 						removeFavorite={this.removeFavorite}
 						favorites={this.state.favorites}
 						selectedArtistId={this.state.selectedArtistId}/>
+				</div>
+
+
 
 					<Drawer
-						containerStyle={styles.drawerContainer}
+						containerStyle={{top:64, bottom:0, height:'calc(100vh-64px)'}}
 						children={
 							<TopTracks
 								model={this.state.selectedArtist}
