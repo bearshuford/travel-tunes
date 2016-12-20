@@ -9,6 +9,8 @@ import {Avatar, Card, CardHeader, CardTitle, CardText,
 				Chip, IconButton, Toggle, Checkbox,
 				BottomNavigation, BottomNavigationItem} from 'material-ui';
 
+import {greenA700, greenA400, pink400} from 'material-ui/styles/colors';
+
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import EventSeat from 'material-ui/svg-icons/action/event-seat';
@@ -127,8 +129,8 @@ var ArtistChip = React.createClass({
 		var href 			  = spotify ? artist.get('spotifyLink') : null;
 		var handleClick = spotify ? this.handleClick : undefined;
 
-		var color 		= spotify && added ? '#23CF5F'  : null;
-		var iconColor = spotify && !added ? '#23CF5F'  : null;
+		var color 		= spotify && added ? greenA700  : null;
+		var iconColor = spotify && !added ? greenA700  : null;
 
 		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">queue_music</i>;
 
@@ -178,7 +180,6 @@ var ConcertCard = React.createClass({
 			this.props.removeFavorite(concert.get('sgId'));
 		}
 
-		//  concert.set({'favorite': favorite});
 	},
 
 
@@ -205,8 +206,6 @@ var ConcertCard = React.createClass({
 					title={day}
 					subtitle={time}
 					showExpandableButton={false}
-					openIcon={<span><i style={{color: '#E91E63'}} className="material-icons">favorite</i></span>}
-					closeIcon={<span><i style={{color: '#E91E63'}} className="material-icons">favorite_border</i></span> }
 				/>
 
 				<div style={styles.seat}>
@@ -225,7 +224,7 @@ var ConcertCard = React.createClass({
 
 				<div style={styles.fave}>
 					<IconButton
-						iconStyle={{color: '#E91E63'}}
+						iconStyle={{color: pink400}}
 						onTouchTap={this.onExpandChange}
 						>
 						{concert.get('favorite') ? <ActionFavorite /> : <ActionFavoriteBorder/>}
@@ -341,9 +340,9 @@ var Concerts = React.createClass({
 							onCheck={this.handleToggle}
 							checkedIcon={<ActionFavorite />}
 				      uncheckedIcon={<ActionFavoriteBorder />}
-							iconStyle={{color: '#E91E63', fill: 'currentColor'}}
+							iconStyle={{color: pink400, fill: 'currentColor'}}
 							label={'Favorites'}
-							labelStyle={{color: '#E91E63', marginLeft: -8}}
+							labelStyle={{color: pink400, marginLeft: -8}}
 							/>
 				</div>
 

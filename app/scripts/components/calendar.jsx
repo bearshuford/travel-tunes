@@ -27,12 +27,12 @@ const styles = {
 	page:{
 		position: 'relative',
 		paddingLeft: 250,
-		paddingRight: 240
+		paddingRight: 250
 	},
 	pageLeft:{
 		position: 'relative',
 		paddingLeft: 0,
-		paddingRight: 240
+		paddingRight: 250
 	},
 	pageRight:{
 		position: 'relative',
