@@ -169,20 +169,23 @@ var TripDetail = React.createClass({
 	},
 
 	addArtist: function(artist){
-		// var artists = this.state.selectedArtists;
 		var selectedArtistId = this.state.selectedArtistId;
-		artist.getTopTracks(9);
+		artist.getTopTracks(10);
 
-		if(selectedArtistId !== artist.get('spotifyId'))
+		if(selectedArtistId !== artist.get('spotifyId')){
+      this.props.openMusic();
 			this.setState({
 				selectedArtistId: artist.get('spotifyId'),
-				 selectedArtist: artist
+				selectedArtist:   artist
 			});
-		else
+    }
+		else{
+      this.props.closeMusic();
 			this.setState({
 				selectedArtistId: '',
-				selectedArtist: new Artist()
+				selectedArtist:   new Artist()
 			});
+    }
 	},
 
 	removeArtist: function(artist){

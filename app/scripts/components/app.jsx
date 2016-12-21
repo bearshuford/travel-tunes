@@ -43,9 +43,11 @@ var UserMenu = React.createClass({
   render: function(){
     return (
     <div>
-      <IconMenu desktop={true}
+      <IconMenu
+
+        desktop={true}
         style={styles.iconButton}
-        iconButtonElement={<IconButton iconStyle={styles.icon} iconClassName="material-icons">account_circle</IconButton>}
+        iconButtonElement={<IconButton iconStyle={styles.icon} iconClassName="material-icons" tooltip="Account">account_circle</IconButton>}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
         targetOrigin={{horizontal: 'right', vertical: 'top'}}
       >
@@ -65,7 +67,10 @@ var UserMenu = React.createClass({
           leftIcon={<i className="material-icons">power_settings_new</i>}/>
       </IconMenu>
       {this.props.music &&
-        <IconButton onTouchTap={this.props.toggle}>
+        <IconButton
+          tooltip="Top Tracks"
+          onTouchTap={this.props.toggle}
+          iconStyle={{width: 26, height: 26}}>
           <Music color="white"/>
         </IconButton>
       }
@@ -99,7 +104,7 @@ var App = React.createClass({
                         onTouchTap={this.props.handleBack}
                         children="arrow_back"
                       /> : null;
-    left = menu ? <IconButton>
+    left = menu ? <IconButton tooltip="Trips">
                     <ViewList/>
                   </IconButton> : left;
 

@@ -15,7 +15,6 @@ import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
 import EventSeat from 'material-ui/svg-icons/action/event-seat';
 
-
 import Trip   from './../models/Trip';
 import Artist from './../models/SpotifyArtist';
 import SGEventCollection from './../models/SeatGeekEventCollection';
@@ -69,9 +68,6 @@ const styles = {
 	header:{
 		paddingBottom: 8
 	},
-	date:{
-
-	},
 	seat: {
 		position: 'absolute',
 		top: 0,
@@ -88,10 +84,29 @@ const styles = {
 	},
   detail: {
     width:'100%',
-    paddingLeft: 30,
-    margin: 10
-  }
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    justifyContent: 'flex-start',
+		alignItems: 'center',
+		height: 42,
+		paddingLeft: 28,
+		paddingBottom: 4
+  },
+	checkIcon: {
+		color:  pink400,
+		fill:   'currentColor',
+		width:  26,
+		height: 26
+	},
 
+	checkLabel: {
+		color:      pink400,
+		fontSize:   18,
+		fontWeight: 400,
+		marginLeft: -4,
+		marginTop:  1,
+		lineHeight: '26px'
+	}
 
 
 };
@@ -192,7 +207,6 @@ var ConcertCard = React.createClass({
 
 		var price = concert.get('price') ? 'from $'+ concert.get('price'): null;
 		var chair = (concert.get('price') == null );
-		//? {color: 'gray', fill: 'currentColor'} : null;
 
 		return (
 			<Card
@@ -278,13 +292,8 @@ var Concerts = React.createClass({
 
 	getInitialState: function() {
 		return {
-      favorites: false,
-			index: 0
+      favorites: false
     };
-	},
-
-	select: function(index){
-		this.setState({favorites:(index===1), index: index});
 	},
 
 	handleToggle: function(event, toggle) {
@@ -294,7 +303,6 @@ var Concerts = React.createClass({
 	render: function() {
 		var self = this;
 		var concerts = this.getCollection();
-
 		var faves = this.getModel().get('favorites');
 
 		// set favorites
@@ -305,11 +313,10 @@ var Concerts = React.createClass({
 			return concert;
 		});
 
-		if(self.state.favorites === true){
+		if(self.state.favorites === true)
 			concerts = concerts.where({favorite:true});
-		}
 
-		 concerts = concerts.map( function(concert, i){
+		concerts = concerts.map( function(concert, i){
 			return <ConcertCard
 			          key={i}
 								model={concert}
@@ -322,28 +329,17 @@ var Concerts = React.createClass({
 
 		return (
 			<div style={styles.concerts}>
-{/*				<BottomNavigation selectedIndex={this.state.index}>
-          <BottomNavigationItem
-            label="All"
-						icon={<ActionFavoriteBorder/>}
-            onTouchTap={() => this.select(0)}
-          />
-          <BottomNavigationItem
-            label="Favorites"
-            icon={<ActionFavorite/>}
-            onTouchTap={() => this.select(1)}
-          />
-        </BottomNavigation> */}
 				<div style={styles.detail}>
 					<Checkbox
-							checked={this.state.favorites}
-							onCheck={this.handleToggle}
-							checkedIcon={<ActionFavorite />}
-				      uncheckedIcon={<ActionFavoriteBorder />}
-							iconStyle={{color: pink400, fill: 'currentColor'}}
-							label={'Favorites'}
-							labelStyle={{color: pink400, marginLeft: -8}}
-							/>
+						style={{width: 120, height: 26}}
+						checked={this.state.favorites}
+						onCheck={this.handleToggle}
+						checkedIcon={<ActionFavorite />}
+			      uncheckedIcon={<ActionFavoriteBorder />}
+						iconStyle={styles.checkIcon}
+						label={'Favorites'}
+						labelStyle={styles.checkLabel}
+					/>
 				</div>
 
 				{concerts}

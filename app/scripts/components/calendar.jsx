@@ -169,7 +169,7 @@ var CalendarContainer = React.createClass({
 			trips: new TripCollection(),
 			open: false,
 			menu: true,
-			music: true
+			music: false
 		};
 	},
 
@@ -214,9 +214,18 @@ var CalendarContainer = React.createClass({
 	},
 
 	toggleMusic: function(){
-		console.log('toggle music');
 		this.setState({music: !this.state.music});
 	},
+
+  openMusic: function(){
+    if(!this.state.music)
+      this.setState({music: true, menu: false});
+  },
+
+  closeMusic: function(){
+    if(this.state.music)
+      this.setState({music: false});
+  },
 
   render: function() {
 		var path = this.props.path ? this.props.path : false;
@@ -255,7 +264,13 @@ var CalendarContainer = React.createClass({
 
 				{ path &&
 					<div style={pageStyle}>
-						<TripDetail tripId={this.props.tripId} model={model} music={this.state.music}/>
+						<TripDetail
+              tripId={this.props.tripId}
+              model={model}
+              music={this.state.music}
+              openMusic={this.openMusic}
+              closeMusic={this.closeMusic}
+            />
 					</div>
 				}
 
