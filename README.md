@@ -3,7 +3,7 @@
 Find music to see live on your travels.
 
 
-![travel-tunes](https://cloud.githubusercontent.com/assets/21989005/21206671/929f8c60-c231-11e6-96d1-a81385122a2c.png)
+![final-project](https://cloud.githubusercontent.com/assets/21989005/21433815/54cafa8c-c83f-11e6-9977-4c5d57387ea5.gif)
 
 ## Use
 
@@ -31,6 +31,8 @@ Try the [live demo](https://bearshuford.github.io/travel-tunes/).
 * [React](https://facebook.github.io/react/docs/) - user interfaces
 * [material-ui](http://www.material-ui.com/) - React components that implement Google's Material Design
 * [formsy-material-ui](https://github.com/mbrookes/formsy-material-ui) - A [Formsy](https://github.com/christianalfoni/formsy-react) compatibility wrapper for Material-UI form components
+
+* [React Flip Move](https://github.com/joshwcomeau/react-flip-move) - animation between DOM changes (eg. list reordering) using the [FLIP technique](https://aerotwist.com/blog/flip-your-animations/#the-general-approach)
 
 * [Moment.js](http://momentjs.com/) - date parsing, manipulation, and display
 

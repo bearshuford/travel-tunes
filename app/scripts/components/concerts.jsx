@@ -38,7 +38,7 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'flex-start',
-		paddingBottom: 8,
+		paddingBottom: 4,
 		maxWidth: 800
 	},
 	artist: {
@@ -60,7 +60,7 @@ const styles = {
 		lineHeight: '36px'
 	},
 	cardHeader:{
-		paddingTop: 8,
+		paddingTop: 10,
 		paddingBottom: 8
 	},
 	cardTitle: {
@@ -215,18 +215,18 @@ var ConcertCard = React.createClass({
 					title={day}
 					subtitle={time}
 					showExpandableButton={false}
+					textStyle={{paddingTop:4}}
 					children={
 						<div style={styles.cardIcons}>
-							<IconButton
+							{chair ? <EventSeat color={'rgba(0, 0, 0, 0.298039)'}/> : <IconButton
 								tooltip={price}
-								disabled={chair}
 								style={{padding:0, width:24, height:24}}
-								tooltipPosition="top-left"
+								tooltipPosition="top-center"
 								tooltipStyles={{fontSize: 12}}
 								href={concert.get('sgUrl')}
 							>
 								<EventSeat/>
-							</IconButton>
+							</IconButton>}
 							<IconButton
 								iconStyle={{color: pink400}}
 								style={{padding:0, width:24, height:24}}
