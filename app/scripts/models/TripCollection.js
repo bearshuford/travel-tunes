@@ -5,6 +5,7 @@ import ParseCollection from './ParseCollection';
 
 var TripCollection = ParseCollection.extend({
   model:   Trip,
+  comparator: 'startDate',
   baseUrl: 'https://maeve.herokuapp.com/classes/Trip'
 });
 

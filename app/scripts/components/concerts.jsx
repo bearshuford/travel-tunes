@@ -4,6 +4,7 @@ import _ 				from 'underscore';
 import React 		from 'react';
 import moment 	from 'moment';
 import Backbone from 'backbone';
+import FlipMove from 'react-flip-move';
 
 import {Avatar, Card, CardHeader, CardTitle, CardText,
 				Chip, IconButton, Toggle, Checkbox,
@@ -66,22 +67,22 @@ const styles = {
 		fontSize: 20
 	},
 	header:{
-		paddingBottom: 8
+		paddingBottom: 6,
+		paddingTop: 10,
+		display: 'flex',
+		flexFlow: 'row nowrap',
+		justifyContent: 'space-between',
+		alignItems: 'center'
 	},
-	seat: {
-		position: 'absolute',
-		top: 0,
-		right: 42,
-		marginTop: 5,
-		marginBottom: 5
+	cardIcons: {
+		display: 'flex',
+		flexFlow: 'row nowrap',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		width: 60,
+
 	},
-	fave: {
-		position: 'absolute',
-		top: 0,
-		right: 4,
-		marginTop: 5,
-		marginBottom: 5
-	},
+
   detail: {
     width:'100%',
     display: 'flex',
@@ -174,12 +175,6 @@ var ArtistChip = React.createClass({
 
 
 
-
-
-
-
-
-
 var ConcertCard = React.createClass({
 	mixins: [Backbone.React.Component.mixin],
 
@@ -220,36 +215,31 @@ var ConcertCard = React.createClass({
 					title={day}
 					subtitle={time}
 					showExpandableButton={false}
+					children={
+						<div style={styles.cardIcons}>
+							<IconButton
+								tooltip={price}
+								disabled={chair}
+								style={{padding:0, width:24, height:24}}
+								tooltipPosition="top-left"
+								tooltipStyles={{fontSize: 12}}
+								href={concert.get('sgUrl')}
+							>
+								<EventSeat/>
+							</IconButton>
+							<IconButton
+								iconStyle={{color: pink400}}
+								style={{padding:0, width:24, height:24}}
+								tooltipPosition="top-right"
+								tooltipStyles={{fontSize: 12}}
+								onTouchTap={this.onExpandChange}
+							>
+								{concert.get('favorite') ? <ActionFavorite /> : <ActionFavoriteBorder/>}
+							</IconButton>
+
+						</div>
+					}
 				/>
-
-				<div style={styles.seat}>
-					<IconButton
-						tooltip={price}
-						disabled={chair}
-						iconStyle={{cursor:'default'}}
-						tooltipPosition="top-center"
-						tooltipStyles={{fontSize: 12}}
-						href={concert.get('sgUrl')}
-						>
-						<EventSeat style={{color: 'blue', fill: 'currentColor'}}/>
-					</IconButton>
-
-				</div>
-
-				<div style={styles.fave}>
-					<IconButton
-						iconStyle={{color: pink400}}
-						onTouchTap={this.onExpandChange}
-						>
-						{concert.get('favorite') ? <ActionFavorite /> : <ActionFavoriteBorder/>}
-					</IconButton>
-
-
-
-				</div>
-
-
-
 
 
 				<CardTitle
@@ -318,7 +308,7 @@ var Concerts = React.createClass({
 
 		concerts = concerts.map( function(concert, i){
 			return <ConcertCard
-			          key={i}
+			          key={concert.cid}
 								model={concert}
 								addArtist={self.props.addArtist}
 								removeArtist={self.props.removeArtist}
@@ -326,10 +316,17 @@ var Concerts = React.createClass({
 								removeFavorite={self.props.removeFavorite}
 								selectedArtistId={self.props.selectedArtistId}/>;
 		});
-
+		console.log(this.props.pageStyle);
 		return (
 			<div style={styles.concerts}>
-				<div style={styles.detail}>
+				<FlipMove
+					style={this.props.pageStyle}
+					easing={'cubic-bezier(0.43, 1, 0.5, 1)'}
+					staggerDurationBy={20}
+					staggerDelayBy={20}
+					duration={500}
+				>
+				<div style={styles.detail} key="favorites-check">
 					<Checkbox
 						style={{width: 120, height: 26}}
 						checked={this.state.favorites}
@@ -341,8 +338,8 @@ var Concerts = React.createClass({
 						labelStyle={styles.checkLabel}
 					/>
 				</div>
-
-				{concerts}
+					{concerts}
+				</FlipMove>
 
 			</div>
 		);

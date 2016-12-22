@@ -5,7 +5,8 @@ import Backbone from 'backbone';
 import Place  from 'material-ui/svg-icons/maps/place';
 import More from 'material-ui/svg-icons/navigation/more-vert';
 
-import {grey500} from 'material-ui/styles/colors';
+import {greenA700, greenA400, pink400, grey500} from 'material-ui/styles/colors';
+
 
 import {Avatar, Paper, Dialog, Divider, Drawer, IconMenu, MenuItem,
 	FlatButton, IconButton, FloatingActionButton} from 'material-ui';
@@ -24,25 +25,53 @@ import TripDetail from './TripDetail.jsx';
 const SelectableList = makeSelectable(List);
 
 const styles = {
+// 	page:{
+// 		transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
+// 		position: 'relative',
+// 		paddingLeft: 250,
+// 		paddingRight: 250
+// 	},
+// 	pageLeft:{
+// 		transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
+// 		position: 'relative',
+// 		paddingLeft: 0,
+// 		paddingRight: 250
+// 	},
+// 	pageRight:{
+// transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',		position: 'relative',
+// 		paddingLeft: 250,
+// 		paddingRight: 0
+// 	},
+// 	pageFull:{
+// transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',		position: 'relative',
+// 		paddingLeft: 0,
+// 		paddingRight: 0
+// 	},
 	page:{
-		transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
-		position: 'relative',
+		display: 'flex',
+		flexFlow: 'row wrap',
+		justifyContent: 'stretch',
 		paddingLeft: 250,
 		paddingRight: 250
 	},
 	pageLeft:{
-		transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
-		position: 'relative',
+		display: 'flex',
+		flexFlow: 'row wrap',
+		justifyContent: 'stretch',
 		paddingLeft: 0,
 		paddingRight: 250
 	},
 	pageRight:{
-transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',		position: 'relative',
+		display: 'flex',
+		flexFlow: 'row wrap',
+		justifyContent: 'stretch',
 		paddingLeft: 250,
 		paddingRight: 0
 	},
 	pageFull:{
-transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',		position: 'relative',
+		display: 'flex',
+		flexFlow: 'row wrap',
+		justifyContent: 'stretch',
 		paddingLeft: 0,
 		paddingRight: 0
 	},
@@ -74,10 +103,19 @@ var Calendar = React.createClass({
 		}
   },
 
+
+
   render: function() {
 
 		var path = this.props.path;
 		var trips = this.props.trips.map(function(trip, i){
+
+			var startDatePast = moment() > moment(trip.get('startDate'));
+			var endDatePast   = moment() > moment(trip.get('endDate'));
+
+			var startDateStyle = startDatePast ? {color: pink400} : {};
+			var endDateStyle   = endDatePast   ? {color: pink400} : {};
+
 			var self = this;
 			var id = trip.get('objectId');
 			var city = trip.get('city');
@@ -93,7 +131,9 @@ var Calendar = React.createClass({
 												{city+' '+state}
 											 </span>}
 					secondaryText={<p style={{display:'block', paddingLeft:20}}>
-													{startDate}<br/>{endDate}
+													<span style={startDateStyle}>{startDate}</span>
+													<br/>
+													<span style={endDateStyle}>{endDate}</span>
 												 </p>}
 					secondaryTextLines={2}
 					leftAvatar= {
@@ -222,11 +262,9 @@ var CalendarContainer = React.createClass({
   openMusic: function(){
 		var self = this;
     if(!this.state.music){
-			setTimeout(function(){
-				self.setState({music: true});
-			},300);
 			if(this.state.menu)
-	    	self.setState({menu: false});
+	    	self.setState({menu: false, music: true});
+			else self.setState({music: true});
 		}
   },
 
@@ -273,7 +311,7 @@ var CalendarContainer = React.createClass({
 				/>
 
 				{ path &&
-					<div style={pageStyle}>
+
 						<TripDetail
               tripId={this.props.tripId}
               model={model}
@@ -281,8 +319,9 @@ var CalendarContainer = React.createClass({
               openMusic={this.openMusic}
               closeMusic={this.closeMusic}
 							closeMenu={this.closeMenu}
+							pageStyle={pageStyle}
             />
-					</div>
+
 				}
 
 				<Dialog

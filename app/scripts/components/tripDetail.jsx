@@ -230,7 +230,7 @@ var TripDetail = React.createClass({
 
 		var concerts = this.state.concerts;
 
-		console.log('this.props.music');
+		console.log(this.props.pageStyle);
 
     return (
 
@@ -245,7 +245,8 @@ var TripDetail = React.createClass({
 						addFavorite={this.addFavorite}
 						removeFavorite={this.removeFavorite}
 						favorites={this.state.favorites}
-						selectedArtistId={this.state.selectedArtistId}/>
+						selectedArtistId={this.state.selectedArtistId}
+						pageStyle={this.props.pageStyle}/>
 				</div>
 
 
