@@ -170,7 +170,7 @@ var TripDetail = React.createClass({
 
 	addArtist: function(artist){
 		var selectedArtistId = this.state.selectedArtistId;
-		artist.getTopTracks(10);
+		artist.getTopTracks(10, this.props.openMusic);
 
 		if(selectedArtistId !== artist.get('spotifyId')){
       this.props.openMusic();

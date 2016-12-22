@@ -20,7 +20,7 @@ var Theme = React.createClass({
   render: function() {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
-			  <div> {this.props.children} </div>
+			  <div style={{width: '100vw'}}> {this.props.children} </div>
 			</MuiThemeProvider>
 		);
   }

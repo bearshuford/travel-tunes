@@ -25,22 +25,24 @@ const SelectableList = makeSelectable(List);
 
 const styles = {
 	page:{
+		transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
 		position: 'relative',
 		paddingLeft: 250,
 		paddingRight: 250
 	},
 	pageLeft:{
+		transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
 		position: 'relative',
 		paddingLeft: 0,
 		paddingRight: 250
 	},
 	pageRight:{
-		position: 'relative',
-		marginLeft: 250,
+transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',		position: 'relative',
+		paddingLeft: 250,
 		paddingRight: 0
 	},
 	pageFull:{
-		position: 'relative',
+transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',		position: 'relative',
 		paddingLeft: 0,
 		paddingRight: 0
 	},
@@ -218,8 +220,14 @@ var CalendarContainer = React.createClass({
 	},
 
   openMusic: function(){
-    if(!this.state.music)
-      this.setState({music: true, menu: false});
+		var self = this;
+    if(!this.state.music){
+			setTimeout(function(){
+				self.setState({music: true});
+			},300);
+			if(this.state.menu)
+	    	self.setState({menu: false});
+		}
   },
 
   closeMusic: function(){
@@ -227,23 +235,27 @@ var CalendarContainer = React.createClass({
       this.setState({music: false});
   },
 
-  render: function() {
-		var path = this.props.path ? this.props.path : false;
+	closeMenu: function(){
+    // if(this.state.menu)
+		console.log('closeMenu');
+      this.setState({menu: false});
+  },
 
-		var pageStyle = null;
-		if(this.state.menu && this.state.music)
-			pageStyle = styles.page;
-		else if(!this.state.menu && this.state.music)
-		  pageStyle = styles.pageLeft;
-		else if(this.state.menu && !this.state.music)
-			pageStyle = styles.pageRight;
-		else
-			pageStyle = styles.pageFull;
+  render: function() {
+		var path  = this.props.path ? this.props.path : false;
+		var menu  = this.state.menu;
+		var music = this.state.music;
+
+		var pageStyle;
+		if(menu && music)				pageStyle = styles.page;
+		else if(!menu && music)	pageStyle = styles.pageLeft;
+		else if(menu && !music)	pageStyle = styles.pageRight;
+		else  									pageStyle = styles.pageFull;
 
 		var model = new Trip();
-		if(this.state.trips.length)(
+		if(this.state.trips.length){
 			model = this.state.trips.get(this.props.tripId)
-		)
+		}
 
     return (
 			<App
@@ -252,9 +264,7 @@ var CalendarContainer = React.createClass({
 				toggle={this.toggleMenu}
 				music={path !== false}
 				toggleMusic={this.toggleMusic}
-
 			>
-
 				<Calendar
 					trips={this.state.trips}
 					path={path}
@@ -270,6 +280,7 @@ var CalendarContainer = React.createClass({
               music={this.state.music}
               openMusic={this.openMusic}
               closeMusic={this.closeMusic}
+							closeMenu={this.closeMenu}
             />
 					</div>
 				}
