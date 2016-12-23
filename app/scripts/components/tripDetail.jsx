@@ -3,7 +3,6 @@ import _ from 'underscore';
 import React from 'react';
 import moment from 'moment';
 import Backbone from 'backbone';
-import FlipMove from 'react-flip-move';
 
 import {Paper, Drawer, MenuItem, Chip, Avatar, RaisedButton, FloatingActionButton} from 'material-ui';
 
@@ -23,11 +22,11 @@ require('backbone-react-component');
 const styles = {
 
 	page:{
-		// position: 	 'relative',
-		// display: 		 'flex',
-		// flexFlow: 	 'row nowrap',
-		// alignItems:  'flex-start',
-		// fontFamily:  '"Roboto", sans-serif'
+		position: 	 'relative',
+		display: 		 'flex',
+		flexFlow: 	 'row nowrap',
+		alignItems:  'space-between',
+		fontFamily:  '"Roboto", sans-serif'
 	},
 
 	pageFull:{
@@ -239,13 +238,17 @@ var TripDetail = React.createClass({
 		console.log(trip.get('favorites'));
 		var faves = this.getModel().get('favorites');
 
-		var concerts = this.state.concerts.filter(function(concert){
-			var keep = self.state.seat  ? concert.get('price') != null    : true;
-			return self.state.favorites ? keep && concert.get('favorite') : keep;;
-		}).map( function(concert, i){
-			concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
-			return concert;
-		});
+		var concerts = new SGEventCollection(
+			this.state.concerts.filter(function(concert){
+				var keep = self.state.seat  ? concert.get('price') != null    : true;
+				return self.state.favorites ? keep && concert.get('favorite') : keep;;
+			}).map( function(concert, i){
+				concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
+				return concert;
+			})
+		);
+
+		console.log('TD concerts:', concerts);
 
     return (
 
@@ -260,7 +263,8 @@ var TripDetail = React.createClass({
 						selectedArtistId={this.state.selectedArtistId}
 						pageStyle={this.props.pageStyle}
 						handleFaveToggle={this.handleFaveToggle}
-						handleSeatToggle={this.handleSeatToggle} />
+						handleSeatToggle={this.handleSeatToggle}
+						seat={this.state.seat}/>
 				</div>
 
 					<Drawer

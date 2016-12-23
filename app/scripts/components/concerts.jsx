@@ -309,7 +309,9 @@ var Concerts = React.createClass({
 		var self = this;
 		var concerts = this.getCollection();
 
+		console.log('this.props.seat',this.props.seat);
 		return (
+			<div>
 				<FlipMove
 					style={this.props.pageStyle}
 					easing={'ease'}
@@ -350,6 +352,7 @@ var Concerts = React.createClass({
 											selectedArtistId={self.props.selectedArtistId}/>;
 					})}
 				</FlipMove>
+				</div>
 
 
 		);
