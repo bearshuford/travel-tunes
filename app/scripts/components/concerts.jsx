@@ -7,8 +7,7 @@ import Backbone from 'backbone';
 import FlipMove from 'react-flip-move';
 
 import {Avatar, Card, CardHeader, CardTitle, CardText,
-				Chip, IconButton, Toggle, Checkbox,
-				BottomNavigation, BottomNavigationItem} from 'material-ui';
+				Chip, IconButton, Toggle, Checkbox} from 'material-ui';
 
 import {greenA700, greenA400, pink400} from 'material-ui/styles/colors';
 
@@ -79,19 +78,17 @@ const styles = {
 		flexFlow: 'row nowrap',
 		alignItems: 'center',
 		justifyContent: 'space-between',
-		width: 60,
-
+		width: 60
 	},
-
   detail: {
-    width:'100%',
+		width: '100%',
     display: 'flex',
     flexFlow: 'row nowrap',
     justifyContent: 'flex-start',
 		alignItems: 'center',
 		height: 42,
-		paddingLeft: 28,
-		paddingBottom: 4
+		padding: '0 16px 4px',
+		transition: 'all .3s'
   },
 	checkIcon: {
 		color:  pink400,
@@ -104,9 +101,42 @@ const styles = {
 		color:      pink400,
 		fontSize:   18,
 		fontWeight: 400,
-		marginLeft: -4,
+		marginLeft: -8,
+		marginLeft: 0,
 		marginTop:  1,
 		lineHeight: '26px'
+	},
+
+	chairCheckIcon: {
+		fill:   'currentColor',
+		width:  26,
+		height: 26
+	},
+
+	chairEmptyCheckIcon: {
+		color:  'rgba(0, 0, 0, 0.298039)',
+		fill:   'currentColor',
+		width:  26,
+		height: 26
+	},
+
+	chairCheckLabel: {
+		fontSize:   18,
+		fontWeight: 400,
+		marginLeft: -4,
+		marginTop:  1,
+		lineHeight: '26px',
+		transition: 'color .5s'
+	},
+
+	chairEmptyCheckLabel: {
+		color:  'rgba(0, 0, 0, 0.298039)',
+		fontSize:   18,
+		fontWeight: 400,
+		marginLeft: -4,
+		marginTop:  1,
+		lineHeight: '26px',
+		transition: 'color .5s'
 	}
 
 
@@ -127,8 +157,6 @@ var ArtistChip = React.createClass({
 
 	handleClick: function(e){
 		e.preventDefault();
-		console.log(this.getModel().toJSON());
-
 		var artist =  this.getModel();
 		this.props.addArtist(artist);
 	},
@@ -138,7 +166,6 @@ var ArtistChip = React.createClass({
 		var spotify = artist.get('spotify');
 		var spotifyId = artist.get('spotifyId')
 		var added = spotifyId === this.props.selectedArtistId && spotifyId;
-		if(added) {console.log('ADDED', artist.get('spotifyId'));}
 		var images  = artist.get('images');
 
 		var labelStyle  = spotify && added ? styles.spotify : styles.label;
@@ -179,12 +206,10 @@ var ConcertCard = React.createClass({
 	mixins: [Backbone.React.Component.mixin],
 
 	onExpandChange: function(){
-		console.log('favorite:');
 		var concert = this.getModel();
 
 		if(!concert.get('favorite')){
 			this.props.addFavorite(concert.get('sgId'));
-			console.log('concert card– adding favorite:', concert.get('sgId'));
 		}
 		else{
 			this.props.removeFavorite(concert.get('sgId'));
@@ -280,68 +305,53 @@ var Concerts = React.createClass({
 
 	mixins: [Backbone.React.Component.mixin],
 
-	getInitialState: function() {
-		return {
-      favorites: false
-    };
-	},
-
-	handleToggle: function(event, toggle) {
-		 this.setState({favorites: toggle});
-	 },
-
 	render: function() {
 		var self = this;
 		var concerts = this.getCollection();
-		var faves = this.getModel().get('favorites');
 
-		// set favorites
-		concerts.map(function(concert,i){
-			var favorite =_.contains(faves, concert.get('sgId'))
-			concert.set({'favorite': favorite});
-
-			return concert;
-		});
-
-		if(self.state.favorites === true)
-			concerts = concerts.where({favorite:true});
-
-		concerts = concerts.map( function(concert, i){
-			return <ConcertCard
-			          key={concert.cid}
-								model={concert}
-								addArtist={self.props.addArtist}
-								removeArtist={self.props.removeArtist}
-								addFavorite={self.props.addFavorite}
-								removeFavorite={self.props.removeFavorite}
-								selectedArtistId={self.props.selectedArtistId}/>;
-		});
-		console.log(this.props.pageStyle);
 		return (
-			<div style={styles.concerts}>
 				<FlipMove
 					style={this.props.pageStyle}
-					easing={'cubic-bezier(0.43, 1, 0.5, 1)'}
+					easing={'ease'}
 					staggerDurationBy={20}
 					staggerDelayBy={20}
-					duration={500}
+					duration={350}
 				>
 				<div style={styles.detail} key="favorites-check">
 					<Checkbox
-						style={{width: 120, height: 26}}
-						checked={this.state.favorites}
-						onCheck={this.handleToggle}
+						key="check-fave"
+						style={{width: 120, height: 26, marginRight: 16}}
+						onCheck={this.props.handleFaveToggle}
 						checkedIcon={<ActionFavorite />}
 			      uncheckedIcon={<ActionFavoriteBorder />}
 						iconStyle={styles.checkIcon}
 						label={'Favorites'}
 						labelStyle={styles.checkLabel}
 					/>
+					<Checkbox
+						key="check-seat"
+						style={{width: 120, height: 26, marginLeft: 16}}
+						onCheck={this.props.handleSeatToggle}
+						checkedIcon={<EventSeat />}
+						uncheckedIcon={<EventSeat />}
+						iconStyle={this.props.seat ? styles.chairCheckIcon : styles.chairEmptyCheckIcon}
+						label={'Tickets'}
+						labelStyle={this.props.seat ? styles.chairCheckLabel : styles.chairEmptyCheckLabel}
+					/>
 				</div>
-					{concerts}
+					{concerts.map( function(concert, i){
+						return <ConcertCard
+						          key={concert.get('sgId')}
+											model={concert}
+											addArtist={self.props.addArtist}
+											removeArtist={self.props.removeArtist}
+											addFavorite={self.props.addFavorite}
+											removeFavorite={self.props.removeFavorite}
+											selectedArtistId={self.props.selectedArtistId}/>;
+					})}
 				</FlipMove>
 
-			</div>
+
 		);
 	}
 

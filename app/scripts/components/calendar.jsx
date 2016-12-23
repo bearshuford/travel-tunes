@@ -25,55 +25,37 @@ import TripDetail from './TripDetail.jsx';
 const SelectableList = makeSelectable(List);
 
 const styles = {
-// 	page:{
-// 		transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
-// 		position: 'relative',
-// 		paddingLeft: 250,
-// 		paddingRight: 250
-// 	},
-// 	pageLeft:{
-// 		transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',
-// 		position: 'relative',
-// 		paddingLeft: 0,
-// 		paddingRight: 250
-// 	},
-// 	pageRight:{
-// transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',		position: 'relative',
-// 		paddingLeft: 250,
-// 		paddingRight: 0
-// 	},
-// 	pageFull:{
-// transition: 'all 450ms cubic-bezier(0.23, 1, 0.32, 1) 0ms',		position: 'relative',
-// 		paddingLeft: 0,
-// 		paddingRight: 0
-// 	},
 	page:{
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
-		paddingLeft: 250,
-		paddingRight: 250
+		marginLeft: 250,
+		marginRight: 250,
+		marginTop: 70
 	},
 	pageLeft:{
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
 		paddingLeft: 0,
-		paddingRight: 250
+		marginRight: 250,
+		marginTop: 70
 	},
 	pageRight:{
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
 		paddingLeft: 250,
-		paddingRight: 0
+		paddingRight: 10,
+		marginTop: 70
 	},
 	pageFull:{
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
 		paddingLeft: 0,
-		paddingRight: 0
+		paddingRight: 10,
+		marginTop: 70
 	},
 	paper:{
 		maxWidth: 800,
@@ -97,7 +79,6 @@ const styles = {
 var Calendar = React.createClass({
 
 	handleRequestChange: function(event, index) {
-		console.log('handleRequestChange', index);
 		if(index !== 'add-button'){
 			Backbone.history.navigate(index,{trigger:true});
 		}
@@ -185,7 +166,6 @@ var Calendar = React.createClass({
 		var hasTrips = (trips.length > 0);
 		var self = this;
 		var value = this.props.path ? this.props.path : null;
-		console.log('value', value);
     return (
 			<Drawer
 				open={this.props.open}
@@ -239,7 +219,6 @@ var CalendarContainer = React.createClass({
 		var trip = new Trip(data);
 		trip.save().done(function(data){
 			var id = data.objectId;
-			console.log(trip.get('user'));
 			Backbone.history.navigate('trips/'+id, {trigger:true});
 		}.bind(this));
 	},
@@ -275,7 +254,6 @@ var CalendarContainer = React.createClass({
 
 	closeMenu: function(){
     // if(this.state.menu)
-		console.log('closeMenu');
       this.setState({menu: false});
   },
 

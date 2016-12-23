@@ -94,7 +94,6 @@ var App = React.createClass({
     var username = localStorage.getItem('username');
 
     var back = this.props.handleBack !== undefined;
-    console.log('back',back);
 
     var title = this.props.title ? this.props.title : "TravelTunes";
     var menu = this.props.menu ? this.props.menu : null;
