@@ -46,21 +46,7 @@ var ConcertCollection = Backbone.Collection.extend({
       };
     });
     return concerts;
-  },
-
-  // getAllArtists: function(){
-  //   console.log('this',this);
-  //   var self = this;
-  //   var a = new ArtistCollection();
-  //   self.each(function(concert){
-  //     concert.get('artists').each(function(artist){
-  //       a.add(artist, {silent:true})
-  //     });
-  //   });
-
-  //   console.log('all artists',a);
-  //   return a;
-  // }
+  }
 });
 
 

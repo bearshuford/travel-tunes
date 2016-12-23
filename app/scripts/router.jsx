@@ -20,10 +20,15 @@ var AppRouter = Backbone.Router.extend({
   routes: {
     '': 'index',
     'login': 'login',
+    'login/': 'login',
 		'trips/new': 'tripAdd',
+    'trips/new/': 'tripAdd',
     'trips/:id/new': 'tripDetailAdd',
+    'trips/:id/new/': 'tripDetailAdd',
 		'trips/:id': 'tripDetail',
-		'trips': 'calendar'
+    'trips/:id/': 'tripDetail',
+		'trips': 'calendar',
+    'trips/': 'calendar'
 
   },
 
