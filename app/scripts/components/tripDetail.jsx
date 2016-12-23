@@ -6,7 +6,6 @@ import Backbone from 'backbone';
 import FlipMove from 'react-flip-move';
 
 import App from './app.jsx';
-import Concerts from './concerts.jsx';
 import TopTracks from './artistsTopTracks.jsx';
 
 import Trip from './../models/Trip';
@@ -344,7 +343,6 @@ var ConcertCard = React.createClass({
 					}
 				/>
 
-
 				<CardTitle
 					style={styles.cardHeader}
 					titleStyle={styles.cardTitle}
@@ -527,17 +525,6 @@ var TripDetail = React.createClass({
 
 			<div>
 				<div style={styles.page}>
-					{/*<Concerts
-						collection={new SGEventCollection(concerts)}
-						addArtist={this.addArtist}
-						removeArtist={this.removeArtist}
-						addFavorite={this.addFavorite}
-						removeFavorite={this.removeFavorite}
-						selectedArtistId={this.state.selectedArtistId}
-						pageStyle={this.props.pageStyle}
-						handleFaveToggle={this.handleFaveToggle}
-						handleSeatToggle={this.handleSeatToggle}
-						seat={this.state.seat}/>	*/}
 
 						<FlipMove
 							style={this.props.pageStyle}
@@ -576,7 +563,8 @@ var TripDetail = React.createClass({
 												removeArtist={self.removeArtist}
 												addFavorite={self.addFavorite}
 												removeFavorite={self.removeFavorite}
-												selectedArtistId={self.props.selectedArtistId}/>;
+												selectedArtistId={self.props.selectedArtistId}
+												z={i}/>;
 						})}
 						</FlipMove>
 				</div>
