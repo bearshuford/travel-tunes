@@ -250,7 +250,7 @@ var CalendarContainer = React.createClass({
 	},
 
 	componentDidUpdate: function(prevProps, prevState) {
-		if(prevProps.tripId !== this.props.tripId){
+		if(prevProps.tripId !== this.props.tripId && this.props.tripId){
 			console.log('Cal–props.path CDU:', prevProps.tripId, this.props.tripId);
 			this.setState({trip: this.state.trips.get(this.props.tripId)});
 			this.fetchConcerts(this.state.trips.get(this.props.tripId));
@@ -270,26 +270,22 @@ var CalendarContainer = React.createClass({
 		var trip = new Trip(data);
 		trip.save().done(function(data){
 			var id = data.objectId;
-
-
 			var trips = this.state.trips;
-			var self = this;
-			var userId = localStorage.getItem('userId');
-			trips.parseWhere('user','_User', userId).fetch().then(
-				function(){
-					self.setState({trips: trips});
-					Backbone.history.navigate('trips/'+id, {trigger:true});
-				}
-			);
+
+			trips.add(trip);
+			this.setState({trips: trips});
+			Backbone.history.navigate('trips/'+id, {trigger:true});
+
 		}.bind(this));
 
 	},
 
 	deleteTrip: function(trip) {
 		var trips = this.state.trips;
-		trips.remove(trip);
+		trips.remove(trip.id);
 		trip.destroy();
 		this.setState({trips: trips});
+		Backbone.history.navigate('', {trigger:true});
 	},
 
 	toggleMenu: function(){
