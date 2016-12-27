@@ -454,7 +454,7 @@ var TripDetail = React.createClass({
 		}).map( function(concert, i){
 			 concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
 			return <ConcertCard
-								key={i}
+								key={concert.get('sgId')}
 								model={concert}
 								addArtist={self.addArtist}
 								removeArtist={self.removeArtist}
