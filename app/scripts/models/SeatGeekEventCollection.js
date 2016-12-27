@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
+import moment from 'moment';
+
 
 import Artist from './SpotifyArtist';
 import ArtistCollection from './SpotifyArtistCollection';
@@ -8,14 +10,20 @@ import ArtistCollection from './SpotifyArtistCollection';
 
 var Concert = Backbone.Model.extend({
   defaults: {
-    favorite: false
+    favorite: false,
+    name: ''
   }
 });
 
 
 var ConcertCollection = Backbone.Collection.extend({
   model : Concert,
-  url : "https://api.seatgeek.com/2/events?client_id=NjIyMDI4NXwxNDc5MzEwODUy",
+  url : 'https://api.seatgeek.com/2/events?client_id=NjIyMDI4NXwxNDc5MzEwODUy',
+
+  comparator: function(concert){
+    return moment(concert.get('date')).add(concert.get('sgId'),'seconds').toDate();
+  },
+
 
   parse : function(response) {
 

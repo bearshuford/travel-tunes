@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import Backbone from 'backbone';
+import _ from 'underscore';
 
 import Place  from 'material-ui/svg-icons/maps/place';
 import More from 'material-ui/svg-icons/navigation/more-vert';
@@ -18,6 +19,8 @@ import TripForm from './tripForm.jsx';
 
 import Trip from './../models/Trip';
 import TripCollection from './../models/TripCollection';
+import SGEventCollection from './../models/SeatGeekEventCollection';
+
 
 import TripDetail from './TripDetail.jsx';
 
@@ -79,8 +82,9 @@ const styles = {
 var Calendar = React.createClass({
 
 	handleRequestChange: function(event, index) {
+    console.log('handlerequestChange');
 		if(index !== 'add-button'){
-			Backbone.history.navigate(index,{trigger:true});
+			// Backbone.history.navigate(index,{trigger:true});
 		}
   },
 
@@ -132,7 +136,9 @@ var Calendar = React.createClass({
 					insetChildren={true}
 					rightIconButton={
 						<IconMenu
-      				iconButtonElement={<IconButton style={{paddingTop:12}}><More color={grey500} /></IconButton>}
+      				iconButtonElement={<IconButton style={{paddingTop:12}}>
+																	 <More color={grey500} />
+																 </IconButton>}
       				anchorOrigin={{horizontal: 'left', vertical: 'top'}}
       				targetOrigin={{horizontal: 'left', vertical: 'top'}}
 						>
@@ -146,6 +152,7 @@ var Calendar = React.createClass({
     				</IconMenu>
 					}
 					value={'#trips/' + id}
+					href={'#trips/' + id}
 				/>
 			);
 		}.bind(this));
@@ -189,21 +196,65 @@ var CalendarContainer = React.createClass({
 	getInitialState: function() {
 		return {
 			trips: new TripCollection(),
+			trip: null,
 			open: false,
 			menu: true,
-			music: false
+			music: false,
+			concerts: new SGEventCollection()
 		};
 	},
 
+	fetchConcerts: function(trip) {
+    var self = this;
+    var concerts = new SGEventCollection();
+
+    var arrival   = moment(trip.get('startDate')).format('YYYY-MM-DD');
+    var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
+
+    concerts.fetch({
+        withCredentials: false,
+        crossDomain:     true,
+      data : {
+        'per_page': 			    '300',
+        'taxonomies.name':    'concert',
+        'venue.state': 			  trip.get('state'),
+        'venue.city': 			  trip.get('city'),
+        'datetime_local.gte': arrival,
+        'datetime_local.lte': departure
+      },
+      success: function(collection, response, options) {
+				self.setState({concerts, collection});
+      },
+      error: function(collection, response, options) {
+        console.error(response.statusText);
+      }
+    });
+  },
+
+
 	componentDidMount: function() {
 		var trips = this.state.trips;
+		var self = this;
 		var userId = localStorage.getItem('userId');
 		trips.parseWhere('user','_User', userId).fetch().then(
       function(){
-        this.setState({trips: trips});
-      }.bind(this)
+				console.log('fetched trips', trips.toJSON());
+				if(self.props.tripId){
+					self.setState({trips: trips, trip: self.state.trips.get(self.props.tripId)});
+					self.fetchConcerts(trips.get(self.props.tripId));
+				}
+        else self.setState({trips: trips});
+      }
     );
     return true;
+	},
+
+	componentDidUpdate: function(prevProps, prevState) {
+		if(prevProps.tripId !== this.props.tripId){
+			console.log('Cal–props.path CDU:', prevProps.tripId, this.props.tripId);
+			this.setState({trip: this.state.trips.get(this.props.tripId)});
+			this.fetchConcerts(this.state.trips.get(this.props.tripId));
+		}
 	},
 
 
@@ -219,8 +270,19 @@ var CalendarContainer = React.createClass({
 		var trip = new Trip(data);
 		trip.save().done(function(data){
 			var id = data.objectId;
-			Backbone.history.navigate('trips/'+id, {trigger:true});
+
+
+			var trips = this.state.trips;
+			var self = this;
+			var userId = localStorage.getItem('userId');
+			trips.parseWhere('user','_User', userId).fetch().then(
+				function(){
+					self.setState({trips: trips});
+					Backbone.history.navigate('trips/'+id, {trigger:true});
+				}
+			);
 		}.bind(this));
+
 	},
 
 	deleteTrip: function(trip) {
@@ -253,7 +315,7 @@ var CalendarContainer = React.createClass({
   },
 
 	closeMenu: function(){
-    // if(this.state.menu)
+    if(this.state.menu)
       this.setState({menu: false});
   },
 
@@ -268,10 +330,8 @@ var CalendarContainer = React.createClass({
 		else if(menu && !music)	pageStyle = styles.pageRight;
 		else  									pageStyle = styles.pageFull;
 
-		var model = new Trip();
-		if(this.state.trips.length){
-			model = this.state.trips.get(this.props.tripId)
-		}
+		var model = this.state.trip;
+
 
     return (
 			<App
@@ -288,11 +348,12 @@ var CalendarContainer = React.createClass({
 					open={this.state.menu}
 				/>
 
-				{ path &&
+			{ path &&  model !== null &&
 
 						<TripDetail
               tripId={this.props.tripId}
               model={model}
+							collection={this.state.concerts}
               music={this.state.music}
               openMusic={this.openMusic}
               closeMusic={this.closeMusic}
@@ -322,9 +383,6 @@ var CalendarContainer = React.createClass({
   }
 
 });
-
-
-
 
 
 export default CalendarContainer;

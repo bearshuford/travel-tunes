@@ -359,7 +359,7 @@ var ConcertCard = React.createClass({
 												addArtist={self.props.addArtist}
 												removeArtist={self.props.removeArtist}
 												selectedArtistId={self.props.selectedArtistId}
-												/>;
+											/>;
 					})}
 
 				</CardText>
@@ -379,67 +379,12 @@ var TripDetail = React.createClass({
 
 	getInitialState: function() {
 		return {
-			concerts : new SGEventCollection(),
-			selectedArtists: new ArtistCollection(),
 			selectedArtistId: '',
 			selectedArtist: new Artist(),
 			favorites: false,
 			seat: false,
 			open: false
 		};
-	},
-
-
-	fetchConcerts: function(){
-		var self = this;
-		var concerts = this.state.concerts;
-		var trip   = this.getModel();
-
-		var arrival   = moment(trip.get('startDate')).format('YYYY-MM-DD');
-		var departure = moment(trip.get('endDate')).format('YYYY-MM-DD');
-
-		concerts.fetch({
-				withCredentials: false,
-				crossDomain:     true,
-			data : {
-				'per_page': 			    '300',
-				'taxonomies.name':    'concert',
-				'venue.state': 			  trip.get('state'),
-				'venue.city': 			  trip.get('city'),
-				'datetime_local.gte': arrival,
-				'datetime_local.lte': departure
-			},
-			success: function(collection, response, options) {
-				self.setState({collection: collection});
-			},
-			error: function(collection, response, options) {
-				console.error(response.statusText);
-			}
-		});
-	},
-
-	fetchTrips: function(){
-		var self = this;
-		var tripId = this.props.tripId;
-
-		this.getModel().set({'objectId': this.props.tripId});
-		this.getModel().fetch().then(function(){self.fetchConcerts()});
-	},
-
-
-	componentDidUpdate: function(prevProps, prevState) {
-		var tripId = this.props.tripId;
-		var self = this;
-
-		if(prevProps.tripId !== tripId){
-			this.getModel().clear();
-			this.getModel().set({'objectId': tripId});
-			this.getModel().fetch().then(self.fetchConcerts);
-		}
-	},
-
-	componentDidMount: function() {
-		this.fetchTrips();
 	},
 
 	addArtist: function(artist){
@@ -497,47 +442,45 @@ var TripDetail = React.createClass({
 
   render: function() {
 
-		var trip = this.getModel();
 		var self = this;
 
-		var startTitle = moment(trip.get('startDate')).format('MMM D');
-		var endTitle   = moment(trip.get('endDate')).format('MMM D');
-
-		var location  = trip.get('city') + ', '  + trip.get('state');
-		var daterange = startTitle       + ' - ' + endTitle;
-		var title     = location         + ' | ' + daterange;
-
-		console.log(trip.get('favorites'));
 		var faves = this.getModel().get('favorites');
 
-		var concerts = this.state.concerts.filter(function(concert){
+		console.log('unfiltered concerts.length', this.getCollection().length);
+
+		var concerts = this.getCollection().filter(function(concert){
 			var keep = self.state.seat  ? concert.get('price') != null    : true;
 			return self.state.favorites ? keep && concert.get('favorite') : keep;;
 		}).map( function(concert, i){
-			concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
-			return concert;
+			 concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
+			return <ConcertCard
+								key={i}
+								model={concert}
+								addArtist={self.addArtist}
+								removeArtist={self.removeArtist}
+								addFavorite={self.addFavorite}
+								removeFavorite={self.removeFavorite}
+								selectedArtistId={self.props.selectedArtistId}
+								z={i}/>;
 		});
 
-
-		console.log('TD concerts:', concerts);
+		console.log('filtered concerts.length',concerts.length);
 
     return (
-
 			<div>
 				<div style={styles.page}>
-
-						<FlipMove
-							style={this.props.pageStyle}
-							easing={'ease'}
-							staggerDurationBy={20}
-							staggerDelayBy={20}
-							duration={400}
-						>
+					<FlipMove
+						style={this.props.pageStyle}
+						easing={'ease'}
+						staggerDurationBy={20}
+						delay={100}
+						duration={450}
+					>
 						<div style={styles.detail} key="favorites-check">
 							<Checkbox
 								key="check-fave"
 								style={{width: 120, height: 26, marginLeft: 16}}
-								onCheck={this.props.handleFaveToggle}
+								onCheck={this.handleFaveToggle}
 								checkedIcon={<ActionFavorite />}
 					      uncheckedIcon={<ActionFavoriteBorder />}
 								iconStyle={styles.checkIcon}
@@ -546,42 +489,29 @@ var TripDetail = React.createClass({
 							/>
 							<Checkbox
 								key="check-seat"
-								style={{width: 120, height: 26, marginLeft: 32}}
-								onCheck={this.props.handleSeatToggle}
+								style={{width: 120, height: 26, marginLeft: 42}}
+								onCheck={this.handleSeatToggle}
 								checkedIcon={<EventSeat />}
 								uncheckedIcon={<EventSeat />}
-								iconStyle={this.props.seat ? styles.chairCheckIcon : styles.chairEmptyCheckIcon}
+								iconStyle={this.state.seat ? styles.chairCheckIcon : styles.chairEmptyCheckIcon}
 								label={'Tickets'}
-								labelStyle={this.props.seat ? styles.chairCheckLabel : styles.chairEmptyCheckLabel}
+								labelStyle={this.state.seat ? styles.chairCheckLabel : styles.chairEmptyCheckLabel}
 							/>
 						</div>
-						{concerts.map( function(concert, i){
-							return <ConcertCard
-							          key={concert.get('sgId')}
-												model={concert}
-												addArtist={self.addArtist}
-												removeArtist={self.removeArtist}
-												addFavorite={self.addFavorite}
-												removeFavorite={self.removeFavorite}
-												selectedArtistId={self.props.selectedArtistId}
-												z={i}/>;
-						})}
-						</FlipMove>
+						{concerts}
+					</FlipMove>
 				</div>
 
-					<Drawer
-						containerStyle={{top:64, bottom:0, height:'calc(100vh-64px)'}}
-						children={
-							<TopTracks
-								model={this.state.selectedArtist}
-								artistCount={1}/>
-						}
-						openSecondary={true}
-						open={this.props.music}
-					/>
+				<Drawer
+					key="drawer"
+					containerStyle={{top:64, bottom:0, height:'calc(100vh-64px)'}}
+					children={<TopTracks model={this.state.selectedArtist}/>}
+					openSecondary={true}
+					open={this.props.music}
+				/>
 
 
-				</div>
+			</div>
 		);
   }
 
