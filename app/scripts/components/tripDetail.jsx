@@ -472,8 +472,8 @@ var TripDetail = React.createClass({
 					<FlipMove
 						style={this.props.pageStyle}
 						easing={'ease'}
-						staggerDurationBy={20}
-						delay={100}
+						staggerDurationBy={15}
+						staggerDelayBy={15}
 						duration={450}
 					>
 						<div style={styles.detail} key="favorites-check">
