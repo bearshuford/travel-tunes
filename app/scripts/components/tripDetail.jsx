@@ -178,8 +178,7 @@ const styles = {
 		color:      pink400,
 		fontSize:   18,
 		fontWeight: 400,
-		marginLeft: -8,
-		marginLeft: 0,
+		marginLeft: -4,
 		marginTop:  1,
 		lineHeight: '26px'
 	},
@@ -203,7 +202,7 @@ const styles = {
 		marginLeft: -4,
 		marginTop:  1,
 		lineHeight: '26px',
-		transition: 'color .5s'
+		transition: 'color .5s ease'
 	},
 
 	chairEmptyCheckLabel: {
@@ -213,7 +212,7 @@ const styles = {
 		marginLeft: -4,
 		marginTop:  1,
 		lineHeight: '26px',
-		transition: 'color .5s'
+		transition: 'color .5s ease'
 	}
 
 
