@@ -449,10 +449,10 @@ var TripDetail = React.createClass({
 		console.log('unfiltered concerts.length', this.getCollection().length);
 
 		var concerts = this.getCollection().filter(function(concert){
+			concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
 			var keep = self.state.seat  ? concert.get('price') != null    : true;
 			return self.state.favorites ? keep && concert.get('favorite') : keep;;
 		}).map( function(concert, i){
-			 concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
 			return <ConcertCard
 								key={concert.get('sgId')}
 								model={concert}
@@ -472,9 +472,9 @@ var TripDetail = React.createClass({
 					<FlipMove
 						style={this.props.pageStyle}
 						easing={'ease'}
-						staggerDurationBy={5}
-						staggerDelayBy={5}
-						duration={400}
+						staggerDurationBy={0}
+						staggerDelayBy={0}
+						duration={450}
 					>
 						<div style={styles.detail} key="favorites-check">
 							<Checkbox
