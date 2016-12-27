@@ -460,7 +460,7 @@ var TripDetail = React.createClass({
 								removeArtist={self.removeArtist}
 								addFavorite={self.addFavorite}
 								removeFavorite={self.removeFavorite}
-								selectedArtistId={self.props.selectedArtistId}
+								selectedArtistId={self.state.selectedArtistId}
 								z={i}/>;
 		});
 
