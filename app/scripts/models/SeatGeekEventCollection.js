@@ -21,7 +21,7 @@ var ConcertCollection = Backbone.Collection.extend({
   url : 'https://api.seatgeek.com/2/events?client_id=NjIyMDI4NXwxNDc5MzEwODUy',
 
   comparator: function(concert){
-    return moment(concert.get('date')).add(concert.get('sgId'),'seconds').toDate();
+    return moment(concert.get('date')).add(concert.get('title').length,'milliseconds').toDate();
   },
 
 
