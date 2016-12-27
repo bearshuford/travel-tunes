@@ -6,6 +6,8 @@ import Backbone from 'backbone';
 import React, {Component, PropTypes} from 'react';
 
 import {List, ListItem, makeSelectable, Avatar, Subheader} from 'material-ui';
+import {greenA700, greenA400, pink400, grey500} from 'material-ui/styles/colors';
+
 import Pause from 'material-ui/svg-icons/av/pause-circle-filled';
 import Play  from 'material-ui/svg-icons/av/play-circle-outline';
 import Replay  from 'material-ui/svg-icons/av/replay';
@@ -195,7 +197,13 @@ var TopTracks = React.createClass({
 							children={
 								<div style={{display:'flex', alignItems:'center', padding: 'auto 26px'}}>
 									<Queue color={'#757575'}/>
-									<span style={{marginLeft: 12}}>{hasTracks ? 'top tracks' : 'select an artist for tunes'}</span>
+									<span style={{marginLeft: 12}}>
+                    {hasTracks ? <span> {'top tracks on '}
+											<a target="_blank" href={artist.get('spotifyLink')} style={{color:greenA700, textDecoration: 'none'}}>
+												{' Spotify'}
+											</a></span> :
+                      'select an artist for tunes'}
+                  </span>
 								</div>
 							}
 						/>
