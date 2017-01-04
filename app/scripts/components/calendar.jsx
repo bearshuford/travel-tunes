@@ -3,6 +3,8 @@ import moment from 'moment';
 import Backbone from 'backbone';
 import _ from 'underscore';
 
+import MDSpinner from "react-md-spinner";
+
 import Place  from 'material-ui/svg-icons/maps/place';
 import More from 'material-ui/svg-icons/navigation/more-vert';
 
@@ -32,33 +34,47 @@ const styles = {
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
-		marginLeft: 250,
-		marginRight: 250,
-		marginTop: 70
+		overflow: 'hidden',
+
+		position: 'absolute',
+		left: 250,
+		right: 250,
+		top: 70
 	},
 	pageLeft:{
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
-		paddingLeft: 0,
-		marginRight: 250,
-		marginTop: 70
+		overflow: 'hidden',
+
+		position: 'absolute',
+		left: 0,
+		right: 250,
+		top: 70
 	},
 	pageRight:{
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
-		paddingLeft: 250,
-		paddingRight: 10,
-		marginTop: 70
+		overflow: 'hidden',
+
+		position: 'absolute',
+		left: 250,
+		right: 0,
+		top: 70,
+		overflow: 'scroll'
 	},
+
 	pageFull:{
 		display: 'flex',
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
-		paddingLeft: 0,
-		paddingRight: 10,
-		marginTop: 70
+		overflow: 'hidden',
+
+		position: 'absolute',
+		left: 0,
+		right: 0,
+		top: 70
 	},
 	paper:{
 		maxWidth: 800,
@@ -178,6 +194,7 @@ var Calendar = React.createClass({
 				open={this.props.open}
 				width={240}
 				containerStyle={{top:64, bottom:0, height:'calc(100vh-64px)'}}
+				zDepth={1}
 			>
 				<SelectableList
 					value={value}
@@ -200,6 +217,7 @@ var CalendarContainer = React.createClass({
 			open: false,
 			menu: true,
 			music: false,
+			fetching: false,
 			concerts: new SGEventCollection()
 		};
 	},
@@ -223,7 +241,7 @@ var CalendarContainer = React.createClass({
         'datetime_local.lte': departure
       },
       success: function(collection, response, options) {
-				self.setState({concerts, collection});
+				self.setState({concerts: collection, fetching: false});
       },
       error: function(collection, response, options) {
         console.error(response.statusText);
@@ -240,7 +258,7 @@ var CalendarContainer = React.createClass({
       function(){
 				console.log('fetched trips', trips.toJSON());
 				if(self.props.tripId){
-					self.setState({trips: trips, trip: self.state.trips.get(self.props.tripId)});
+					self.setState({trips: trips, trip: self.state.trips.get(self.props.tripId), fetching: false});
 					self.fetchConcerts(trips.get(self.props.tripId));
 				}
         else self.setState({trips: trips});
@@ -252,7 +270,7 @@ var CalendarContainer = React.createClass({
 	componentDidUpdate: function(prevProps, prevState) {
 		if(prevProps.tripId !== this.props.tripId && this.props.tripId){
 			console.log('Cal–props.path CDU:', prevProps.tripId, this.props.tripId);
-			this.setState({trip: this.state.trips.get(this.props.tripId)});
+			this.setState({trip: this.state.trips.get(this.props.tripId), fetching: true});
 			this.fetchConcerts(this.state.trips.get(this.props.tripId));
 		}
 	},
@@ -329,6 +347,23 @@ var CalendarContainer = React.createClass({
 		var model = this.state.trip;
 
 
+
+		var Detail = path &&  model !== null ?
+
+					<TripDetail
+						tripId={this.props.tripId}
+						model={model}
+						collection={this.state.concerts}
+						music={this.state.music}
+						openMusic={this.openMusic}
+						closeMusic={this.closeMusic}
+						closeMenu={this.closeMenu}
+						pageStyle={pageStyle}
+						fetching={this.state.fetching}
+					/>
+				: false;
+
+
     return (
 			<App
 				fixed={true}
@@ -344,20 +379,8 @@ var CalendarContainer = React.createClass({
 					open={this.state.menu}
 				/>
 
-			{ path &&  model !== null &&
 
-						<TripDetail
-              tripId={this.props.tripId}
-              model={model}
-							collection={this.state.concerts}
-              music={this.state.music}
-              openMusic={this.openMusic}
-              closeMusic={this.closeMusic}
-							closeMenu={this.closeMenu}
-							pageStyle={pageStyle}
-            />
-
-				}
+			{Detail}
 
 				<Dialog
 					title="Add a Trip~"

@@ -3,6 +3,7 @@ import _ from 'underscore';
 import React from 'react';
 import moment from 'moment';
 import Backbone from 'backbone';
+
 import FlipMove from 'react-flip-move';
 
 import App from './app.jsx';
@@ -108,6 +109,7 @@ const styles = {
 	},
 	concert: {
 		position: 'relative',
+		minWidth: 160,
 		margin: 8
 	},
 	artists: {
@@ -215,7 +217,6 @@ const styles = {
 		transition: 'color .5s ease'
 	}
 
-
 };
 
 
@@ -316,7 +317,7 @@ var ConcertCard = React.createClass({
 					title={day}
 					subtitle={time}
 					showExpandableButton={false}
-					textStyle={{paddingTop:4}}
+					textStyle={{paddingTop:4, width: 100, paddingRight: 0}}
 					children={
 						<div style={styles.cardIcons}>
 							{chair ? <EventSeat color={'rgba(0, 0, 0, 0.298039)'}/> : <IconButton
@@ -463,11 +464,10 @@ var TripDetail = React.createClass({
 								z={i}/>;
 		});
 
-		console.log('filtered concerts.length',concerts.length);
-
     return (
 			<div>
 				<div style={styles.page}>
+
 					<FlipMove
 						style={this.props.pageStyle}
 						easing={'ease'}
@@ -488,7 +488,7 @@ var TripDetail = React.createClass({
 							/>
 							<Checkbox
 								key="check-seat"
-								style={{width: 120, height: 26, marginLeft: 42}}
+								style={{width: 120, height: 26, marginLeft: 36}}
 								onCheck={this.handleSeatToggle}
 								checkedIcon={<EventSeat />}
 								uncheckedIcon={<EventSeat />}
@@ -497,16 +497,19 @@ var TripDetail = React.createClass({
 								labelStyle={this.state.seat ? styles.chairCheckLabel : styles.chairEmptyCheckLabel}
 							/>
 						</div>
+
 						{concerts}
 					</FlipMove>
+
 				</div>
 
 				<Drawer
 					key="drawer"
-					containerStyle={{top:64, bottom:0, height:'calc(100vh-64px)'}}
+					containerStyle={{top:64, bottom:0, right:0, height:'calc(100vh-64px)'}}
 					children={<TopTracks model={this.state.selectedArtist}/>}
 					openSecondary={true}
 					open={this.props.music}
+					zDepth={1}
 				/>
 
 
