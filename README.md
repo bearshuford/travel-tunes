@@ -14,11 +14,7 @@ Final project for [The Iron Yard - Greenville](https://www.theironyard.com/locat
 
 Try the [live demo](https://bearshuford.github.io/travel-tunes/).
 
-1. Create an account to add some **trips**.
-   - destination
-   - arrival date
-   - departure date
-   - image (optional)
+1. Create an account to add some trips.
 
 2. Select a trip to view concerts you could see.
 
