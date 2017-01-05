@@ -4,7 +4,11 @@ Final project for [The Iron Yard - Greenville](https://www.theironyard.com/locat
 
 ![login-traveltunes](https://cloud.githubusercontent.com/assets/21989005/21699474/eece1c1a-d369-11e6-8af2-c983ef24f86a.png)
 
-![traveltunes](https://cloud.githubusercontent.com/assets/21989005/21671346/c915a438-d2e8-11e6-9471-04d4a1b3af44.png)
+![traveltunes-add](https://cloud.githubusercontent.com/assets/21989005/21700579/27821a7a-d36f-11e6-8418-4c3523733202.png)
+
+![traveltunes-filter](https://cloud.githubusercontent.com/assets/21989005/21700717/dbf9720a-d36f-11e6-8da1-ab9ab4a08743.png)
+
+![traveltunes-ss](https://cloud.githubusercontent.com/assets/21989005/21699723/09c2001c-d36b-11e6-9876-beaaf46a5177.png)
 
 
 ## Use
