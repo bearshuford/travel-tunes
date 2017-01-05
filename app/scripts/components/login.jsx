@@ -65,8 +65,8 @@ const styles = {
     textAlign: 'center',
     fontFamily: '"Roboto", sans-serif',
     fontWeight: 500,
-    paddingTop: 4,
-    marginBottom: 4
+    marginBottom: 16,
+    marginTop: 16
   },
   sgIcon: {
     margin: '0 8px',
@@ -159,7 +159,7 @@ var Login = React.createClass({
 
             <div style={styles.info}>
 
-              <span>Find music to see live on your travels.</span>
+              <span>Discover music to enjoy live on your travels.</span>
 
             </div>
 

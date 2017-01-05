@@ -1,7 +1,8 @@
 ## TravelTunes
 
-Find music to see live on your travels.
+Final project for [The Iron Yard - Greenville](https://www.theironyard.com/locations/greenville.html).
 
+![login-traveltunes](https://cloud.githubusercontent.com/assets/21989005/21699474/eece1c1a-d369-11e6-8af2-c983ef24f86a.png)
 
 ![traveltunes](https://cloud.githubusercontent.com/assets/21989005/21671346/c915a438-d2e8-11e6-9471-04d4a1b3af44.png)
 
@@ -10,12 +11,11 @@ Find music to see live on your travels.
 
 Try the [live demo](https://bearshuford.github.io/travel-tunes/).
 
-1. Create an account to add some trips.
+1. Create an account to add some **trips**.
    - destination
    - arrival date
    - departure date
    - image (optional)
-
 
 2. Select a trip to view concerts you could see.
 
