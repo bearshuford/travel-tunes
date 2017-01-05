@@ -39,7 +39,7 @@ const styles = {
 
   titleDiv: {
     marginLeft: 4,
-    fontSize: 26,
+    fontSize: 28,
     height: 'auto',
     lineHeight: 'auto'
   },
@@ -104,7 +104,7 @@ var App = React.createClass({
 
     var back = this.props.handleBack !== undefined;
 
-    var title = 'Travel Tunes';
+    var title = 'TravelTunes';
     var menu = this.props.menu ? this.props.menu : null;
     var tooltip = menu ? 'Trips' : null;
     var left =  <IconButton

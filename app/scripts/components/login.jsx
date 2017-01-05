@@ -24,7 +24,7 @@ const styles = {
     marginRight: 'auto',
     width: '100%',
     position: 'absolute',
-    top: 72
+    top: 72,
   },
   header: {
     marginTop:    4,
@@ -35,7 +35,7 @@ const styles = {
     padding: 20,
     width:   300,
     minWidth: 240,
-    margin:  '8px 16px',
+    margin:  '8px 24px',
     zIndex: 1400,
     overflow: 'hidden'
   },
@@ -50,20 +50,23 @@ const styles = {
     alignItems: 'center',
     fontFamily: '"Roboto", sans-serif',
     fontWeight: 400,
-    fontSize: 24,
-    marginBottom: 10
+    fontSize: '1.8em',
+    marginBottom: 10,
+    padding: '4px 24px'
   },
   details: {
     width: '100%',
-    height: 112,
+    height: 144,
     display: 'flex',
     flexFlow: 'row wrap',
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
+    textAlign: 'center',
     fontFamily: '"Roboto", sans-serif',
     fontWeight: 500,
-    paddingTop: 8
+    paddingTop: 4,
+    marginBottom: 4
   },
   sgIcon: {
     margin: '0 8px',
@@ -156,7 +159,7 @@ var Login = React.createClass({
 
             <div style={styles.info}>
 
-              Find music to see live on your travels.
+              <span>Find music to see live on your travels.</span>
 
             </div>
 
