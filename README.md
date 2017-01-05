@@ -3,7 +3,7 @@
 Find music to see live on your travels.
 
 
-![travel-tunes-5](https://cloud.githubusercontent.com/assets/21989005/21435715/45fee9a0-c849-11e6-9579-7433d5b6889d.gif)
+![traveltunes](https://cloud.githubusercontent.com/assets/21989005/21671346/c915a438-d2e8-11e6-9471-04d4a1b3af44.png)
 
 
 ## Use
