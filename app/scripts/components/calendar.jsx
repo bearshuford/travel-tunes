@@ -3,17 +3,15 @@ import moment from 'moment';
 import Backbone from 'backbone';
 import _ from 'underscore';
 
-import MDSpinner from "react-md-spinner";
 
 import Place  from 'material-ui/svg-icons/social/location-city';
 import More from 'material-ui/svg-icons/navigation/more-vert';
 
-import {greenA700, greenA400, pink400, grey500,
-				blueA200, redA700, deepPurple500, orange700} from 'material-ui/styles/colors';
+import {pink400, grey500} from 'material-ui/styles/colors';
 
 
-import {Avatar, Paper, Dialog, Divider, Drawer, IconMenu, MenuItem,
-	FlatButton, IconButton, FloatingActionButton} from 'material-ui';
+import {Avatar, Dialog, Drawer, IconMenu, MenuItem,
+	FlatButton, IconButton} from 'material-ui';
 
 import {List, ListItem, makeSelectable} from 'material-ui/List';
 
@@ -28,7 +26,6 @@ import SGEventCollection from './../models/SeatGeekEventCollection';
 import TripDetail from './TripDetail.jsx';
 
 
-const colors = [blueA200, redA700, deepPurple500, orange700];
 
 const SelectableList = makeSelectable(List);
 
@@ -38,7 +35,6 @@ const styles = {
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
 		overflow: 'hidden',
-
 		position: 'absolute',
 		left: 250,
 		right: 270,
@@ -49,7 +45,6 @@ const styles = {
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
 		overflow: 'hidden',
-
 		position: 'absolute',
 		left: 0,
 		right: 270,
@@ -60,7 +55,6 @@ const styles = {
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
 		overflow: 'hidden',
-
 		position: 'absolute',
 		left: 250,
 		right: 20,
@@ -73,7 +67,6 @@ const styles = {
 		flexFlow: 'row wrap',
 		justifyContent: 'stretch',
 		overflow: 'hidden',
-
 		position: 'absolute',
 		left: 0,
 		right: 20,
@@ -133,6 +126,7 @@ var Calendar = React.createClass({
 			return (
 				<ListItem
 					key={i}
+					innerDivStyle={{paddingRight: 38}}
 					primaryText={<span style={{display:'block', paddingLeft:20}}>
 												{city+' '+state}
 											 </span>}

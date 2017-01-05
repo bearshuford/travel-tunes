@@ -19,7 +19,7 @@ import {Avatar, Card, CardHeader, CardTitle, CardText,
 				Chip, IconButton, RaisedButton, FloatingActionButton,
 				Toggle, Checkbox, Paper, Drawer, MenuItem} from 'material-ui';
 
-import {greenA400, greenA700, pink400} from 'material-ui/styles/colors';
+import {greenA700, pink400} from 'material-ui/styles/colors';
 
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
@@ -249,7 +249,7 @@ var ArtistChip = React.createClass({
 		var href 			  = spotify ? artist.get('spotifyLink') : null;
 		var handleClick = spotify ? this.handleClick : undefined;
 
-		var color 		= spotify && added ? greenA400  : null;
+		var color 		= spotify && added ? greenA700  : null;
 		var iconColor = spotify && !added ? greenA700  : null;
 
 		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">queue_music</i>;
@@ -322,9 +322,9 @@ var ConcertCard = React.createClass({
 						<div style={styles.cardIcons}>
 							{chair ? <EventSeat color={'rgba(0, 0, 0, 0.298039)'}/> : <IconButton
 								tooltip={price}
+								touch={true}
 								style={{padding:0, width:24, height:24}}
 								tooltipPosition="top-center"
-								tooltipStyles={{fontSize: 12}}
 								href={concert.get('sgUrl')}
 							>
 								<EventSeat/>
@@ -332,8 +332,6 @@ var ConcertCard = React.createClass({
 							<IconButton
 								iconStyle={{color: pink400}}
 								style={{padding:0, width:24, height:24}}
-								tooltipPosition="top-right"
-								tooltipStyles={{fontSize: 12}}
 								onTouchTap={this.onExpandChange}
 							>
 								{concert.get('favorite') ? <ActionFavorite /> : <ActionFavoriteBorder/>}

@@ -198,7 +198,7 @@ var TripForm = React.createClass({
       });
     }
     else{
-      this.props.handleSubmit(data);
+      this.props.handleSubmit(data, this.props.edit);
     }
 
   },
