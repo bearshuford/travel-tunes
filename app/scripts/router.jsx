@@ -23,6 +23,8 @@ var AppRouter = Backbone.Router.extend({
     'login/': 'login',
 		'trips/new': 'tripAdd',
     'trips/new/': 'tripAdd',
+    'trips/:id/edit': 'tripEdit',
+    'trips/:id/edit/': 'tripEdit',
     'trips/:id/new': 'tripDetailAdd',
     'trips/:id/new/': 'tripDetailAdd',
 		'trips/:id': 'tripDetail',
@@ -73,6 +75,17 @@ var AppRouter = Backbone.Router.extend({
 
 		this.loginRedirect();
 	},
+
+  tripEdit: function(tripId){
+    ReactDOM.render(
+      <Calendar
+        edit={true}
+        tripId={tripId}
+        path={'#trips/'+tripId}/>,
+      document.getElementById('root')
+    );
+    this.loginRedirect();
+  },
 
   tripDetail: function(tripId){
     ReactDOM.render(

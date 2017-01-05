@@ -9,6 +9,7 @@ import ArtistCollection from './SpotifyArtistCollection';
 
 
 var Concert = Backbone.Model.extend({
+  idAttribute: 'sgId',
   defaults: {
     favorite: false,
     name: ''

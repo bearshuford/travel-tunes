@@ -1,6 +1,10 @@
 import Backbone from 'backbone';
+import {blueA200, redA700, deepPurple500, orange700} from 'material-ui/styles/colors';
 
 import ParseModel from './ParseModel';
+
+const colors = [blueA200, redA700, deepPurple500, orange700];
+
 
 var Trip = ParseModel.extend({
   idAttribute: 'objectId',
@@ -12,7 +16,8 @@ var Trip = ParseModel.extend({
 			'className': '_User',
 			'objectId':  localStorage.getItem('userId')
 		},
-    favorites: []
+    favorites: [],
+    color: colors[Math.floor(Math.random()*colors.length)]
   }
 
 });

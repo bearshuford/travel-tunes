@@ -111,13 +111,56 @@ var TripForm = React.createClass({
 
   getInitialState: function() {
     var today = new Date();
+    var startDate = null;
+    var endDate = null;
+    var edit = this.props.edit;
+    var trip = this.props.trip;
+
+    var city = '';
+    var state = '';
+
+    if(edit && trip){
+      city = trip.get('city');
+      state = trip.get('state');
+      startDate = moment(trip.get('startDate')).toDate();
+      endDate = moment(trip.get('endDate')).toDate();
+    }
+
     return {
       today:           today,
-      startDate:       today,
+      startDate:       startDate,
+      endDate:         endDate,
       imageFile:       null,
       imagePreviewUrl: null,
-      city: ''
+      city: city,
+      state: state
     };
+  },
+
+
+  componentDidUpdate: function(prevProps, prevState) {
+    if(prevProps.trip !== this.props.trip && this.props.trip){
+      var trip = this.props.trip;
+      var defaultValues = {
+        city: trip.get('city'),
+        state: trip.get('state'),
+        imagePreviewUrl: trip.get('imageUrl'),
+        startDate: moment(trip.get('startDate')).toDate(),
+        endDate: moment(trip.get('endDate')).toDate()
+      };
+
+      this.setState(defaultValues);
+
+    }
+  },
+
+  handleChange(event, value) {
+
+    this.setState({
+      state: value,
+    });
+
+    if (this.props.onChange) this.props.onChange(event, value, index);
   },
 
   beforeImageSubmit: function(xhr) {
@@ -164,6 +207,10 @@ var TripForm = React.createClass({
     this.setState({startDate: date});
   },
 
+  handleEndDate: function(e, date){
+    this.setState({endDate: date});
+  },
+
   formatDate: function(date){
     return moment(date).format('ll');
   },
@@ -193,6 +240,20 @@ var TripForm = React.createClass({
     var path = this.props.path;
     var self = this;
 
+    var edit = this.props.edit;
+    var trip = edit ? this.props.trip : null;
+    var defaultValues = {
+      startDate: null,
+      endDate: null
+    };
+
+    if(edit && trip){
+      defaultValues.startDate = moment(trip.get('startDate')).toDate();
+
+    }
+
+    console.log('defaultValues.startDate ',defaultValues.startDate )
+
     return (
       <div>
 
@@ -203,7 +264,9 @@ var TripForm = React.createClass({
 
       <div style={styles.header}>
 
-      <h3 style={styles.title}>Add a Trip</h3>
+      <h3 style={styles.title}>
+        {edit ? 'Edit Your Trip' : 'Add a Trip'}
+      </h3>
 
         { imagePreview ?
           <Avatar
@@ -248,6 +311,8 @@ var TripForm = React.createClass({
             autoWidth={true}
             maxHeight={340}
             style={styles.stateInput}
+            onChange={this.handleChange}
+            value={this.state.state}
           >
             <MenuItem value="AL" label="AL" primaryText="Alabama"/>
             <MenuItem value="AK" label="AK" primaryText="Alaska"/>
@@ -313,6 +378,7 @@ var TripForm = React.createClass({
             minDate={this.state.today}
             onChange={this.handleStartDate}
             formatDate={this.formatDate}
+            value={this.state.startDate}
             autoOk={true}
             mode="portrait"
             required
@@ -326,6 +392,8 @@ var TripForm = React.createClass({
             formatDate={this.formatDate}
             autoOk={true}
             mode="portrait"
+            value={this.state.endDate}
+            onChange={this.handleEndDate}
             required
           />
         </div>
@@ -339,7 +407,7 @@ var TripForm = React.createClass({
           type="button"
         />
         <RaisedButton
-          label="Add"
+          label={edit ? 'Save' : 'Add'}
           type="submit"
           primary={true}
         />

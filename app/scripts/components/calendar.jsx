@@ -5,10 +5,11 @@ import _ from 'underscore';
 
 import MDSpinner from "react-md-spinner";
 
-import Place  from 'material-ui/svg-icons/maps/place';
+import Place  from 'material-ui/svg-icons/social/location-city';
 import More from 'material-ui/svg-icons/navigation/more-vert';
 
-import {greenA700, greenA400, pink400, grey500} from 'material-ui/styles/colors';
+import {greenA700, greenA400, pink400, grey500,
+				blueA200, redA700, deepPurple500, orange700} from 'material-ui/styles/colors';
 
 
 import {Avatar, Paper, Dialog, Divider, Drawer, IconMenu, MenuItem,
@@ -27,6 +28,8 @@ import SGEventCollection from './../models/SeatGeekEventCollection';
 import TripDetail from './TripDetail.jsx';
 
 
+const colors = [blueA200, redA700, deepPurple500, orange700];
+
 const SelectableList = makeSelectable(List);
 
 const styles = {
@@ -38,7 +41,7 @@ const styles = {
 
 		position: 'absolute',
 		left: 250,
-		right: 250,
+		right: 270,
 		top: 70
 	},
 	pageLeft:{
@@ -49,7 +52,7 @@ const styles = {
 
 		position: 'absolute',
 		left: 0,
-		right: 250,
+		right: 270,
 		top: 70
 	},
 	pageRight:{
@@ -60,7 +63,7 @@ const styles = {
 
 		position: 'absolute',
 		left: 250,
-		right: 0,
+		right: 20,
 		top: 70,
 		overflow: 'scroll'
 	},
@@ -73,7 +76,7 @@ const styles = {
 
 		position: 'absolute',
 		left: 0,
-		right: 0,
+		right: 20,
 		top: 70
 	},
 	paper:{
@@ -125,6 +128,8 @@ var Calendar = React.createClass({
 			var endDate   = moment(trip.get('endDate')).format('ll');
 			var imgUrl = trip.get('imageUrl');
 
+			var color = trip.get('color');
+
 			return (
 				<ListItem
 					key={i}
@@ -158,6 +163,12 @@ var Calendar = React.createClass({
       				anchorOrigin={{horizontal: 'left', vertical: 'top'}}
       				targetOrigin={{horizontal: 'left', vertical: 'top'}}
 						>
+							<MenuItem
+								href={'#trips/'+id+'/edit'}
+								disabled={true}
+							>
+								Edit
+						</MenuItem>
 							<MenuItem
 								onTouchTap={function(){
 									self.props.deleteTrip(trip);
@@ -241,6 +252,10 @@ var CalendarContainer = React.createClass({
         'datetime_local.lte': departure
       },
       success: function(collection, response, options) {
+				_.each(trip.get('favorites') , function(sgId){
+					if(collection.get(sgId))
+						collection.get(sgId).set({favorite: true});
+				});
 				self.setState({concerts: collection, fetching: false});
       },
       error: function(collection, response, options) {
@@ -284,19 +299,32 @@ var CalendarContainer = React.createClass({
 		this.setState({open: false});
 	},
 
-	handleSubmit: function(data) {
+	handleSubmit: function(data, edit) {
 		var trip = new Trip(data);
-		trip.save().done(function(data){
-			var id = data.objectId;
-			var trips = this.state.trips;
 
-			trips.add(trip);
-			this.setState({trips: trips});
-			Backbone.history.navigate('trips/'+id, {trigger:true});
+		if(!edit){
+			trip.save().done(function(data){
+				var id = data.objectId;
+				var trips = this.state.trips;
 
-		}.bind(this));
+				trips.add(trip);
+
+				this.setState({trips: trips});
+				Backbone.history.navigate('trips/'+id, {trigger:true});
+
+			}.bind(this));
+		}
+
+
+		else {
+			trips.get(id).set(trip).save();
+		}
 
 	},
+
+	// editTrip: function(trip) {
+	//
+	// },
 
 	deleteTrip: function(trip) {
 		var trips = this.state.trips;
@@ -346,6 +374,8 @@ var CalendarContainer = React.createClass({
 
 		var model = this.state.trip;
 
+		var form = (this.props.new === true);
+
 
 
 		var Detail = path &&  model !== null ?
@@ -386,13 +416,15 @@ var CalendarContainer = React.createClass({
 					title="Add a Trip~"
 					titleStyle={{display:'none'}}
 					contentStyle={styles.dialogContent}
-          open={(this.props.new === true)}
+          open={form || this.props.edit === true}
 					autoScrollBodyContent={true}
 					modal={true}
         >
 					<TripForm
 						handleSubmit={this.handleSubmit}
 						path={path}
+						edit={this.props.edit}
+						trip={model}
 					/>
         </Dialog>
 

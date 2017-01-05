@@ -2,7 +2,7 @@ import $ from 'jquery';
 import React from 'react';
 
 import ViewList from 'material-ui/svg-icons/action/view-agenda';
-import Account from 'material-ui/svg-icons/navigation/more-vert';
+import Account from 'material-ui/svg-icons/social/person';
 
 import Music from 'material-ui/svg-icons/av/library-music';
 
@@ -52,15 +52,15 @@ var UserMenu = React.createClass({
 
   render: function(){
     return (
-    <div style={{display: 'flex', alignItems: 'center', flexFlow: 'row nowrap'}}>
+    <div style={{display: 'flex', alignItems: 'center', flexFlow: 'row nowrap', width: 94, justifyContent:'space-between'}}>
       <IconMenu
         desktop={true}
         style={{margin: 0, padding: 0}}
         iconButtonElement={
           <IconButton
             tooltip="Account"
-            style={{margin: 0, padding: 0, width: 30}}
-            iconStyle={{width: 30, height: 30, color: 'white'}}>
+            style={{margin: 0, padding: '0 4px', width: 34}}
+            iconStyle={{width: 26, height: 26, color: 'white'}}>
             <Account/>
           </IconButton>}
         anchorOrigin={{horizontal: 'right', vertical: 'bottom'}}
@@ -119,7 +119,7 @@ var App = React.createClass({
     var tooltip = menu ? 'Trips' : null;
     var left =  <IconButton
                   tooltip={tooltip}
-                  style={{margin: 0, padding: 0}}
+                  style={{margin: 0, padding: 0, marginRight: 12}}
                   iconStyle={{width:23.375, height:34}}
                 >
                   <SvgIcon viewBox="0 0 22 32">

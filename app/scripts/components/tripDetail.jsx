@@ -19,7 +19,7 @@ import {Avatar, Card, CardHeader, CardTitle, CardText,
 				Chip, IconButton, RaisedButton, FloatingActionButton,
 				Toggle, Checkbox, Paper, Drawer, MenuItem} from 'material-ui';
 
-import {greenA700, greenA400, pink400} from 'material-ui/styles/colors';
+import {greenA400, greenA700, pink400} from 'material-ui/styles/colors';
 
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
@@ -249,7 +249,7 @@ var ArtistChip = React.createClass({
 		var href 			  = spotify ? artist.get('spotifyLink') : null;
 		var handleClick = spotify ? this.handleClick : undefined;
 
-		var color 		= spotify && added ? greenA700  : null;
+		var color 		= spotify && added ? greenA400  : null;
 		var iconColor = spotify && !added ? greenA700  : null;
 
 		var avatarIcon = added  ?  <i className="material-icons">playlist_add_check</i> : <i style={{'color':iconColor}} className="material-icons">queue_music</i>;
@@ -449,7 +449,8 @@ var TripDetail = React.createClass({
 		console.log('unfiltered concerts.length', this.getCollection().length);
 
 		var concerts = this.getCollection().filter(function(concert){
-			concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
+			if(faves.length>0)
+				concert.set({'favorite': _.contains(faves, concert.get('sgId'))});
 			var keep = self.state.seat  ? concert.get('price') != null    : true;
 			return self.state.favorites ? keep && concert.get('favorite') : keep;;
 		}).map( function(concert, i){
