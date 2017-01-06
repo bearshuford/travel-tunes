@@ -38,9 +38,3 @@ Try the [live demo](https://bearshuford.github.io/travel-tunes/).
 * [Moment.js](http://momentjs.com/) - date parsing, manipulation, and display
 
 * [Parse Server](https://parse.com/) - server for user authentication, trips, and favorite events
-
-
-## TODO
-
-- [ ] make playlist responsive
-- [ ] improve favoriting
