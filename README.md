@@ -2,8 +2,7 @@
 
 Final project for [The Iron Yard - Greenville](https://www.theironyard.com/locations/greenville.html).
 
-![traveltunes-login](https://cloud.githubusercontent.com/assets/21989005/21708123/671609a6-d3a3-11e6-8670-5c5a430f9f6c.png)
-
+![traveltunes-login](https://cloud.githubusercontent.com/assets/21989005/21708207/38b8fd92-d3a4-11e6-8961-da9cd62a2f9f.png)
 
 ![traveltunes-ss](https://cloud.githubusercontent.com/assets/21989005/21703645/b8d744a2-d381-11e6-8af0-9a12a43a3861.png)
 
