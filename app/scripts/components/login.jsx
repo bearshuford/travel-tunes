@@ -62,9 +62,10 @@ const styles = {
     alignContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-    fontFamily: '"Roboto Slab", serif',
+    fontFamily: '"Roboto", serif',
     fontWeight: 400,
-    minHeight:144
+    minHeight:144,
+    marginTop: 12
   },
   sgIcon: {
     margin: '0 8px',
