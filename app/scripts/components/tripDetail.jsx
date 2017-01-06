@@ -17,13 +17,13 @@ import SGEventCollection from './../models/SeatGeekEventCollection';
 
 import {Avatar, Card, CardHeader, CardTitle, CardText,
 				Chip, IconButton, RaisedButton, FloatingActionButton,
-				Toggle, Checkbox, Paper, Drawer, MenuItem, SvgIcon} from 'material-ui';
+				Toggle, Checkbox, Paper, Drawer, MenuItem} from 'material-ui';
 
 import {greenA700, pink400} from 'material-ui/styles/colors';
 
 import ActionFavorite from 'material-ui/svg-icons/action/favorite';
 import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
-import EventSeat from './../../images/SeatGeekChair.svg';
+import EventSeat from 'material-ui/svg-icons/action/event-seat';
 
 require('backbone-react-component');
 
@@ -194,9 +194,8 @@ const styles = {
 	chairEmptyCheckIcon: {
 		color:  'rgba(0, 0, 0, 0.298039)',
 		fill:   'currentColor',
-		height: 34.125,
-		width: 26
-
+		width:  26,
+		height: 26
 	},
 
 	chairCheckLabel: {
@@ -321,17 +320,10 @@ var ConcertCard = React.createClass({
 					textStyle={{paddingTop:4, width: 100, paddingRight: 0}}
 					children={
 						<div style={styles.cardIcons}>
-							{chair ?
-								<SvgIcon
-									viewBox="0 0 31.5 24"
-									color={'rgba(0, 0, 0, 0.298039)'}
-								>
-									<EventSeat />
-								</SvgIcon>
-								: <IconButton
+							{chair ? <EventSeat color={'rgba(0, 0, 0, 0.298039)'}/> : <IconButton
 								tooltip={price}
 								touch={true}
-								style={{padding:0, width:31.5, height:24}}
+								style={{padding:0, width:24, height:24}}
 								tooltipPosition="top-center"
 								href={concert.get('sgUrl')}
 							>
@@ -339,7 +331,7 @@ var ConcertCard = React.createClass({
 							</IconButton>}
 							<IconButton
 								iconStyle={{color: pink400}}
-								style={{padding:0, width:31.5, height:24}}
+								style={{padding:0, width:24, height:24}}
 								onTouchTap={this.onExpandChange}
 							>
 								{concert.get('favorite') ? <ActionFavorite /> : <ActionFavoriteBorder/>}
@@ -498,7 +490,7 @@ var TripDetail = React.createClass({
 								style={{width: 120, height: 26, marginLeft: 36}}
 								onCheck={this.handleSeatToggle}
 								checkedIcon={<EventSeat />}
-								uncheckedIcon={<SvgIcon viewBox="0 0 26 34.125"><EventSeat /></SvgIcon>}
+								uncheckedIcon={<EventSeat />}
 								iconStyle={this.state.seat ? styles.chairCheckIcon : styles.chairEmptyCheckIcon}
 								label={'Tickets'}
 								labelStyle={this.state.seat ? styles.chairCheckLabel : styles.chairEmptyCheckLabel}
