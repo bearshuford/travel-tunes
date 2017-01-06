@@ -1,7 +1,7 @@
 import React    from 'react';
 import Backbone from 'backbone';
 
-import {Paper, RaisedButton, SvgIcon} from 'material-ui'
+import {Paper, RaisedButton, FlatButton, SvgIcon, IconButton} from 'material-ui'
 
 import Formsy       from 'formsy-react';
 import {FormsyText} from 'formsy-material-ui/lib';
@@ -50,28 +50,33 @@ const styles = {
     alignItems: 'center',
     fontFamily: '"Roboto", sans-serif',
     fontWeight: 400,
-    fontSize: '1.8em',
-    marginBottom: 10,
+    fontSize: 'calc(1.2em + .8vw)',
+    marginBottom: 16,
     padding: '4px 24px'
   },
   details: {
     width: '100%',
-    height: 144,
     display: 'flex',
     flexFlow: 'row wrap',
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center',
     textAlign: 'center',
-    fontFamily: '"Roboto", sans-serif',
-    fontWeight: 500,
-    marginBottom: 16,
-    marginTop: 16
+    fontFamily: '"Roboto Slab", serif',
+    fontWeight: 400,
+    minHeight:144
   },
   sgIcon: {
     margin: '0 8px',
     width: 114.125,
     height: 22
+  },
+  buttons:{
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlign: 'center'
   }
 };
 
@@ -165,25 +170,39 @@ var Login = React.createClass({
 
             <span> powered by </span>
 
-            <a style={styles.sgIcon} href="http://platform.seatgeek.com/" target='_blank'>
-              <SvgIcon
-                style={{width: 114.125, height: 22}}
-                viewBox="0 0 114.125 22"
-              >
-                <SeatGeek />
-              </SvgIcon>
-            </a>
+            <div style={styles.buttons}>
 
-            <span> and </span>
+              <FlatButton
+                href="http://platform.seatgeek.com/"
+                target="_blank"
+                style={{margin: '0 6px', width: 132.125, height: 52, padding: '7px 2px'}}
+                icon={
+                  <SvgIcon
+                    viewBox="0 0 114.125 22"
+                    style={{width: 114.125, height: 22}}
+                  >
+                    <SeatGeek />
+                  </SvgIcon>
+                }
+              />
 
-            <a style={{marginLeft: 8}} href="https://developer.spotify.com/web-api/" target='_blank'>
-              <SvgIcon
-                style={{width: 106, height: 32}}
-                viewBox="0 0 106 32"
-              >
-                <Spotify />
-              </SvgIcon>
-            </a>
+
+            <span style={{fontSize: 18}}> + </span>
+
+              <FlatButton
+                href="https://developer.spotify.com/web-api/"
+                target="_blank"
+                style={{marginLeft: 6, width: 124, height: 52, padding: '7px 4px'}}
+                icon={
+                  <SvgIcon
+                    style={{width: 106, height: 32}}
+                    viewBox="0 0 106 32"
+                  >
+                    <Spotify />
+                  </SvgIcon>
+                }
+              />
+            </div>
 
           </div>
 
