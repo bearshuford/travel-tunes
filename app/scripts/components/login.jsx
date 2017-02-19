@@ -83,7 +83,8 @@ const styles = {
   fab: {
     position: 'fixed',
     bottom: 29,
-    right: 25
+    right: 25,
+    zIndex: 50000
   }
 };
 
