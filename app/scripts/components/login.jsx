@@ -177,7 +177,13 @@ var Login = React.createClass({
    	<App>
   	    <div style={styles.login}>
 
-
+          <FloatingActionButton
+            style={styles.fab}
+            backgroundColor="black"
+            children={<BearIcon color="white"/>}
+            disableTouchRipple={true}
+            href="http://bear.works"
+          />
 
           <div style={styles.details}>
 
@@ -239,12 +245,7 @@ var Login = React.createClass({
   	          handleSubmit={this.handleLogin}
   	          />
   	      </Paper>
-          <FloatingActionButton
-            style={styles.fab}
-            backgroundColor="black"
-            children={<BearIcon color="white"/>}
-            href="http://bear.works"
-          />
+
   	    </div>
 		</App>
     );
